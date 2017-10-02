@@ -1,0 +1,54 @@
+#3a
+
+dat = read.csv("~/Desktop/Fall 2017/MA 575/book_data/AdRevenue.csv", header = T)
+
+plot(AdRevenue~Circulation, data = dat)
+model = lm(AdRevenue~Circulation, data = dat)
+abline(model)
+
+par(mfrow = c(2,2))
+plot(model)
+
+hist(dat$Circulation)
+hist(log(dat$Circulation))
+
+plot(AdRevenue~log(Circulation), data = dat)
+model = lm(AdRevenue~log(Circulation), data = dat)
+par(mfrow = c(2,2))
+plot(model)
+
+hist(dat$AdRevenue)
+hist(log(dat$AdRevenue))
+
+plot(log(AdRevenue)~log(Circulation), data = dat)
+model = lm(log(AdRevenue)~log(Circulation), data = dat)
+
+plot(log(AdRevenue)~log(Circulation), data = dat)
+abline(model)
+par(mfrow = c(2,2))
+plot(model)
+
+#3b 
+predict(model, newdata = data.frame(Circulation = .5), interval = "prediction")
+predict(model, newdata = data.frame(Circulation = 20), interval = "prediction")
+
+#c
+par(mfrow = c(2,2))
+plot(model)
+#Couple of high leverage points? 
+
+#-----------------------------------------------------------------
+plot(AdRevenue~Circulation, data = dat)
+model = lm(AdRevenue~Circulation+I(Circulation^2) + I(Circulation^3), data = dat)
+
+y = predict(model, data.frame(Circulation = 1:35))
+plot(AdRevenue~Circulation, data = dat)
+lines(1:35, y, col = "red")
+
+par(mfrow = c(2,2))
+plot(model)
+
+#3b 
+predict(model, newdata = data.frame(Circulation = .5), interval = "prediction")
+predict(model, newdata = data.frame(Circulation = 20), interval = "prediction")
+

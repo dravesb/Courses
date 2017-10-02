@@ -1,0 +1,170 @@
+---
+title: "MA 575: HW2"
+author: Benjamin Draves
+date: September 19, 2017
+output: pdf_document
+
+#output:
+#  rmarkdown::html_document:
+#    theme: cosmo
+---
+
+### Exercise 2.2 
+
+First, we'll read in the data and take a look at the data frame containing the housing data. 
+
+
+```{r}
+
+#read in data
+dat = read.table("~/Desktop/Fall 2017/MA 575/book_data/indicators.txt", header = TRUE)
+
+#take a peak
+head(dat)
+
+```
+
+Next, we'll actually build the model. From here, we'll visualize the relationship and the simple regression fit. 
+
+```{r}
+#attach the dataframe 
+attach(dat)
+
+#build the model 
+model = lm(PriceChange ~ LoanPaymentsOverdue)
+
+#plot the relationship
+plot(LoanPaymentsOverdue, PriceChange, main = "Exercise 2.2", xlab = "%Loan Pay. Overdue", ylab = "% Change in Price", pch = 1, col = "blue")
+
+#add the regression line 
+abline(model)
+
+```
+
+Now we'll take a look at the fit statistics.
+
+```{r}
+summary(model)
+```
+
+#### (a)
+
+To build a $95\%$ confidence interval for $\widehat{\beta}_1$, we will use the form derived in the text for the case where $\sigma^2$ is unknow. That is the $(1-\alpha)100\%$ confidence interval is given by $\widehat{\beta}_1\pm t_{\alpha/2, n-2}\frac{S}{\sqrt{SXX}}$. R gives us $\widehat{\beta}_1 = -2.2485$ and the standard error corresponding to this estimator $se(\widehat{\beta}_1) = \frac{S}{\sqrt{SXX}} = 0.9033$. To finish building this confidence interval, we need to find $t_{\alpha/2, n-2}$. In our case there are $n=18$ observations and we are using a $95\%$ confindence level corresponding to $\alpha = 0.05$. Hence we seek to find $t_{\alpha/2, n-2} = t_{.05/2, 18-2} = t_{.025, 16}$. We can use R to find this value using 
+
+```{r}
+#find t - multiplier
+qt(.975, 16)
+```
+
+Hence our confidence interval is given by 
+```{r}
+#build confidence interval
+right = -2.2485 + (2.119905 * 0.9033)
+left = -2.2485 - (2.119905 * 0.9033)
+
+# Our 95% confidence interval for B_1
+c(left, right)
+
+```
+
+The confidence interval covers negative values and does not include zero. This suggests that the true value of $\beta_1$ is negative. That is, this model gives us reason to believe there is a negative relationshop between percentage change in loan payment overdue and percentage change in price.
+
+####(b)
+
+Next, we'll use our model to find the confidence interval for our regression line at $X = 4$. Using the summary above, our regression line is given by $E(Y|X = x^{*}) = 4.5145 -2.2485x^{*}$. Hence for $x^{*} = 4$, we have $y^{*} = 4.5145 -2.2485(4) =-4.4795$. 
+
+To construct a $95\%$ confidence inteval for the regression line, we will use the form we derived in class given by $\hat{y}^{*} \pm t_{\alpha/2, n-2}S\sqrt{\frac{1}{n} + \frac{(x^{*}-\overline{x})^2}{SXX}}$. From part $a$ we know $t_{\alpha/2, n-2} = 2.119905$. We will need to find the remaining terms. Consider the following 
+
+```{r}
+#find S and SXX
+S = sqrt(1/(18-2)*sum((model$residuals)^2))
+SXX = sum((dat$LoanPaymentsOverdue - mean(dat$LoanPaymentsOverdue))^2)
+
+#find the part under the square root
+under = 1/18 + (4 - mean(dat$LoanPaymentsOverdue))^2/SXX
+
+#define the width variable
+width = 2.119905*S*sqrt(under)
+```
+
+From here we can build our confidence interval using the formula given above.
+
+```{r}
+#build the interval
+left = -4.4795 - width
+right = -4.4795 + width
+
+c(left, right)
+```
+
+$0\%$ is likely *not* a reasonable value for the expected percentage change in housing price. We're $95\%$ confident the true percentage change in housing price given that the percentage change in overdue loan payments is somewhere in the interval $(-6.648764, -2.310236)$. $0\%$ is well outside  this range and thus is likely not a feasible value for $E(Y|X = 4)$. 
+
+### Exercise 2.3
+
+
+First we'll read in the data and take a look at the dataframe.
+```{r}
+#read in data 
+dat = read.table("~/Desktop/Fall 2017/MA 575/book_data/invoices.txt", header = TRUE)
+
+#take a peak 
+head(dat)
+```
+
+We'll plot the relationship and build the model. 
+
+```{r}
+#attach the dataframe 
+attach(dat)
+
+#build the model 
+model = lm(Time ~ Invoices, data = dat)
+
+#plot the relationship
+plot(Invoices, Time, main = "Exercise 2.3", xlab = "Invoices", ylab = "Processing Time", pch = 1, col = "blue")
+
+#add the regression line 
+abline(model)
+```
+
+Now we'll take a look at the fit statistics. 
+
+```{r}
+summary(model)
+```
+
+####(a)
+
+To build the confidence for $\widehat{\beta}_0$ we will use the form where $\sigma^2$ is unknown. The $(1-\alpha)100\%$ confidence interval is given by $\widehat{\beta}_0 \pm t_{\alpha/2, n-2}S\sqrt{\frac{1}{n} + \frac{\overline{x}^2}{SXX}}$. Here, $se(\widehat{\beta}_0) = S\sqrt{\frac{1}{n} + \frac{\overline{x}^2}{SXX}}$ and $\widehat{\beta}_0$ is given directly from R. In our case $se(\widehat{\beta}_0) = 0.1222707$ and $\widehat{\beta}_0 = 0.6417099$. We can calculate $t_{\alpha/2, n-2} = t_{.025, 28}$ using the following 
+
+```{r}
+qt(.975, 28)
+```
+ From here, we can construct our confidence interval for the intercept 
+ 
+ 
+```{r}
+width = 2.048407*0.1222707
+
+left = 0.6417099 - width
+right = 0.6417099 + width
+
+c(left, right)
+```
+
+####(b)
+Here our null hypothesis $H_0: \beta_1 = 0.01$ and the alternative hypothesis is given by $H_A: \beta_1 \neq 0.01$. Before, we calculate our test statistic, we will identify our rejection region. We will use an $\alpha = 0.05$ level for the $T_{n-2} = T_{28}$ distribution. In part $a$ we calculated that $t_{.025, 28} = 2.048407$. So our rejection region is given by $R = (-\infty, -2.048407)\cup(2.048407, \infty)$. 
+
+Now we will calculate our test statistic given by $T = \frac{\widehat{\beta}_1 - \beta_1^{(0)}}{S/\sqrt{SXX}} = \frac{\widehat{\beta}_1 - \beta_1^{(0)}}{se(\widehat{\beta}_1)} = \frac{0.0112916 - .01}{0.0008184} = 1.578201$. Since $T\not\in R$, we fail to reject $H_0$, that $\beta_1 = .01$. That is, we have do not have sufficent evidence to suggest that $\beta_1 \neq .01$
+
+####(c)
+
+Here we look to find a point estimate, and corresponding prediction interval, for $E(Y|X = 130)$. Using our estimates for $\widehat{\beta}_1$ and $\widehat{\beta}_0$, we have $\hat{y}^{*} = 0.6417099 + 0.0112916*130 = 2.109618$. We will use the prediction interval of the form $\hat{y}^{*} \pm t_{\alpha/2, n-2}S\sqrt{1 + \frac{1}{n} + \frac{(x^{*}-\overline{x})^2}{SXX}}$. We will use the built in R function *predict* to get the prediction interval for $X = 130$. 
+
+```{r}
+#Calculate prediction interval
+predict(model,data.frame(Invoices = 130), interval  = "prediction")
+
+```
+
+

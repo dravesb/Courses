@@ -1,0 +1,151 @@
+---
+title: "MA 750: HW1"
+author: Benjamin Draves
+date: September 26, 2017
+output: pdf_document
+
+#output:
+#  rmarkdown::html_document:
+#    theme: cosmo
+---
+
+
+### Exercise 1 
+
+#### (d)
+
+```{r}
+#set seed 
+set.seed(1665)
+
+#set up tunning variables 
+n = 100
+num_samp = 1000
+mu = 5
+
+#Get num_samp estimates of exp(-xbar) where -xbar from Pois(mu) with n samples
+sim = replicate(num_samp, exp(-mean(rpois(n,mu))))
+
+#compute empircal bias for each point 
+estimated_bias = sim - exp(-mu)
+
+#find the mean bias 
+mean_bias = mean(estimated_bias)
+
+#display estimated bias 
+paste("The estiamted bias of the MLE estimator:", round(mean_bias, 6))
+
+```
+
+```{r}
+#estimate the variance of the estimator 
+estimated_var = var(sim)
+
+#display estimated variance 
+paste("The estiamted variance of the MLE estimator:", round(estimated_var, 6))
+```
+
+*Compare estimates to the part approximated in part b*
+
+#### (e)
+```{r}
+#set up tunning variables 
+n = 50
+num_samp = 1000
+mu = 5
+
+#Get num_samp estimates of exp(-xbar) where -xbar from Pois(mu) with n samples
+sim = replicate(num_samp, exp(-mean(rpois(n,mu))))
+
+#compute empircal bias for each point 
+estimated_bias = sim - exp(-mu)
+
+#find the mean bias 
+mean_bias = mean(estimated_bias)
+
+#display estimated bias 
+paste("The estiamted bias of the MLE estimator:", round(mean_bias, 6))
+
+```
+
+```{r}
+#estimate the variance of the estimator 
+estimated_var = var(sim)
+
+#display estimated variance 
+paste("The estiamted variance of the MLE estimator:", round(estimated_var, 6))
+```
+
+*Compare estimates here*
+
+
+```{r}
+#set up tunning variables 
+n = 20
+num_samp = 1000
+mu = 5
+
+#Get num_samp estimates of exp(-xbar) where -xbar from Pois(mu) with n samples
+sim = replicate(num_samp, exp(-mean(rpois(n,mu))))
+
+#compute empircal bias for each point 
+estimated_bias = sim - exp(-mu)
+
+#find the mean bias 
+mean_bias = mean(estimated_bias)
+
+#display estimated bias 
+paste("The estiamted bias of the MLE estimator:", round(mean_bias, 6))
+
+```
+
+```{r}
+#estimate the variance of the estimator 
+estimated_var = var(sim)
+
+#display estimated variance 
+paste("The estiamted variance of the MLE estimator:", round(estimated_var, 6))
+```
+*Compare estimates here*
+
+### Exericse 5 
+
+```{r}
+#get sample
+dat = matrix(0,nrow = 100, ncol = 2)
+dat[,1] = rnorm(100, mean = 3, sd = 1)
+dat[,2] = rnorm(100, mean = 6, sd = 1)
+
+#get indicator
+mixture1 = rbinom(n = 100, size = 1, p = .4)
+indicator = matrix(0, nrow = 100, ncol = 2)
+indicator[,1] = mixture1
+indicator[,2] = ifelse(indicator[,1] == 0, 1, 0)
+
+#get histogram data
+hist.dat = rowSums(dat*indicator)
+
+#load necessary packages
+library(MASS)
+
+#Check out histograms
+par(mfrow = c(2.,3))
+truehist(hist.dat, h = 0.1, x0 = 0)
+truehist(hist.dat, h = 0.5, x0 = 0)
+truehist(hist.dat, h = 0.7, x0 = 0)
+truehist(hist.dat, h = 0.9, x0 = 0)
+truehist(hist.dat, h = 1.2, x0 = 0)
+truehist(hist.dat, h = 1.5, x0 = 0)
+
+#Check out histograms
+par(mfrow = c(2.,3))
+truehist(hist.dat, h = 0.7, x0 = 0)
+truehist(hist.dat, h = 0.7, x0 = 0.05)
+truehist(hist.dat, h = 0.7, x0 = 0.1)
+truehist(hist.dat, h = 0.7, x0 = 0.15)
+truehist(hist.dat, h = 0.7, x0 = 0.2)
+truehist(hist.dat, h = 0.7, x0 = 0.25)
+```
+
+
+

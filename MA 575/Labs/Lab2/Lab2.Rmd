@@ -1,0 +1,102 @@
+---
+title: "Lab 2 R"
+
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+# Read data from cvs file with ";" instead of ","
+pollutiondata <- read.csv2("AirQualityData.csv",header=TRUE)
+
+# Replace missing data i.e. -200 with NA
+pollutiondata[pollutiondata==-200]<-NA
+
+# Force Temperature to be a numeric vector
+Temperature = as.numeric(as.character(pollutiondata$Temperature))
+Titania = as.numeric(as.character(pollutiondata$PT08.S2.NMHC.))
+
+summary(Temperature)
+```
+```{r}
+summary(Titania)
+```
+```{r}
+# Create temporary data set with Temperature and Titania pollutant
+tempdataset <- data.frame(Titania, Temperature)
+rm(Temperature,Titania)
+
+# Data with NA
+Bivariatedataset<-tempdataset[complete.cases(tempdataset), ]
+
+# Remove NA
+Bivariatedataset<-Bivariatedataset[complete.cases(Bivariatedataset), ]
+
+#pollutiondatareduced<-pollutiondata[complete.cases(pollutiondata), ]
+
+# Print the first 10 data rows
+head(Bivariatedataset,10)
+```
+
+
+```{r}
+# Attach
+attach(Bivariatedataset)
+
+# Plot Titania pollutant vs time
+plot(Temperature,Titania,xlab="Temperature", ylab="Titania")
+```
+
+```{r}
+# Perform linear regression between temperature and Titania
+m1 <- lm(Titania ~ Temperature)
+summary(m1)
+```
+
+```{r}
+# Plot figure with least square fit
+plot(Temperature,Titania,xlab="Temperature", ylab="Titania")
+abline(lsfit(Temperature,Titania))
+```
+
+```{r}
+#t-value for 95% confidence
+tval <- qt(1-0.05/2,8989)
+tval
+```
+
+```{r}
+#95% confidence intervals
+round(confint(m1,level=0.95),3)
+```
+
+```{r}
+# Let us look at the standardized residual
+StanRes2 <- rstandard(m1)
+plot(Temperature,StanRes2,xlab="Temperature", ylab="Standardized Residuals",xlim=c(-2,45),main="Pollutant")
+abline(h=2,lty=2)
+abline(h=-2,lty=2)
+```
+```{r}
+# Detach the data frame
+detach(Bivariatedataset)
+
+# Plot diagnostic information
+# par(mfrow=c(2,2))
+plot(m1)
+```
+
+```{r}
+# Notice the leverage points and the Q-Q Normal plot
+# What can say about this linear regression model ?
+
+# Can you try other data sets ? For example, 
+# Titania ~ Absolute Humidity ? or Relative Humidity ?
+
+```
+

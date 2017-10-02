@@ -1,0 +1,10 @@
+---
+title: "MA 575: Lab 1"
+author: Benjamin Draves
+date: September 14, 2017
+output:
+  rmarkdown::html_document:
+    theme: lumen
+---
+
+This is a test 

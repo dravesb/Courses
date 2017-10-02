@@ -1,0 +1,54 @@
+---
+title: 'MA 575: HW4'
+author: "Benjamin Draves"
+date: "September 26, 2017"
+output:
+  rmarkdown::html_document:
+   theme: cosmo
+---
+
+### Exercise 4.1 
+Here, we build a weighted regression model for third quartile of full professor salaries on years of experience. The weights correspond to $w_i =  1/n_i$ where the $n_i$ correspond to the number of professors sampled for each fixed years of experience value. We fit the model below. 
+
+
+```{r}
+#read in data
+dat = read.table("~/Desktop/Fall 2017/MA 575/book_data/ProfessorSalaries.txt", header = T)
+
+#take a peak 
+head(dat)
+
+#look at the bivariate relationship
+plot(dat$Experience, dat$ThirdQuartile, main = "", pch = 2, col = "blue", xlab = "Yrs. Experience", ylab = "Third Quartile")
+
+#Define weights for WLS 
+w = dat$SampleSize
+
+#Build WLS
+wlm = lm(ThirdQuartile~Experience, data = dat, weights = w)
+
+
+wlm = lm(ThirdQuartile~Experience, data = dat, weights = rep(1,nrow(dat)))
+
+wlm = lm(ThirdQuartile~Experience, data = dat, weights = rep(2,nrow(dat)))
+
+
+#check out fit 
+plot(dat$Experience, dat$ThirdQuartile, main = "", pch = 2, col = "blue", xlab = "Yrs. Experience", ylab = "Third Quartile")
+abline(wlm, col = "red")
+
+#get fit statistics
+summary(wlm)
+
+```
+
+Hence, the expected third quartile salary of a sixth year full professor is given by $104,759.0 + 1172.5x^{*} =104,759.0 + 1172.5(6)= \$111,794$. 
+
+
+
+
+
+
+
+
+

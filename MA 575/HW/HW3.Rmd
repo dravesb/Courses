@@ -1,0 +1,171 @@
+---
+title: "MA 575: HW3"
+author: Benjamin Draves
+date: September 26, 2017
+output: pdf_document
+
+#output:
+ # rmarkdown::html_document:
+  #  theme: cosmo
+---
+
+### Exercise 3.1 
+
+We first reconstruct the model proposed in the problem. 
+
+```{r}
+
+#read in data
+dat = read.table("~/Desktop/Fall 2017/MA 575/book_data/airfares.txt", header = TRUE)
+
+#take a peak
+head(dat)
+
+#plot bivariate relationship 
+plot(dat$Distance, dat$Fare, ylab = "Fare", xlab = "Distance", pch = 2, col = "blue")
+
+```
+
+```{r}
+
+#build regression model 
+model = lm(Fare~Distance, data = dat)
+
+#check out summary statistics 
+summary(model)
+```
+
+
+```{r}
+
+#Check out the fit 
+plot(dat$Distance, dat$Fare, ylab = "Fare", xlab = "Distance", pch = 2, col = "blue")
+abline(model, lty = 2, col = "red")
+
+#take a look at R's built in residual plots
+par(mfrow = c(2,2))
+plot(model)
+```
+
+#### a)
+
+The business analyst claims that the relationship is strongly signficant. We cannot make this claim, because this model violates our assumption that we have constant variance. The residual plot clearly indicates that as distance increases, so does our variance. Hence, any hypothesis testing on $\widehat{\beta}_1$ cannot be reliable. The model, however, shows that a _linear_ relationship between _Distance_ and _Fare_ explains 99.4% of the variance. The residuals have a quadratic behavior, so more variance is likely explained by a model containing a quadratic component. This model clearly does not allow us to properly infer the strength of the relationship between these two variables. Moreover, our confidence statements about predictions rely on constant variance of the residuls which we do not have here.
+
+#### b)
+Here, we see the residuals demostrate a quadratic behavior (with the exception of one high leverage point). There are clearly two leverage points in this model, corresponding to point 13 and point 17. Both have large leverage as we see in the residuals vs leverage point. 17 appears to follow the quadratic relationship of the other data point, so if we added this quadratic term in the model, 17 could be a "good" leverage point. 13 is clearly a bad leverage point, with or without the quadratic fit. I would revisit this point to see if there was something that made it different than the other X-values (e.g. international destination). Thus, the linear model assumption is probably not best for this data. Instead a quadratic model should be fit to the data, with possible adding a dummy variable for international vs. domestic flights. 
+
+### Exercise 3.2 
+
+As we showed in class, if we believe the true underlying model is a quadratic model, then $\hat{e}_i \approx \beta_2x_i^2 + e_i$. Notice that this assumption does not rely on the distribution of $Y$. Hence if the $\hat{e}_i$ show some quadratic behavior, adding in a quadratic term may help fit the true model. So the statement is _true_. 
+
+Depending on the distribution of the residuals, however, to address nonconstant variance may require a $Y$ transformation. Recall under the assumption that the $e_i$ are normal, then $Y|X$ is also normal. Hence to address the nonconstant variance, we may need to go further than just adding in a quadratic term. 
+
+### Exercise 3.4 
+
+First we will reconstruct the models found in both examples. 
+
+```{r}
+#read in data
+dat = read.table("~/Desktop/Fall 2017/MA 575/book_data/glakes.txt", header = TRUE)
+
+#take a peak
+head(dat)
+
+#plot bivariate relationship 
+plot(dat$Tonnage, dat$Time, ylab = "Time", xlab = "Tonnage", pch = 2, col = "blue")
+
+```
+
+```{r}
+
+#build regression model 
+model = lm(Time~Tonnage, data = dat)
+
+#check out summary statistics 
+summary(model)
+```
+
+
+```{r}
+
+#Check out the fit 
+plot(dat$Tonnage, dat$Time, ylab = "Time", xlab = "Tonnage", pch = 2, col = "blue")
+abline(model, lty = 2, col = "red")
+
+#take a look at R's built in residual plots
+par(mfrow = c(2,2))
+plot(model)
+```
+
+#### a)
+
+While the data does roughly follow a linear trend, we see that the regression model's assumptions are violated. That is as _Tonnage_ increases so does the variance. Moreover, there are two very high leverage points both with very high influence. So while a linear model is probably the correct choice, some adjustments need to be made to make this model valid. 
+
+
+#### b)
+
+Recall we constructed our prediction intervals off the assumption that there was constant variance. But in this case, as _Tonnage_ increases, so does the variance. Since the prediction interval will assume constant variance, there is no way for the interval to accommodate the growing variance for _Tonnage_ $=10,000$. For this reason, we expect the interval will be too short.
+
+To test this argument, we can plot the prediction intervals as follows 
+
+```{r}
+#Check out the fit 
+plot(dat$Tonnage, dat$Time, ylab = "Time", xlab = "Tonnage", pch = 2, col = "blue")
+abline(model, lty = 2, col = "red")
+
+pred = predict(model, newdata = data.frame(Tonnage = seq(0,15000, 1000)), interval = "predict")
+
+lines(seq(0,15000, 1000), pred[,2], col="orange", lty=2)
+lines(seq(0,15000, 1000), pred[,3], col="orange", lty=2)
+
+```
+
+Notice as _Tonnage_ increases, the observed values begin to inch closer to the prediction intervals, depicted by the orange lines. This corresponds to the prediction interval not taking into account the increasing variance. 
+
+
+#### c) 
+
+
+We now fit the second model in this problem. 
+
+```{r}
+#plot bivariate relationship 
+plot(dat$Tonnage^(0.25), log(dat$Time), ylab = "log(Time)", xlab = "Tonnage^0.25", pch = 2, col = "blue")
+
+```
+
+```{r}
+#add fourth root variable
+dat$Tonnage2 = dat$Tonnage^(1/4)
+
+#build regression model 
+model = lm(log(Time)~Tonnage2, data = dat)
+
+#check out summary statistics 
+summary(model)
+```
+
+
+```{r}
+
+#Check out the fit 
+plot(dat$Tonnage^(0.25), log(dat$Time), ylab = "log(Time)", xlab = "Tonnage^(0.25)", pch = 2, col = "blue")
+abline(model, lty = 2, col = "red")
+
+#take a look at R's built in residual plots
+par(mfrow = c(2,2))
+plot(model)
+```
+
+
+There appears to be a large improvement for this model over the previous model. Our residuals show that the model has (relatively) constant variance and the trend is linear. Moreover, the leverage points in this model are "good" leverage points since they follow the trend suggested by the rest of the data. Since we have these features, the prediction intervals will be valid for time. 
+
+#### d) 
+
+There could be some normality issues with the _Tonnage_ variable towards the tail (see Normal Q-Q plot). This could be fine tuned by changing the power transformation of $X$. I would not recommend this, however, due to possible overfitting. 
+
+
+
+
+
+
