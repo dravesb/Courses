@@ -1,0 +1,31 @@
+---
+title: 'MA 750: HW2'
+author: "Benjamin Draves"
+date: "October 5, 2017"
+output: pdf_document
+---
+
+### Exercise 2.4
+
+```{r}
+#take a peak at the data 
+head(iris)
+
+#Take a look at multiple bandwidths 
+par(mfrow = c(3,3))
+for(h in seq(.1, .8, .1)){
+  plot(density(iris$Petal.Length, bw = h, kernel = "gaussian"), xlab ="", ylab = "Petal Length", main = paste("Bandwidth: ",h))
+}
+
+#Take a look at multiple kerenels
+kernels = c("gaussian", "epanechnikov", "rectangular","triangular", "biweight","cosine", "optcosine")
+
+par(mfrow = c(3,3))
+for(kern in kernels){
+  plot(density(iris$Petal.Length, bw =0.2 , kernel = kern), xlab ="", ylab = "Petal Length", main = paste("Kernel: ",kern))
+}
+
+
+
+```
+
