@@ -3,11 +3,13 @@ title: 'MA 750: HW2'
 author: "Benjamin Draves"
 date: "October 5, 2017"
 output: pdf_document
+fontsize: 11pt
+geometry: margin=1in
 ---
 
 ### Exercise 2.4
 
-```{r}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 #take a peak at the data 
 head(iris)
 
@@ -17,15 +19,19 @@ for(h in seq(.1, .8, .1)){
   plot(density(iris$Petal.Length, bw = h, kernel = "gaussian"), xlab ="", ylab = "Petal Length", main = paste("Bandwidth: ",h))
 }
 
+```
+
+It appears that bandwidths of $h>.4$ oversmooth the data. In fact, we see at $h\approx 0.45$ that the mode changes from the first feature to the second. This behaviors shows how bandwidth selection can dramatically change the results of this sommthing method. It appears that both $h=0.1, 0.2$ undersmooth the data with several rigid edges. A bandwidth of $h=0.3$ seems to best smooth the data - preserving local features while smoothing the data. 
+
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 #Take a look at multiple kerenels
 kernels = c("gaussian", "epanechnikov", "rectangular","triangular", "biweight","cosine", "optcosine")
 
 par(mfrow = c(3,3))
 for(kern in kernels){
-  plot(density(iris$Petal.Length, bw =0.2 , kernel = kern), xlab ="", ylab = "Petal Length", main = paste("Kernel: ",kern))
+  plot(density(iris$Petal.Length, bw =0.3 , kernel = kern), xlab ="", ylab = "Petal Length", main = paste("Kernel: ",kern))
 }
-
-
 
 ```
 
+This chart shows how little effect the choice of kernel has on our model results. Aside from the rectangular kernel, all charts appear _relatively_ similar. The triangular kernel may also fail to smooth the data appropriately while the optcosine and cosine may othersmooth the data. In my opinion, the Gaussian and Epanechnikov kernels preform the best. Although similar, I would choose the Epanechnikov kernel over all other kernels. 
