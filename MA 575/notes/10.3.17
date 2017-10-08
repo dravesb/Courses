@@ -1,0 +1,23 @@
+\documentclass{article} 
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{geometry}
+
+\title{MA 575}
+
+\author{Benjamin Draves}
+
+\date{October 3}
+
+\begin{document}
+\maketitle{}
+
+Recall we set up the MLR model in matrix notation as 
+
+\begin{equation}
+\matbf{Y} = \mathbf{X}\boldsymbol{\beta} + \mathbf{e}
+\end{equation}
+
+
+
+\end{document}

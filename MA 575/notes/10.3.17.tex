@@ -1,0 +1,98 @@
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 575: October 3}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 7 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+\newcommand{\bb}{{\boldsymbol{\beta}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+
+\begin{document}
+
+Recall we set up the MLR model in matrix notation as 
+\begin{equation}
+\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \mathbf{e}
+\end{equation}
+Using this formulation, we can write the OLS estimates of our coeffecients as \begin{equation}
+\widehat{\boldsymbol{\beta}} = \underset{b}{\arg\min}(\mathbf{\mathbf{Y}-\mathbf{Xb}})^{T}(\mathbf{\mathbf{Y}-\mathbf{Xb}})
+\end{equation}
+If $(\mathbf{X}^{T}\mathbf{X})$ is invertible, then we have the \textit{unique} solutions of $\widehat{\boldsymbol{\beta}}$ as 
+\begin{equation}
+\widehat{\boldsymbol{\beta}} = (\mathbf{X}^{T}\mathbf{X})^{-1}\mathbf{X}^{T}\mathbf{Y}
+\end{equation}
+We now look to investigate the bias and variance of this estimate. Let $C = (\mathbf{X}^{T}\mathbf{X})^{-1}\mathbf{X}^{T}$. Using this, we see $$\E(\widehat{\bb}|\mathbf{X}) = \E(C\mathbf{Y}|X) = C\E(\mathbf{Y}|\mathbf{X}) = C\mathbf{X}\bb = (\mathbf{X}^{T}\mathbf{X})^{-1}\mathbf{X}^{T}\mathbf{X}\bb = \bb$$
+Using a similar argument, we have $$Var(\mathbf{Y}|\mathbf{X}) = CVar(\mathbf{Y}|\mathbf{X})C^{T} = CI_{\sigma^2}C^{T} = \sigma^2CC^{T}$$ Where $$CC^{T} = \Big[(\mathbf{X}^{T}\mathbf{X})^{-1}\mathbf{X}^{T}\Big]\Big[(\mathbf{X}^{T}\mathbf{X})^{-1}\mathbf{X}^{T}\big]^{T} = (\mathbf{X}^{T}\mathbf{X})^{-1}\mathbf{X}^{T}\mathbf{X}(\mathbf{X}^{T}\mathbf{X})^{-1} = (\mathbf{X}^{T}\mathbf{X})^{-1}$$
+So, under the assumption that $e\sim \mathcal{N}(0,I_{\sigma^2})$ we have 
+\begin{equation} 
+\widehat{\bb} \sim\mathcal{N}(\bb,\sigma^{2}(\mathbf{X}^{T}\mathbf{X})^{-1})
+\end{equation}
+
+\begin{theorem}
+(Gauss - Markov) Let $\ell = (\ell_1, \ldots, \ell_{p+1}\in\R^{p+1}$ and consider all the linear combinations of the form $\ell^{T}\bb$. Then for any $\ell\in\R^{p+1}$\begin{itemize}
+\item The OLS estimate of $\ell^{T}\bb$ is $\ell\widehat{\bb}$ 
+\item Among all \underline{unbiased, linear, estimates} of $\ell^{T}\bb$, $\ell^{T}\widehat{\bb}$ has the smallest variance. In this case, we call $\widehat{\bb}$ the \textbf{B}est \textbf{L}inear \textbf{U}nbiased \textbf{E}stimator (\textbf{BLUE})∫
+\end{itemize} 
+\end{theorem}
+
+\begin{proof}
+\begin{itemize}
+\item Assume there is an unbiased linear estimator $\widetilde{\bb}$ with lower variance.
+\item Write $\widehat{\bb} = \mathbf{CY}$ and $\widetilde{\bb} = \mathbf{(A+C)Y}$
+\item Show $Var(\widehat{\bb}) - Var(\widetilde{\bb})$ is positive definite
+\item Show $\E(\widetilde{\bb}|X) = \bb$ implies $\mathbf{AX} = 0$ and with this $Var(\widetilde{\bb}|\mathbf{X})$ implies $\mathbf{AA}^{T} = 0$
+\item Show $Var(\widetilde{\bb}) = Var(\widehat{\bb}) + \sigma^2\mathbf{AA}^{T}$ implies $-\sigma^2\mathbf{AA}^{T} P.D.$ 
+\item Show contradiction of P.D. and conclude. 
+\end{itemize}
+
+
+\end{proof}
+
+
+
+\end{document}

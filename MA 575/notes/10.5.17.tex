@@ -1,0 +1,89 @@
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 575: October 5}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 7 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+\newcommand{\bb}{{\boldsymbol{\beta}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+
+\begin{document}
+Today we focus on the geometry of least squares via projection mappings. Specifically, each data point, $\mathbf{x} = (x_1, \ldots, x_n)$ can be regarded as a point in $n$ dimensional space. We're interesting in the space of all linear combinations of the random variables $\mathbf{X_1, X_2, \ldots, X_p}$. First, 
+
+\[
+\overline{\mathbf{X}}^{*} = \begin{bmatrix}
+    \overline{x_{1}} & \overline{x_{2}}  & \dots  & \overline{x_{p}}\\
+    \vdots & \vdots & \vdots &  \vdots \\
+    \overline{x_{1}} & \overline{x_{2}} & \dots  & \overline{x_{p}}
+\end{bmatrix}\hspace{1em} \bb^{*} = \begin{bmatrix}\beta_1\\ \beta_2\\ \vdots \\ \beta_p\end{bmatrix} \hspace{1em} \mathbf{X}^{*} = \begin{bmatrix}
+    x_{11} & x_{21} &  \dots  & x_{p1} \\
+    x_{12} & x_{22} & \dots  & x_{p2} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    x_{1n} & x_{2n} & \dots  & x_{pn}
+\end{bmatrix}
+\]
+Then we can rewrite the mean corrected MLR model as \begin{equation}\mathbf{Y} = \alpha\cdot1 + (\mathbf{X}^{*} - \overline{\mathbf{X}}^{*})\bb^{*} + \mathbf{e}\end{equation} where $\alpha = \beta_0\cdot1 +\overline{\mathbf{X}}^{*}\bb^{*}$. One can show that $\widehat{\alpha} = \overline{y}$. So, roughly, we get \begin{equation}(y_i - \overline{y}) = (\mathbf{X}^{*} - \overline{\mathbf{X}}^{*})\bb^{*} + \mathbf{e}\end{equation}Call this model now \begin{equation}\mathcal{Y} = \mathcal{X}\bb^{*} + \mathbf{e}\end{equation} This gives rise to the OLS estimate of $\bb^{*}$ as $$\widehat{\bb^{*}} = (\mathcal{X}^{T}\mathcal{X})^{-1}\mathcal{X}^{T}\mathcal{Y}$$ This solution solves the problem $\underset{b}{\min}(\mathcal{Y} - \widehat{\mathcal{Y}})^{T}(\mathcal{Y} - \widehat{\mathcal{Y}})$ where $\mathcal{Y}$ \textit{must be in the column space of \textbf{X}}. Identically, we can consider this problem as \begin{equation}
+\underset{\widehat{y}\in col(\mathbf{X})}{\min}||\mathcal{Y} - \widehat{\mathcal{Y}}||_2^2
+\end{equation} We can achieve this minimization by choosing $\widehat{\mathcal{Y}}$ as the the point on the span of $\mathbf{X}$ closest to $\mathcal{Y}$. This corresponds to $\mathcal{Y}$'s projection onto $col(\mathbf{X})$. The projection map is given by \begin{equation}H = \mathcal{X}(\mathcal{X}^{T}\mathcal{X})^{-1}\mathcal{X}^{T}\end{equation} This gives a really nice interpretation, because then we see $e^{T}\widehat{\mathcal{Y}} = 0$ i.e. the residual space and the column space are orthogonal. Moreover, we have $$SSY = ||\mathcal{Y}||_2^2\hspace{3em} R^2 = 1 - \frac{||\mathbf{e}||_2^2}{||\mathcal{Y}||_2^2}$$ Moreover we can think of ANOVA in a much much cleaner sense. We can decompose the variance in $\mathcal{Y}$ by $$||\mathcal{Y}||_2^2 = ||\widehat{\mathcal{Y}}||_2^2 + ||\widehat{\mathbf{e}}||_2^2 = ||\widehat{\mathcal{Y}}||_2^2 + ||(I-H)\mathcal{Y}||_2^2$$ and think of degrees of freedom as simply dimensions of subspaces. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
