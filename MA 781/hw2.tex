@@ -1,0 +1,139 @@
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 781: HW2}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 7 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+\newcommand{\bb}{{\boldsymbol{\beta}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+
+\begin{document}
+
+\begin{enumerate}
+
+\item (4.44) Theorem 4.5.6, with $a=b=1$, serves as the base case of our inductive argument. Assume that the statement holds for $n>1$. That is, assume $$Var\bigg(\sum_{i=1}^{n}X_i\bigg) = \sum_{i=1}^{n}Var(X_i) + 2\sum_{1\leq i<j\leq n}Cov(X_i, X_j)$$ Now for the $n+1$ case we have \begin{align*}
+Var\bigg(\sum_{i=1}^{n+1}X_i\bigg) &= Var\bigg(\sum_{i=1}^{n}X_i + X_{n+1}\bigg)\\
+&= Var\bigg(\sum_{i=1}^{n}X_i\bigg) + Var(X_{n+1}) + 2Cov\bigg(\sum_{i=1}^{n}X_i, X_{n+1}\bigg)\hspace{2em}(4.5.6)\\
+&= \sum_{i=1}^{n+1}Var(X_i) + 2\sum_{1\leq i<j\leq n}Cov(X_i, X_j) + 2Cov\bigg(\sum_{i=1}^{n}X_i, X_{n+1}\bigg)\hspace{2em}(Assumption)\\
+\end{align*}
+Now, first notice that we can rewrite the second term as $$2\sum_{1\leq i<j\leq n}Cov(X_i, X_j) = 2\sum_{j=2}^{n}\sum_{i=1}^{j-1}Cov(X_i, X_j)$$
+It should be clear that we simply need third term above proves the $j = n+1$ case in this sum. Consider the following.\begin{align*}
+Cov(\sum_{i=1}^{n}X_i, X_{n+1}) &= \E\Big(X_{n+1}\sum_{i=1}^{n}X_i\Big) - \E\Big(\sum_{i=1}^{n}X_i\Big)\E\left(X_{n+1}\right)\\
+&= \E\Big(\sum_{i=1}^{n}X_{n+1}X_i\Big) - \E\Big(\sum_{i=1}^{n}X_i\Big)\E\left(X_{n+1}\right)\\
+&= \sum_{i=1}^{n}\E\left(X_{n+1}X_i\right) - \sum_{i=1}^{n}\E\left(X_i\right)\E\left(X_{n+1}\right)\\
+&= \sum_{i=1}^{n}\Big[\E\left(X_{n+1}X_i\right) - \E\left(X_i\right)\E\left(X_{n+1}\right)\big]\\
+&= \sum_{i=1}^{n}Cov(X_i, X_{n+1})\\
+&= \sum_{j = n+1}^{n+1}\sum_{i = 1}^{j-1}Cov(X_i, X_j)
+\end{align*}Using this, we see 
+$$2\sum_{1\leq i<j\leq n}Cov(X_i, X_j) + 2 Cov(\sum_{i=1}^{n}X_i, X_{n+1})= 2\sum_{j=2}^{n+1}\sum_{i=1}^{j-1}Cov(X_i, X_j) = 2\sum_{1\leq i<j\leq n+1}Cov(X_i, X_j)$$ Hence $$Var\bigg(\sum_{i=1}^{n+1}X_i\bigg) = \sum_{i=1}^{n+1}Var(X_i) + 2\sum_{1\leq i<j\leq n+1}Cov(X_i, X_j)$$
+
+\item (4.63) Let $X = \log Z$. Then $X = \exp(Z)$. Recall that $\exp(\cdot)$ is a convex function so by Jensen's Inequality, we have $$\E(X) = \E(\exp(Z))\geq \exp(\E(Z)) = \exp(0) = 1$$ Therefore, $\E(X)\geq 1$
+
+\item (5.3) First note that $Y_i = 0 $ with probability $P(X_i\leq \mu) = F_{X}(\mu)$ and $Y_i = 1$ with probability $P(X_i>\mu) = 1 - F_{X}(\mu)$. This holds for all $1\leq i\leq n$ so assuming that we consider 1 as a ``success'' we have $Y_i\sim Bern(1-F_X(\mu)$. Hence for $Z = \sum_{i=1}^{n}Y_i$ we have that $Z \sim Binom(n, 1-F_X(\mu))$. 
+
+\item 
+\begin{enumerate}
+
+\item For $0<t<h$, the function $e^{tx}$ is nondecreasing and nonegative on $(0,\infty)$. Thus, using the Markov-Inequality, we have 
+
+$$P(X\geq a) \leq \frac{1}{e^{ta}}\E(e^{tX}) = e^{-ta}M_X(t)$$
+
+\item For $-h<t<0$, the function $e^{-tx}$ is nondecreasing and nonnegative on $(0,\infty)$. Again, using the Markov-Inequality, we have 
+
+$$P(X\leq a) = P(-X\geq -a) = \frac{1}{e^{ta}}\E(e^{tX}) = e^{-ta}M_X(t)$$
+
+\end{enumerate} 
+
+\item 
+\begin{enumerate}
+
+\item Suppose $g(t) = t^2 + \sigma^2$. Then $g(t)$ is nonegative and nondecreasing on $(0,\infty)$, using the Markov-Inequality we have $$P(X\geq a)\leq \frac{1}{a^2 + \sigma^2}\E(X^2 +\sigma^2) = \frac{\sigma^2}{a^2 + \sigma^2}$$
+
+\item asdf
+
+\end{enumerate}
+
+\item 
+
+\item 
+\begin{enumerate}
+
+\item Yes. Consider $X\sim N(0,1)$ and $Y = X^2$. Then $$Cov(X,Y) = Cov(X,X^2) = \E(X^3) - \E(X^2)\E(X) = \E(X^3)$$ Then using the moment generating function of a standard normal, we see $$\frac{\partial^3}{\partial t^3}\exp(1/2t^2)\Big\vert_{t=0} = t\exp(1/2t^2) + 2t\exp(1/2t^2) + t^3\exp(1/2t^2)\Big\vert_{t=0} = 0$$
+
+\item No. 
+
+\end{enumerate}
+
+\item 
+\begin{enumerate}
+\item Let $Y_1, Y_2\overset{iid}{\sim} F_{Y}(y)$. Let $M = \max(Y_1, Y_2)$ and let $m$ be the median of $F_{Y}(y)$. Then $M$ is the largest order statistic and has cumulative distribution function $G_{M}(t) = (F_Y(t))^2$. Using this, we can calculate the desired probability $$P(M>m) = 1 - P(M\leq m) = 1 - G_M(m) = 1 - (F_Y(m))^2 = 1 - (1/2)^2 = \frac{3}{4}$$ Here, the fourth equality used the fact that $m$ was the median of $F_Y(y)$.
+
+\item Now, let $Y_1, Y_2, \ldots, Y_n\sim F_{Y}(y)$, $M = \max(Y_i)_{i=1}^{n}$, and m be the median of $F_Y(y)$. Then $M$ has CDF $G_{M}(t) = (F_y(t))^n$. With this, we can compute the desired probability.
+
+$$P(M>m) = 1 - P(M\leq m) = 1 - G_{M}(m) = 1 - (F_Y(m))^n = 1 - (1/2)^n$$
+
+\end{enumerate}
+
+\item Recall that if $Y_k$ is the $kth$ order statistic of $X_1, X_2, \ldots, X_n$ then $U_k =F_X(Y_k)$ is the $kth$ order statistic of a sample of size $n$ from a Uniform on $[0,1]$. Now recall that the distribution of the $kth$ order statistic is given by the following 
+\begin{align*}
+g_{U_k}(y) &=\frac{n!}{(k-1)!(n-k)!}F_{U}(y)^{k-1}(1-F_{U}(y))^{n-k}\\	
+&= \frac{\Gamma(n+1)}{\Gamma(k)\Gamma(n-k+1)}y^{k-1}(1-y)^{n-k}
+\end{align*} which we recogonize as the Beta density function with parameters $(k,n-k+1)$. Hence, we can use the form $\E\big[F(Y_k)^2\big] = Var(F(Y_K)) + \E(F(Y_k))^2$ to find the desired value. 
+
+\begin{align*}
+\E\big[F(Y_k)^2\big] &= \frac{k(n-k+1)}{(n+1)^2(n+2)} + \frac{k^2}{(n+1)^2}\\
+\vspace{.3em}\\
+&= \frac{k(n-k+1) + k^2(n+2)}{(n+1)^2(n+2)}
+\end{align*} 
+
+\end{enumerate}
+
+
+
+\end{document}
