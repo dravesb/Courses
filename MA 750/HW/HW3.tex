@@ -1,0 +1,138 @@
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=0.75in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 750: HW3}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 8 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+\newcommand{\bb}{{\boldsymbol{\beta}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+
+\begin{document}
+
+\begin{enumerate}
+
+\item The optimal bandwidth for a kernel density estimate, $h_{norm}$, is given by $$h_{norm} = \Big(\frac{||K||_{2}^2}{||f^{''}||_2^2\mu_{2}^{2}(K)}\Big)^{-1/5}n^{-1/5}$$ Notice that this choice is dependent on the underlying distribution $f$ (the very thing we are trying to estimate). One method to choose the optimal bandwidth is assume $f$ is approximately normal with standard deviation $\sigma^2$. First, we collect some results that will be helpful in our derivation. If $f$ is the kernel of $N(0,\sigma^2)$ and $\phi$ is the kernel of $N(0,1)$
+
+$$f^{''}(x) = \frac{x^2-\sigma^2}{\sqrt{2\pi}\sigma^5}e^{-x^2/2\sigma^2}\hspace{3em}\phi^{''}(x) =\frac{x^2 -1}{\sqrt{2\pi}}e^{-x^2/2} $$
+
+$$||f^{''}||_2^2 = \int (f^{''}(x))^2dx = \int \bigg(\frac{x^2-\sigma^2}{\sqrt{2\pi}\sigma^5}e^{-x^2/2\sigma^2}\bigg)^2dx$$
+
+Now completing a substituion $z = x/\sigma$, $\sigma dz = dx$ we have 
+
+$$ = \int \bigg(\frac{z^2-1}{\sqrt{2\pi}\sigma^3}e^{-z^2/2}\bigg)^2\sigma dz = \frac{\sigma}{\sigma^6}\int \bigg(\frac{z^2-1}{\sqrt{2\pi}}e^{-z^2/2}\bigg)^2dz = \sigma^{-5}||\phi^{''}||_2^2$$
+
+Now to evaluate $||\phi^{''}||_2^2$ consider the following 
+
+\begin{align*}
+\sigma^{-5}\int\big(\phi(z)^{''}\big)^2dz &= \frac{1}{2\pi\sigma^5}\int (z^2-1)^2e^{-z^2}dz\\
+&=  \frac{1}{2\pi\sigma^5}\int(z^4 -2z^2 + 1)e^{-z^2}dz\\
+&= \frac{\sqrt{1/2}}{\sqrt{2\pi}\sigma^5}\frac{1}{\sqrt{2\pi}\sqrt{1/2}}\bigg(\int z^4e^{-z^2}dz -2 \int z^2e^{-z^2}dz + \int e^{-z^2}dz\bigg)
+\end{align*}
+We recognize each intengrad and the kernel of a normal random variable with mean zero variance $1/2$, $N(0,1/2))$. Seeing the distribution is mean zero, we see the three terms in the sum are the Kurtosis (which we find via the MGF), Variance, and density respectively. Thus, 
+
+$$ = \frac{1}{2\sqrt{\pi}\sigma^5}\Big(\frac{3}{4} - 2\cdot\frac{1}{2} + 1\Big) = \frac{3\sigma^{-5}}{8\sqrt{\pi}}$$
+
+Note further for the standard normal kernel $K$, we have the following 
+$$||K||_2^2 = \frac{1}{2\pi}\int e^{-x^2}dx = \frac{\sqrt{1/2}}{\sqrt{2\pi}}\frac{1}{\sqrt{2\pi}\sqrt{1/2}}\int e^{-x^2}dx = \frac{1}{2\sqrt{\pi}}$$
+where the third equality is due to the fact that the integral is simply the kernel of a Guassian random variable with mean zero and variance $1/2$. Now lastly, since $K$ is mean zero, we see that $\mu_2(K) = 1$, the variance of $K$. Moreover, $\mu_{2}^2(K) = 1$. Using all of these equations, we have 
+
+$$h_{norm} = \bigg(\frac{1/2\sqrt{\pi}}{\frac{3}{8}\sigma^{-5}\sqrt{\pi}}\bigg)^{-1/5}n^{-1/5} = (4/3)^{-1/5}\sigma^{-1/5}\approx 1.06\hat{\sigma}n^{-1/5}$$
+
+
+\item First consider the following equality.  
+$$
+\E(||\widehat{f^{''}_{h}}||_2^2) = \E\Big[\int\bigg(\frac{1}{nh^3}\sum_{i=1}^{n}K^{''}\big(\frac{x_i - x}{h}\big)\bigg)^2dx\Big] =\frac{1}{n^2h^6}\int \E\Big[\Big(\sum_{i=1}^n K^{''}\big(\frac{x_i-x}{h}\big)\Big)^2\Big]dx$$
+Now rewriting this sum in terms of variances, we have 
+\begin{align*}
+&= \frac{1}{n^2h^6}\int Var\Big(\sum_{i=1}^{n}K^{''}\big(\frac{X_i - x}{h}\big)\Big)dx + \frac{1}{n^2h^6}\int \Big[\E\big(\sum_{i=1}^{n}K^{''}\big(\frac{X_i-x}{h}\big)\big)\Big]^2dx\\
+&\overset{iid}{=}\frac{1}{nh^6}\int Var\Big(K^{''}\big(\frac{X - x}{h}\big)\Big)dx + \frac{1}{h^6}\int \Big[\E\big(K^{''}\big(\frac{X-x}{h}\big)\big)\Big]^2dx\\
+&= \frac{1}{nh^6}\int\int \Big[K^{''}\big(\frac{w - x}{h}\big)-\mu(K^{''})\Big]^2f(w)dwdx + \frac{1}{nh^6}\int\Big[\int K^{''}\big(\frac{w - x}{h}\big)f(w)dw\Big]^2dx\\
+&= \frac{1}{nh^5}\int\int (K^{''}(z))^2f(x+zh)dzdx +\frac{1}{nh^4}\int \Big[\int K^{''}(z)f(x+zh)dw\Big]^2dx\\
+&=\frac{1}{nh^5}\int\int (K^{''}(z))^2\Big\{f(x) + O(h)\Big\}dzdx +\frac{1}{nh^4}\int \Big[\int K^{''}(z)f(x+zh)dw\Big]^2dx\\
+\end{align*}
+
+Now for the second part of this equation, we can integrate by parts twice to achieve the desired result. We integrated in such a manor in the previous HW assignment and found $$\frac{1}{h^2}\int K^{''}(z)f(x-zh)dz = \int K(z)f^{''}(x-zh)dz$$ Using this result, we have 
+
+\begin{align*}
+&=\frac{1}{nh^5}\int\int (K^{''}(z))^2\Big\{f(x) + O(h)\Big\}dzdx +\frac{1}{h^4}\int\Big[h^2\int K(z)f^{''}(z-zh)dz\Big]^2\\
+&= \frac{||K^{''}||_2^2}{nh^5}\int f(x)dx + O(h)+ \int\Big[\int K(z)\big\{f^{''}(x) + O(h)\big\}dz\Big]^2dx\\
+& = \frac{||K^{''}||_2^2}{nh^5} + O(h) + \int (f^{''}(x))^2\Big[\int K(z)dz\Big]^2 + O(h^2)\\
+&= ||f^{''}||_2^2 + \frac{||K^{''}||_2^2}{nh^5}  + O(h^2)
+\end{align*}
+
+\item 
+\begin{align*}
+\E(\widehat{f}(0)) & = \E\Big[\frac{1}{nh}\sum_{i = 1}^{n}K\big(\frac{x_i - 0}{h}\big)\Big]\\
+&\overset{iid}{=} \frac{1}{h}\E\Big[K\big(\frac{X}{h}\big)\Big]\\
+&= \frac{1}{h}\int_{0}^{1}K(x/h)f(x)dx\\
+&\overset{z-sub}{=} \int_{0}^{1/h}K(z)f(z)dz\\
+&\overset{taylor}{=} \int_{0}^{1/h}K(z)\Big\{f(0) + O(h)\Big\}dz
+\end{align*}
+
+Recall that as $n\to\infty$, $h\to 0$ albeit at a slower rate. Thus we see that $$\lim_{h\to 0}\E(\widehat{f}(0))= \lim_{h\to\infty}f(0)\int_{0}^{1/h}K(z)dz + O(H) = f(0)\int_{0}^{\infty}K(z)dz = \frac{f(0)}{2}$$
+
+Thus we see that even asymptotically, $\hat{f}$ is biased at the boundaries. This implies that even as we collect more data, the boundary estimates will be biased. In addition, under the kernel density procedure, the mass that is not allocated to the boundary positions will be allocated to other estimates near the boundary. This, means that biased estimates at the boundary will negatively impact estimates throughout the range of the density. 
+
+\item In both papers, the concept of developing an ``oversmoothed" bandwidth selection procedure introduced by Terrel and Scott (1985) and Terrell (1990) was introduced. The authors attempt to find an upper bound on how smooth the density estimate while simultaneousness accounting for asymptotic mean integrated square error (AMISE). They find this oversmoothed bandwidth by finding $\hat{f''}$ that minimizes $||f^{''}||_2^2$. For a given kernel (with variance $\sigma^2$) $\hat{f''}$maximizes the equation 
+$$h_{AMISE} = \Big[\frac{||K||_2^2}{\mu(K)^2||f^{''}||_2^2}\Big]^{1/5}n^{-1/5}$$ 
+
+Heuristically, this method is accounting for a ``worst case'' underlying density $f$. $||f''||_2^2$ measures the roughness of the density in question. By maximizing our estimate of $||\hat{f''}||_2^2$ we account for the most wiggly density to set an upper bound for the behavior of $f$. 
+
+Terrell (1990) go on to show that $\hat{f''}$ that minimizes $||\hat{f^{''}}||_2^2$ corresponds to the parameter family $\beta(4,4)$. Moreover, using a normal kernel, they show that the optimal ``oversmoothed'' bandwidth is given by $h_{os} = 1.144Sn^{-1/5}$ where $S$ is the sample standard deviation. Here, we see that this estimate is in fact larger than most estimates (such as the one found in problem 1). This method is specifically very useful as a starting point for choosing an optimal $h$. Many data-dependent cross validation schemes require searching over a candidate set $\mathcal{H}$. By finding a type of upper bound for optimal parameter selection, practitioners can more effectively choose their candidate set $\mathcal{H}$. This has great implications in both computational efficiency (smaller $\mathcal{H}$ implies shorter search) as well as restricts the problem to a simpler class of density estimates. 
+
+Another interesting topic covered in the Sheather survey is one of Local Likelihood Density estimates. This method was specifically introduced to overcome the boundary problem we discussed in class. We solved the problem by combining two kernels. Here, they fit local models in a neighborhood of $x$ of the form $$\psi(u) = \exp\Big[\sum_{i=1}^{p}\theta_j(u-x)^{j}\Big]$$ where the $\theta_j$ are fit via maximum likelihood. By changing the number of parameters fit (p increases) we can effectively remove the boundary bias for $p>1$. For $p=1$ we still see there is asymptotic bias (as in problem 3) but remove the bias thereafter. 
+
+On the surface this approach seems preferable to nonparametric boundary kernels - the rate of convergence is better, there is no boundary bias, and the model itself is simpler. However, in the case that there are few boundary points, Hall and Toa (2002) note that the nonparametric approach is preferable to the log-polynomial model in terms of Integrated Square Bias (ISB). This again shows the flexibility of nonparametric methods. Given that we do not know the underlying distribution, and thus do not understand its boundary behavior, the nonparametric model can be preferable to the parametric model in some cases. Moreover, as $p$ increases, we need to solve more complex systems of equations. This implies that even the nonparametric method may have comparable computational performance and the parametric model. 
+
+
+
+\end{enumerate}
+
+
+\end{document}

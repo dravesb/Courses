@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  11 OCT 2017 22:14
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  18 OCT 2017 11:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**hw2.tex
-(./hw2.tex
+**HW5.tex
+(./HW5.tex
 LaTeX2e <2017-04-15>
 Babel <3.10> and hyphenation patterns for 84 language(s) loaded.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/article.cls
@@ -812,24 +812,24 @@ Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
 \c@theorem=\count193
 \c@definition=\count194
 
-(./hw2.aux)
-\openout1 = `hw2.aux'.
+(./HW5.aux)
+\openout1 = `HW5.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-Package ragged2e Info: ABD: executing \RaggedRight on input line 56.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+Package ragged2e Info: ABD: executing \RaggedRight on input line 55.
  ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 56.
+LaTeX Info: Redefining \selectfont on input line 55.
 
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -899,14 +899,14 @@ ABD: EveryShipout initializing macros
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
-* h-part:(L,W,R)=(54.2025pt, 505.89pt, 54.2025pt)
-* v-part:(T,H,B)=(54.2025pt, 686.56499pt, 54.2025pt)
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
 * \paperwidth=614.295pt
 * \paperheight=794.96999pt
-* \textwidth=505.89pt
-* \textheight=686.56499pt
-* \oddsidemargin=-18.06749pt
-* \evensidemargin=-18.06749pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
 * \topmargin=-28.90755pt
 * \headheight=12.0pt
 * \headsep=25.0pt
@@ -925,23 +925,15 @@ ABD: EveryShipout initializing macros
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Font Info:    Try loading font information for U+msa on input line 60.
+LaTeX Font Info:    Try loading font information for U+msa on input line 57.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 60.
+LaTeX Font Info:    Try loading font information for U+msb on input line 57.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (1.68767pt too wide) detected at line 74
-\OT1/cmr/m/n/12 2 [] \OML/cmm/m/it/12 Cov\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 X[];
- X[]\OT1/cmr/m/n/12 ) + 2\OML/cmm/m/it/12 Cov\OT1/cmr/m/n/12 ([] \OML/cmm/m/it/
-12 X[]; X[]\OT1/cmr/m/n/12 ) = 2 [] [] \OML/cmm/m/it/12 Cov\OT1/cmr/m/n/12 (\OM
-L/cmm/m/it/12 X[]; X[]\OT1/cmr/m/n/12 ) = 2 [] \OML/cmm/m/it/12 Cov\OT1/cmr/m/n
-/12 (\OML/cmm/m/it/12 X[]; X[]\OT1/cmr/m/n/12 )
- []
-
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 14.49998pt.
@@ -951,42 +943,47 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 [1{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 ]
-[2]
-Overfull \hbox (23.66861pt too wide) in paragraph at lines 124--125
-[]\OT1/cmr/m/n/12 Note that the third equal-ity used the fact that all terms in
- $[]$ are con-stants ex-pect the $[]\OML/cmm/m/it/12 X$ 
+[2] [3] [4] [5]
+Overfull \hbox (26.19373pt too wide) in paragraph at lines 106--107
+\OT1/cmr/m/n/12 Using this, show that if $\OML/cmm/m/it/12 Y[] \OMS/cmsy/m/n/12
+ ^^X$\OT1/cmr/m/n/12 Pois$(\OML/cmm/m/it/12 ^^U[]\OT1/cmr/m/n/12 )$ and $\OML/c
+mm/m/it/12 Y[] \OMS/cmsy/m/n/12 ^^X$\OT1/cmr/m/n/12 Pois$(\OML/cmm/m/it/12 ^^U[
+]\OT1/cmr/m/n/12 )$ are in-de-pen-dent, then $\OML/cmm/m/it/12 Y[] \OT1/cmr/m/n
+/12 + \OML/cmm/m/it/12 Y[] \OMS/cmsy/m/n/12 ^^X$\OT1/cmr/m/n/12 Pois$(\OML/cmm/
+m/it/12 ^^U[] \OT1/cmr/m/n/12 + 
  []
 
-
-Overfull \hbox (7.75961pt too wide) in paragraph at lines 140--140
+[6]
+Overfull \hbox (44.69458pt too wide) in paragraph at lines 138--138
 []  
  []
 
-[3] [4] [5] (./hw2.aux) ) 
+[7] [8] (./HW5.aux) ) 
 Here is how much of TeX's memory you used:
- 30362 strings out of 492995
- 695435 string characters out of 6132704
- 747258 words of memory out of 5000000
- 33552 multiletter control sequences out of 15000+600000
- 8632 words of font info for 33 fonts, out of 8000000 for 9000
+ 30366 strings out of 492995
+ 695473 string characters out of 6132704
+ 742262 words of memory out of 5000000
+ 33554 multiletter control sequences out of 15000+600000
+ 9213 words of font info for 35 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 61i,13n,69p,10377b,358s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2017/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmex10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmmi12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmmi6.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmmi8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmr12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmr6.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmr8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/c
-msy10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-sy8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti
-12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/symbols/
-msbm10.pfb>
-Output written on hw2.pdf (5 pages, 129876 bytes).
+ 61i,13n,69p,10377b,275s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmbx12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmbx8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmex10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmmi12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmi6.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmmi8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r6.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.
+pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.p
+fb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb
+></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10
+.pfb>
+Output written on HW5.pdf (8 pages, 135461 bytes).
 PDF statistics:
- 67 PDF objects out of 1000 (max. 8388607)
- 48 compressed objects within 1 object stream
+ 82 PDF objects out of 1000 (max. 8388607)
+ 59 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

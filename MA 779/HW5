@@ -1,0 +1,154 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 779: Probability 1}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 7 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+
+\textbf{Question 4.1} For $a,b\in\R$ and \textit{any} integrable random variables $X$ and $Y$ show $$\E(aX+bY) = a\E(X) + b\E(Y)$$
+\textbf{Solution:} Recall that we first required that either $\E(aX+bY)^{+}<\infty$ or $\E(aX+bY)^{-}<\infty$. Notice by the triangle inequality we have$$\E(aX+bY)\leq \E|aX+bY|\leq \E(|aX|+|bY|)\leq \E(|a||X|+|b||Y|)\leq |a|\E|X| + |b|\E|Y|<\infty$$where the fourth inequality is justified because $|X|,|Y|\geq0$ and the last inequality is justified by the fact that $X$ and $Y$ are integrable random variables. Next we will show $\E(X+Y) = \E X + \E Y$. $$\E(X+Y) = \E(X+Y)^{+} -\E(X+Y)^{-} = \E X^{+}+\E Y^{+} - \E X^{-} -\E Y^{-} = \E X + \E Y$$ where the third equality comes from the fact that $X^{+},X^{-},Y^{+},Y^{-}\geq 0$. Now for $a,b\in\R$. We have \begin{align*}
+\E(aX+bY) = \E(aX) + \E(bY) &= \E(aX)^{+} -\E(aX)^{-} + \E(bY)^{+} -\E(bY)^{-}\\
+&= a\E(X)^{+} -a\E(X)^{-} + b\E(Y)^{+} -b\E(Y)^{-}\\
+&= a\left(\E(X)^{+} -\E(X)^{-}\right) + b\left(\E(Y)^{+} -\E(Y)^{-}\right)\\
+&= a\E X + b\E Y
+\end{align*}
+Where the first equality is justified above and the third equality comes from the fact that $(aX)^{+},(aX)^{-},(bY)^{+},(bY)^{-}\geq 0$
+\newpage
+
+\textbf{Question 4.2} Let $X_n\geq0$ be a sequence of random variables such that $X_n\searrow X$. Show if $\E|X_1|<\infty$, then $\E X_n\searrow\E X$.   
+
+\textbf{Solution:} First define $Y_n = 2X - X_n$. Then $$\lim_{n\to\infty} Y_n = \lim_{n\to\infty} (2X-X_n) = 2X - \lim_{n\to\infty} X_n = 2X-X = X$$ Moreover, since $X_n$ is a decreasing sequence, then $Y_n$ is an increasing sequence. Thus, by the Monotone Convergence Theorem $\E Y_n\nearrow \E X$. This yields 
+\begin{align*}
+\E X &= \lim_{n\to\infty}\E Y_n\\
+\E X &= \lim_{n\to\infty}\E(2X-X_n)\\
+\E X &= \lim_{n\to\infty}\left(2\E X-\E X_n\right)\\
+\E X &= 2\E X-\lim_{n\to\infty}\E X_n\\
+\E X &=\lim_{n\to\infty}\E X_n
+\end{align*}
+Since $X_n$ is a decreasing sequence, then $\E X_n$ is also a decreasing sequence. Hence, we see $\E X_n\searrow\E X$. 
+\newpage
+
+\textbf{Question 4.3} Suppose $\E|X|<\infty$ where $F_X$ is the CDF of $X$. Show $$\E X = \int_{\Omega}XdP = \int_{\R}xdF(x)$$
+\textbf{Solution:} First, suppose that $X$ is an indicator random variable for the set $A\in\mathcal{F}$. Then $\E(X) = \E(I_{A}(x)) = P(A)$. Moreover
+$$\int_{\Omega}XdP = \int_{\Omega}I_{A}(d)dP = 1*P(A) + 0*P(\Omega\setminus A) = P(A)$$ Now recall that for each distribution function $F$ there exists a measure $\mu_{F}$ such that$\mu((a,b]) = F(b)-F(a)$. Furthermore, we have $$\mu((a,b]) = F(b)-F(a) = P(X\in(a,b]) = P_{X}((a,b])$$ Using this we can write $$\int_{\R}xdF(X) = \int_{\R}I_{A}(x)dF(x)=\int_{\R}I_{A}(x)\mu_{F}(dx)=\int_{A}dP_{X} =P(A)$$
+
+Next, suppose that $X = \sum_{k=1}^{n}a_kI_{A_k}(x)$ is a simple function with respect to the partition $\{A_k: k =1,2,\ldots\}$. Then $\E(X) = \sum_{k=1}^{n}a_kP(A_k)$ by definition. Moreover, $$\int_{\Omega}XdP = \int_{\Omega}\sum_{k=1}^{n}a_kI_{A_k}(x)dP = \sum_{k=1}^{n}a_k\int_{\Omega}I_{A_k}(x)dP = \sum_{k=1}^{n}a_kP(A_k)$$ where the last equality was justified above. Lastly we have $$\int_{\R}xdF(x) = \int_{\R}\sum_{k=1}^{n}a_kI_{A_k}(x)dF(x) = \sum_{k=1}^{n}a_k\int_{\R}I_{A_k}(x)dF(x) = \sum_{k=1}^{n}a_kP(A_k)$$
+
+Now, suppose that $X$ is a nonnegative random variable. Then there exists a sequence of simple, nonnegative random variables $\{X_n\}_{n=0}^{\infty}$ with $X_n\nearrow X$. Then for any fixed $n$ we have from above $$\E X_n = \int_{\Omega}X_ndP = \int_{\R}xF(X_n)$$ Notice that since all $X_n\geq 0$, that each term in this equality is positive and \textit{increasing in n}. Hence we can apply the Monotone Convergence Theorem. Letting $n\to\infty$ we have $\lim_{n\to\infty}\E X_n = \E X$. Moreover $$\lim_{n\to\infty}\int_{\Omega}X_ndP = \int_{\Omega}\lim_{n\to\infty}X_ndP = \int_{\Omega}XdP$$ and lastly $$\lim_{n\to\infty}\int_{\R}xdF(X_n) = \int_{\R}\lim_{n\to\infty}xdF(X_n) = \int_{\Omega}xdF(X)$$
+
+Finally, suppose that $X$ is any random variable. Then $X = X^{+}-X^{-}$. Since $X^{+},X^{-}\geq 0$ we have $$\E X^{+} = \int_{\Omega}X^{+}dP = \int_{\R}xdF(X^{+})$$
+$$\E X^{-} = \int_{\Omega}X^{-}dP = \int_{\R}xdF(X^{-})$$
+Seeing both $X^{+}$ and $X^{-}$ are integrable we can subtract these two equations which yields 
+$$\E X^{+}-\E X^{-} = \int_{\Omega}X^{+}dP-\int_{\Omega}X^{-}dP = \int_{\R}xdF(X^{+})-\int_{\R}xdF(X^{-})$$
+Now notice that each operation above (Expectation, Lebesgue Integration, Riemann–Stieltjes Integration) have the linearity property. Thus we see 
+$$\E X^{+}-X^{-} = \int_{\Omega}(X^{+}-X^{-})dP = \int_{\R}xdF(X^{+}-X^{-})$$
+
+$$\E X = \int_{\Omega}XdP = \int_{\R}xdF(X)$$
+For part b, we follow (almost identically), the same steps as above. Let $g(X) = I_A(X)$. Then by definition, $\E g(X) = \E I_A(X) = P(A)$. Moreover, we have 
+
+$$\int_{\Omega} g(X)dP = \int_{\Omega}I_A(X)dP = 1\cdot P(A) + 0\cdot P(\omega\setminus A) = P(A)$$ Lastly, as above due to one-to-one correspondence between $F(x)$ and Lebesgue measure on the real line we have 
+$$\int_{\R}g(X)dF(x) = \int_{\R}I_A(x)dF(x) = \int_{\R}I_A(x)\mu_{F}(dx) = \int_{A}dP_X = P(A)$$. 
+
+Now let $g(X) = \sum_{k=1}^{n}a_kI_{A_k}(x)$ be a simple function with partition $\{A_k:k=1,\ldots,n\}$. Then $\E(g(X)) = \sum_{k=1}^{n}a_kP(A_k)$ by definition. Moreover, we have 
+
+$$\int_{\Omega}g(X)dP = \int_{\Omega}\sum_{i=1}^{n}a_kI_{a}dP = \sum_{i=1}^{n}a_k\int_{\Omega}I_{A_k}dP = \sum_{i=1}^{n}a_kP(A_k)$$
+Lastly we have $$\int_{\R}g(X)dF(x) = \int_{\R}\sum_{k=1}^{n}a_kI_{A_k}(x)dF(x) = \sum_{k=1}^{n}a_k\int_{\R}I_{A_k}(x)dF(x) = \sum_{k=1}^{n}a_kP(A_k)$$
+
+Now, suppose $g(X)$ be a nonnegative random variable. Then there exists a a sequence $g(X)_n$ such that $g(X)_n\nearrow g(X)$. So for some $k$ we have 
+
+$$\E g(X)_n = \int_{\Omega}g(X)_ndP = \int_{\R}g(x)F(X)_n$$ Again notice that each term in this sequence is increasing in $n$ and bounded above. Hence by Monotone convergence in all three cases we have 
+
+$$\lim_{n\to\infty}\E g(X)_n = \lim_{n\to\infty}\int_{\Omega}g(X)_ndP = \lim_{n\to\infty}\int_{\R}g(x)F(X)_n$$
+
+$$\E \lim_{n\to\infty} g(X)_n = \int_{\Omega}\lim_{n\to\infty} g(X)_ndP = \int_{\R}\lim_{n\to\infty}g(x)F(X)_n$$
+
+$$\E g(X) = \int_{\Omega}g(X)dP = \int_{\R}g(x)F(X)$$
+
+Finally, suppose that $g(X)$ is any random variable. Then $g(X) = g(X)^{+}-g(X)^{-}$. Since $g(X)^{+},g(X)^{-}\geq 0$ we have $$\E g(X)^{+} = \int_{\Omega}g(X)^{+}dP = \int_{\R}g(x)dF(X^{+})$$
+$$\E g(X)^{-} = \int_{\Omega}g(X)^{-}dP = \int_{\R}g(x)dF(X^{-})$$
+Seeing both $g(X)^{+}$ and $g(X)^{-}$ are integrable we can subtract these two equations which yields 
+$$\E g(X)^{+}-\E g(X)^{-} = \int_{\Omega}g(X)^{+}dP-\int_{\Omega}g(X)^{-}dP = \int_{\R}g(x)dF(X^{+})-\int_{\R}g(x)dF(X^{-})$$
+Now notice that each operation above (Expectation, Lebesgue Integration, Riemann–Stieltjes Integration) have the linearity property. Thus we see 
+$$\E g(X)^{+}-g(X)^{-} = \int_{\Omega}(g(X)^{+}-g(X)^{-})dP = \int_{\R}g(x)dF(X^{+}-X^{-})$$
+
+$$\E g(X) = \int_{\Omega}g(X)dP = \int_{\R}g(x)dF(X)$$
+\newpage
+
+\textbf{Question 4.4} Show that the requirement that $X_n\geq 0$ in Fatou's Lemma can be replaced by $X_n\geq Z$ so long as $\E Z>-\infty$ 
+
+\textbf{Solution:} Consider $X_n -Z\geq 0$. Then this is a sequence of nonnegative random variables. Applying Fatou's Lemma, we see 
+\begin{align*}
+\E\lim\inf(X_n-Z)&\leq\lim\inf\E(X_n-Z)\\
+\E\big[\lim\inf(X_n)-Z\big]&\leq\lim\inf\big[\E(X_n)-\E Z)\big]\\
+\E\lim\inf(X_n)-\E Z&\leq\lim\inf\E(X_n)-\E Z\\
+\E\lim\inf(X_n)&\leq\lim\inf\E(X_n)\\
+\end{align*}
+where we use linearity of expectation in the second and third line. The cancellation in the last line is justified because $\E Z>-\infty$. 
+\newpage
+
+\textbf{Question 4.5} Show if $|X_n|\leq Z$ with $\E Z<\infty$ then $$\E\lim\inf X_n\leq \lim\inf\E X_n \leq \lim\sup\E X_n\leq \E\lim\sup X_n   $$
+\textbf{Solution:} First note that $|X_n|\leq Z$ implies $-Z\leq X_n\leq Z$ for all $n$. Further note $\E Z<\infty$ so $\E(-Z)>\infty$. Having this, we can apply the result from 4.4 and have $\E(\lim\inf X_n)\leq \lim\inf\E(X_n)$. 
+
+Now notice that $\E(X_n)$ is just a sequence of numbers. Hence for properties of $\lim\inf$ and $\lim\sup$ \textit{of numbers}, we see that $\lim\inf(\E(X_n))\leq \lim\sup(\E(X_n))$. 
+
+Lastly, consider the sequence $Z - X_n\geq 0$. Recall that by definition $\lim\inf$ is an increasing operation. Now, since $Z$ is independent of $n$ and $\lim\sup$ is a decreasing operation, we have $\lim\inf(Z - X_n) = Z - \lim\sup(X_n)$. Moreover, since expectation is linear, we also have $\lim\inf(\E(Z) - \E(X_n)) = \E(Z) - \lim\sup(\E(X_n))$. Now, applying Fatou's Lemma, we have 
+\begin{align*}
+\E(\lim\inf(Z-X_n)) &\leq \lim\inf(\E(Z - X_n))\\
+\E(Z-\lim\sup(X_n)) &\leq \lim\inf(\E(Z) - \E (X_n))\\
+\E(Z)-\E(\lim\sup(X_n)) &\leq \E(Z) - \lim\sup(\E (X_n))\\
+\E(\lim\sup(X_n))) &\geq  \lim\sup(\E X_n))\\
+\end{align*}
+where the last cancellation is due to the fact $\E(Z)<\infty$. Putting these three parts together we are left with $$\E\lim\inf X_n\leq \lim\inf\E X_n \leq \lim\sup\E X_n\leq \E\lim\sup X_n $$
+
+
+\end{document} 
+

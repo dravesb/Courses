@@ -1,0 +1,144 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 781: HW3}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 7 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+\begin{enumerate}
+
+\item Let $X_1, X_2, \ldots, X_n$ be a random sample from $X\sim f(x) = e^{-(x-\theta)}I_{(\theta,\infty)}(x)$. Let $Y_n = \min\{X_1, X_2, \ldots, X_n\}$. Then $Y_n$ is the first order statistic of the random sample. Recall that the density of $Y_n$ is given by $f_{Y_n}(y) =1 - (1 - F_X(y))^n$. First we find $F_{x}(y)$. 
+$$F_{X}(y) = \int_{\infty}^{y}e^{-(x-\theta)}I_{(\theta, \infty)}dx = \int_{\theta}^{y}e^{-(x-\theta)}dx = \frac{1}{\theta}e^{-(x-\theta)}\bigg|_{\theta}^{y} = -e^{-(y-\theta)}  = 1 - e^{-(y-\theta)}$$
+Using this we see $$f_{Y_n}(y) = n(1 - 1 + e^{-(y-\theta)})^{n-1}e^{-(y-\theta)}I_{(\theta,\infty)}(y) = ne^{-n(y-\theta)}I_{(\theta,\infty)}(y)$$ Now, we are ready to show that $Y_n$ is a consistent point estimator of $\theta$. 
+
+\begin{align*}
+P(|Y_n - \theta|<\e) &= P(\theta - \e \leq Y_n \leq \theta + \e)\\
+&= P(\theta - \e \leq Y_n \leq \theta) + P(\theta \leq Y_n \leq \theta + \e)\\
+&= 0 + \int_{\theta}^{\theta+\e}f_{Y_n}(y)dy\\
+&= \int_{\theta}^{\theta+\e}ne^{-n(y-\theta)}I_{(\theta,\infty)}(y)dy\\
+&= n \int_{\theta}^{\theta + \e}e^{-n(y-\theta)}dy\\
+&= -e^{-n(y-\theta)}\bigg|_{\theta}^{\theta+\e}\\
+&= 1 - e^{-n\e}
+\end{align*}
+Now, letting $n\to\infty$ shows that $P(|Y_n - \theta|<\e) \to \lim_{n\to\infty}1 - e^{-n\e} = 1$. Thus our point estimator is consistent. 
+
+\item Let $f(x) = \frac{1}{2}(1+ \theta x)I_{(-1,1)}(x)$. Then for $X\sim f(x)$ the mean is given by $$\E(X) = \int_{\R}\frac{1}{2}x(1 + \theta x)I_{(-1,1)}(x)dx = \int_{-1}^{1}\frac{1}{2}(x+\theta x^2)dx = x^2 + \theta\frac{x^3}{6}\bigg |_{-1}^{1} = 1 + \frac{\theta}{6} - 1 + \frac{\theta}{6} = \frac{\theta}{3}$$
+Moreover we can find variance by the following $$\E(X^2) = \int_{\R}\frac{1}{2}x^2(1 + \theta x)I_{(-1,1)}(x)dx = \int_{-1}^{1}\frac{1}{2}(x^2+\theta x^3)dx =\frac{x^3}{6} + \theta\frac{x^4}{8}\bigg |_{-1}^{1} = \frac{1}{6} + \frac{\theta}{8} +\frac{1}{6} - \frac{\theta}{8} = \frac{1}{3}$$ This implies $$Var(X) = E(X^2) - E(X)^2 = \frac{1}{3} - \frac{\theta^2}{9} = \frac{3 - \theta^2}{9}$$
+
+Therefore, our candidate point estimate is $\widehat{\theta} = 3\overline{X}$. Recall that $\overline{X}$ is unbiased for the mean. Therefore $\E(\widehat{\theta}) = \E(3\overline{X}) = 3\frac{\theta}{3} = \theta$. So our estimate is unbiased. To see why our estimate is consistent in mean squared error, consider the following 
+
+\begin{align*}
+E|\widehat{\theta}-\theta|^2 &= \E(\widehat{\theta}^2) - 2\E(\widehat{\theta})\theta +\theta^2\\
+&= Var(\widehat{\theta}) + \big[\E(\widehat{\theta})\big]^2 - 2\E(\widehat{\theta})\theta + \theta^2\\
+&= Var(\widehat{\theta}) + \big[\E(\widehat{\theta}) - \theta\big]^2\\
+&= 9Var(\overline{X})\\
+&= \frac{9Var(X)}{n}\\
+&= \frac{3-\theta^2}{n}
+\end{align*}
+The fourth equality is justified by $\widehat{\theta}$ being unbiased estimate for $\theta$. Letting $n\to \infty$ we see that $\lim_{n\to\infty}E|\widehat{\theta}-\theta|^2 = 0$ and $\widehat{\theta}$ is mean squared - consistent. 
+
+
+\item 
+\begin{enumerate}
+\item Recall that by the Central Limit Theorem (CLT) $$\frac{\sqrt{n}(\overline{X}_n - \mu)}{\sigma}\overset{D}{\to}Z\sim(0,1)$$ In our case $\mu = \theta$ and $\sigma^2 = \theta(1-\theta)$. First note that the sequence $\theta(1-\theta) \to \theta(1-\theta)$ in probability (it is a constant sequence). So by Slutsky's Theorem we see $$\sqrt{n}(\overline{X}_n - \theta) = \sqrt{\theta(1-\theta)}\frac{\sqrt{n}(\overline{X}_n -\theta)}{\sqrt{\theta(1-\theta)}} \overset{D}{\to} \sqrt{\theta(1-\theta)}Z$$ Now notice that the random variable $Y = \sqrt{\theta(1-\theta)}Z$ is normally distributed with $$\E(Y) = \E(\sqrt{\theta(1-\theta)}Z) = \sqrt{\theta(1-\theta)}\E(Z) = 0 $$ Moreover we see $$Var(Y) = Var(\sqrt{\theta(1-\theta)}Z) = \theta(1-\theta)Var(Z) = \theta(1-\theta)$$ Therefore, we see $$\sqrt{n}(\overline{X}_n - \theta) \overset{D}{\longrightarrow} Y\sim N(0, \theta(1-\theta))$$
+
+\item Let $g(t) = t(1-t)$. Then $g(t)$ is differentiable everywhere with $g^{'}(t) = 1-2t$. Moreover we note that $g'(\theta)\neq 0$ for $\theta\neq 0.5$. Having shown these properties, we can apply the first order Delta method to the result in $a$. Specifically, for $$\sqrt{n}(\overline{X}_n - \theta) \overset{D}{\longrightarrow} Y\sim N(0, \theta(1-\theta))$$ we note that $$\sqrt{n}(g(\overline{X}_n) - g(\theta)) \overset{D}{\longrightarrow} V\sim N(0, \theta(1-\theta)g^{'}(\theta)^2)$$ Here we see that $\theta(1-\theta)g^{'}(\theta)^2 = \theta(1-\theta)(1 - 2\theta)^2$. Simplifying the form above we see $$\sqrt{n}(\overline{X}_n(1-\overline{X}_n) - \theta(1 - \theta)) \overset{D}{\longrightarrow} Y\sim N(0, \theta(1-\theta)(1-2\theta)^2)$$
+
+\item To apply the Delta method we required that $\theta\neq 0.5$ so $g{'}(\theta)\neq 0$. If $\theta = 0.5$ we instead need to look at higher orders of the Delta method. Namely, the second order Delta method. Specifically, note that for $g(t) = t(1-t)$, $g^{''}(t) = -2\neq0$ for all values of $\theta$. This along with $g^{'}(0.5)  = 0$ allows us to use the second order Delta Method. Specifically, we have 
+\begin{align*}
+n\big[g(\overline{X}_n) - g(\theta)\big]&\overset{D}{\longrightarrow} \frac{\theta(1-\theta)g^{''}(\theta)}{2}Z^2\\
+n\big[\overline{X}_n(1-\overline{X}_n) - 1/2(1-1/2)\big]&\overset{D}{\longrightarrow} \frac{-2(1/2(1-1/2))}{2}Z^2\\
+n\big[\overline{X}_n(1-\overline{X}_n) - \frac{1}{4}\big]&\overset{D}{\longrightarrow} -\frac{1}{4}Z^2
+\end{align*}
+Seeing this, we can apply Slutsky's Theorem to see 
+
+$$-4n\big[\overline{X}_n(1-\overline{X}_n) - \frac{1}{4}\big] = 4n\big[\frac{1}{4}-\overline{X}_n(1-\overline{X}_n)\big]\overset{D}{\longrightarrow}Z^2 = \chi^2(1)$$
+\end{enumerate}
+
+\item First consider the following equality. \begin{align*}
+\frac{\sqrt{n}(\overline{X}_n - \mu_n)}{\sigma_n} &= \frac{\sqrt{n}(\overline{X}_n - \overline{\mu}_n+\overline{\mu}_n-\mu_n)}{\sigma_n}\\
+& = \frac{\sqrt{n}(X_n - \overline{\mu}_n)}{\sigma_n} + \sqrt{n}\frac{(\overline{\mu}_n - \mu_n)}{\sigma_n}\\
+& = \frac{\sqrt{n}(X_n - \overline{\mu}_n)}{\overline{\sigma}_n}\frac{\overline{\sigma}_n}{\sigma_n} + \sqrt{n}\frac{(\overline{\mu}_n - \mu_n)	}{\sigma_n}
+\end{align*} 
+
+Assume $X\sim AN(\mu_{n}, \sigma^2_n)$, $\overline{\sigma}_n/\sigma_n\to1$ and $\frac{\overline{\sigma}_n-\mu_n}{\sigma_n}\to 0$. Then we see $$\lim_{n\to\infty}\frac{\sqrt{n}(\overline{X}_n - \mu_n)}{\sigma_n} = \lim_{n\to\infty}\frac{\sqrt{n}(\overline{X}_n - \overline{\mu}_n)}{\overline{\sigma}_n}=Z\sim N(0,1)$$ Hence $\overline{X}_n\sim AN(\overline{\mu}_n, \overline{\sigma}^2_n)$. Now, assuming that $\overline{X}_n\sim AN(\overline{\mu}_n, \overline{\sigma}^2_n)$ and $X_n\sim AN(\mu_n, \sigma_n^2)$. Then we see that 
+$$\lim_{n\to\infty}\Big(\frac{\sqrt{n}(X_n - \overline{\mu}_n)}{\overline{\sigma}_n}\frac{\overline{\sigma}_n}{\sigma_n} + \sqrt{n}\frac{(\overline{\mu}_n - \mu_n)}{\sigma_n}\Big) = \lim_{n\to\infty}\frac{\sqrt{n}(\overline{X}_n - \mu_n)}{\sigma_n} = Z\sim N(0,1)$$ Since $\overline{X}_n\sim AN(\overline{\mu}_n, \sigma_n^2)$ we see that the left hand side limit is given by $$\lim_{n\to\infty}\Big(\frac{\sqrt{n}(X_n - \overline{\mu}_n)}{\overline{\sigma}_n}\frac{\overline{\sigma}_n}{\sigma_n} + \sqrt{n}\frac{(\overline{\mu}_n - \mu_n)}{\sigma_n}\Big)\overset{D}{\longrightarrow}aZ + b$$ where $a = \lim_{n\to\infty}\overline{\sigma}_n/\sigma_n$ and $b = \lim_{n\to\infty}\frac{\overline{\mu}_n - \mu_n}{\sigma_n}$ (if they exist). But note that as we see above this limit is equal $Z\sim(0,1)$ and hence $a = 1$ and $b = 0$. Thus $$\lim_{n\to \infty}\frac{\overline{\sigma}_n}{\sigma_n} = 1 \hspace{2em} \lim_{n\to\infty}\frac{\overline{\mu}_n - \mu}{\sigma_n} = 0$$. 
+
+\item 
+\begin{enumerate}
+\item First notice that 
+$$Z_n = \frac{S_n - \E(S_n)}{\sqrt{Var(S_n)}} = \frac{1/n}{1/n}\frac{S_n - \E(S_n)}{\sqrt{Var(S_n)}} = \frac{\overline{X}_n - E(\overline{X}_n)}{\sqrt{Var(\overline{X}_n)}} = \frac{X_n - \mu}{\sqrt{\sigma^2/n}} =\frac{\sqrt{n}(X_n - \mu)}{\sigma}$$
+
+We note that this is just a statement of the CLT for $X\sim Pois(\lambda)$. We require that $\mu<\infty$ and $0<\sigma^2<\infty$. Here, $\mu = \sigma^2 = \lambda$ and by assumption $0<\lambda<\infty$. Thus we apply the CLT and see that $$Z_n = \frac{S_n - E(S_n)}{\sqrt{Var(S_n}}\overset{D}{\longrightarrow}Z\sim N(0,1)$$  
+
+\item Using the above fact, and the fact that $\cos(\cdot)$ is infinity differentiable, we can use the Delta method to find the limiting distribution of $\cos(\overline{X}_n)$. 
+
+Let $g(t) = \cos(t)$. Then assuming that $g'(\lambda) = -\sin(\lambda)\neq 0$ we have $$\sqrt{n}(\cos(\overline{X}_n) - \cos(\lambda))\overset{D}{\longrightarrow} N(0, -\lambda\sin^2(\lambda))$$
+
+If $-\sin(\lambda) = 0$ then we use the second order delta method (this is sufficient because $-\sin(\lambda)$ and $-\cos(\lambda)$ cannot both be zero simultaneously). Specifically, we see $$n(\cos(\overline{X}_n) - \cos(\lambda))\overset{D}{\longrightarrow} \frac{-\lambda\cos(\lambda)}{2}\chi^{2}_1$$
+
+\item By the Delta Method of the first order $$\sqrt{n}(g(\overline{X}_n) - g(\lambda))\overset{D}{\longrightarrow}N(0, \sigma^2g'(\lambda)^2)$$
+
+Thus, we seek a function $g(\cdot)$ such that the variance of this asymptotic distribution is $1$. This corresponds to solving the equation the following $\sigma^2g'(\lambda)^2 = 1$. Recall that $\sigma^2 = \lambda$. This yields 
+
+$$g(\lambda) = \int \frac{d\lambda}{\sqrt{\lambda}} = 2\sqrt{\lambda}$$
+
+Using this transformation along with the Delta Method we have $$\sqrt{n}(2\sqrt{\overline{X}_n} - 2\sqrt{\lambda})\overset{D}{\longrightarrow}Z\sim N(0, \lambda(1/\sqrt{\lambda})^2) = N(0,1)$$
+
+Thus we see that $\sqrt{n}(2\sqrt{\overline{X}_n} - 2\sqrt{\lambda})\sim AN(0,1)$
+\end{enumerate}
+
+\item For $\mu\neq 0$, then the first derivative of $\log(x)$ is nonzero at $\mu$. That is $1/\mu \neq 0$. Therefore, we can apply the first order delta method to see, $Y_n = \log|X_n|\sim AN(\log|\mu|,(\sigma/\mu)^2)$. Now notice for $\mu = 0$, we note that \textit{all derivatives of $\log(\cdot)$ are not defined}. That is $\frac{d}{d^{n}}\log(x)|_{x = 0}$ does not exist for all $n$. Therefore, the asymptotic distribution for $\mu = 0$ does not exist. 
+
+
+\end{enumerate}
+\end{document} 
+

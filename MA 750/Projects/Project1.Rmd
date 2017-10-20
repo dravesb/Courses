@@ -1,0 +1,47 @@
+---
+title: "MA 750 Project 1"
+author: "Benjamin Draves"
+date: "October 24, 2017"
+output: pdf_document
+fontsize: 11pt
+geometry: margin=1in
+---
+
+
+```{r}
+
+variable_bandwidth = function(data, g, h){
+  
+  #set up random variables 
+  n = length(data)
+  
+  #get initial estimate ~f
+  f_til = density(data, bw = g, kernel = "gaussian")  
+  
+  #set up kernel 
+  kernel = function(x){exp(-(x^2)/2)/(2*pi)^(1/2)}
+  
+  #f-hat function 
+  f_hat = function(x){
+    
+    arg = (x - data)*(f_til$y[data])^(1/2)/h
+    
+    1/(n*h)
+    
+    (f_til$x)^(1/2) * kernel(     )
+    
+  }
+  
+  
+  estimate = data.frame(X = data, Y = NA)
+  estimate$Y = ()
+  
+}
+
+
+
+
+
+
+```
+

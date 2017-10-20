@@ -1,0 +1,162 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 779: Probability 1}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 7 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+
+\textbf{Question 5.1} If $\E X^r = \infty$ show that $$\E X^r = r\int_{0}^{\infty}x^{r-1}P(x\geq x)dx$$
+
+\textbf{Solution:} We will integrate by parts to show the result. Let $u = rP(X\geq x) = r - rF(X)$. Then $du = -rf(x)dx$. Moreover, let $dv = x^{r-1}dx$. Then $v = \frac{1}{r}x^{r}$. Then we have 
+$$r\int_{0}^{\infty}x^{r-1}P(x\geq x)dx = (1-F(x))x^{r}\bigg|_{0}^{\infty} + \frac{1}{r}\int_{0}^{\infty}x^{r}f(x)dx $$
+$$= P(X\geq x)x^{r}\bigg|_{x \to \infty} + \frac{1}{r}\E(X^{r})\geq \frac{1}{r}\E(X^{r}) = \infty$$
+
+Thus, equality holds if $\E(X^{r}) = \infty$
+\newpage
+
+\textbf{Question 5.2} Let $A_1$, $A_2$ be nontrivial events (i.e. $P(A_1), P(A_2)>0$). Show that $A_1$,$A_2$ disjoint does not imply $A_1$,$A_2$ are independent. Show that $A_1$, $A_2$ independent does not imply $A_1$, $A_2$ disjoint.
+
+\textbf{Solution:}
+
+ Assume that $A_1\cap A_2 = \emptyset$. Then $P(A_1\cap A_2) = P(\emptyset)<P(A_1)P(A_2)$. Therefore $P(A_1\cap A_2)\neq P(A_1)P(A_2)$ so $A_1$ and $A_2$ are not independent. 
+
+Assume that $A_2$ and $A_2$ are independent. Then $P(A_1\cap A_2)=P(A_1)P(A_2)>0$. Thus $A_1\cap A_2 \neq \emptyset$. 
+\newpage
+
+\textbf{Question 5.3} Give an example that shows that pairwise independence does not imply mutual independence. 
+
+\textbf{Solution:} Consider two die rolls. Let $A$ be the event that the first roll is even, $B$ is the event that the second roll is even, and $C$ be the event that the sum of the two rolls is even. Then $P(A) = P(B) = P(C) = \frac{1}{2}$. Moreover we have $P(A\cap B) = \frac{1}{4} = P(A)P(B)$. Now notice for the sum of the two rolls to be even, either both rolls must be even or both rolls must be odd. So the events $A\cap C$ and $B\cap C$ require both rolls be even. Hence $P(A\cap C) = P(B\cap C) = \frac{1}{4} = P(A)P(C) = P(B)P(C)$. Thus we see these events are pairwise independent. Now consider $P(A\cap B \cap C)$. Notice the event $A\cap B \subset C$ so $A\cap B\cap C = A\cap B$. Thus $P(A\cap B \cap C) = P(A\cap B) = 1/4$. But notice that $P(A)P(B)P(C) = \frac{1}{8}$. Thus $$P(A\cap B \cap C)\neq P(A)P(B)P(C)$$
+and we see that pairwise independence does not imply mutual independence. 
+\newpage
+
+\textbf{Question 5.4} Let $\{X_k\}_k^n$ be a sequence of mean zero random variables that are weakly stationary. Define $R_{ij} = r(i-j) = Cov(X_i, X_j)$. Using this notation, show $$Var\Big[\sum_{i=1}^{n}X_i\Big] = \sum_{i=1}^{n}\sum_{j=1}^{n}r(i-j) = nr(0) + 2 A_n$$ where $A_n = \sum_{k = 1}^{n-1}(n-k)r(k)$
+
+\textbf{Solution:} First let $\mathbf{X} = (X_1, X_2,\ldots, X_n)^T$. Then the $Var(\mathbf{X}) = \mathbf{\Sigma}$ can be written as $\mathbf{\Sigma}_{ij} = r(i-j)$. Let $\mathbf{1}_{n} = (1,1,\ldots,1)^T$ be a vector of $n$ ones. Then our problem reduces to $$Var(\mathbf{1}_n^T\mathbf{X}) = \mathbf{1}_n^{T}Var(\mathbf{X})\mathbf{1}_n = \mathbf{1}_n^{T}\mathbf{\Sigma 1_n}$$
+
+Now notice that this is just the sum over all elements in $\mathbf{\Sigma}$. Now, all $n$ elements on the main diagonal are $r(0)$. The diagonal above (and below) the main diagonal have $n-1$ elements and are all $r(1)$. In general, for the $k = 1, 2, \ldots, n-1$ diagonal above/below the main diagonal there are $n-k$ elements all of the form $r(k)$. This yields $$\mathbf{1_n^T\Sigma1_n} = nr(0) + 2\sum_{k = 1}^{n-1}(n-k)r(k)$$
+
+\newpage
+
+\textbf{Question 5.5}
+Suppose $X_1\sim$Gamma$(p_1, \lambda)$ and $X_2\sim$Gamma$(p_2, \lambda)$. Find the distribution of $X_1+X_2$. 
+
+\textbf{Solution:} We use the convolution formula to find the distribution of $X_1 + X_2$. 
+
+\begin{align*}
+f_{X_1+X_2}(x) &= \int_{-\infty}^{\infty}f_1(x-y)f_2(y)dy\\
+&= \int_{-\infty}^{\infty}\Big(\frac{1}{\Gamma(p_1)}(x-y)^{p_1-1}\lambda^{p_1}e^{-\lambda(x-y)}\Big)\Big(\frac{1}{\Gamma(p_2)}y^{p_2-1}\lambda^{p_2}e^{-\lambda y}\Big)dy\\
+&= \int_{-\infty}^{\infty}\frac{1}{\Gamma(p_1)\Gamma(p_2)}(x-y)^{p_1-1}y^{p_2-1}\lambda^{p_1+p_2}e^{-\lambda x}dy\\
+&= \frac{x^{p_1+p_2 - 2}\lambda^{p_1+p_2}e^{-\lambda x}}{\Gamma(p_1+p_2)}\int_{-\infty}^{\infty}\frac{\Gamma(p_1+p_2)}{\Gamma(p_1)\Gamma(p_2)}\frac{(x-y)^{p_1-1}y^{p_2-1}}{x^{p_1-1}x^{p_2-1}}dy\\
+&= \frac{x^{p_1+p_2 - 2}\lambda^{p_1+p_2}e^{-\lambda x}}{\Gamma(p_1+p_2)}\int_{-\infty}^{\infty}\frac{\Gamma(p_1+p_2)}{\Gamma(p_1)\Gamma(p_2)}(1-y/x)^{p_1-1}(y/x)^{p_2-1}dy\\
+\end{align*}
+
+After completing a change of variables $u = y/x$ we see that the integrand is the density of a Beta distribution. Therefore, it integrates to one and can write $$= \frac{x^{p_1+p_2-2}\lambda^{p_1+p_2}e^{-\lambda x}}{\Gamma(p_1+p_2)}\int_{-\infty}^{\infty}\frac{\Gamma(p_1+p_2)}{\Gamma(p_1)\Gamma(p_2)}(1-u)^{p_1-1}(u)^{p_2-1}xdu = \frac{x^{p_1+p_2-1}\lambda^{p_1+p_2}e^{-\lambda x}}{\Gamma(p_1+p_2)}$$ which we recognize as a density of a Gamma with parameters $(p_1+p_2,\lambda)$. Thus $X_1+X_2\sim $Gamma$(p_1+p_2, \lambda)$. 
+
+\newpage
+
+\textbf{Question 5.6} Show that if $X_1$ and $X_2$ are independent then $$P(X_1 + X_2 = n) = \sum_{k = 1}^{n}P(X_1 = n-k)P(X_2 =k)$$ Using this, show that if $Y_1\sim$Pois$(\lambda_1)$ and $Y_2\sim$Pois$(\lambda_2)$ are independent, then $Y_1 + Y_2\sim$Pois$(\lambda_1+\lambda_2)$
+
+\textbf{Solution:} Let $\mathbf{X}$ be the support of $X_1 + X_2$. Using the fact that $X_1$ and $X_2$ are independent and the law of total probability, we have 
+\begin{align*}
+P(X_1 + X_2 = n) &\overset{LTP}{=} \sum_{k\in\mathbf{X}}P(X_1 + X_2 = n|X_2 = k)P(X_2 = k)\\
+&= \sum_{k\in\mathbf{X}}P(X_1 = n - k|X_2 = k)P(X_2 = k)\\
+&\overset{ind.}{=} \sum_{k\in\mathbf{X}}P(X_1 = n - k)P(X_2 = k)
+\end{align*}
+Now consider the probability mass function of $Y_1 + Y_2$. 
+\begin{align*}
+P(Y_1 + Y_2 = n) &= \sum_{k=0}^{\infty}P(Y_1 = n - k)P(Y_2 = k)\\
+&= \sum_{k=0}^{\infty}\frac{e^{-\lambda_1}\lambda_1^{n-k}}{(n-k)!}\frac{e^{-\lambda_2}\lambda_2^{k}}{(k)!}\\
+&= e^{-(\lambda_1 + \lambda_2)}\sum_{k=0}^{\infty}\frac{\lambda_1^{n-k}\lambda_2^{k}}{(n-k)!k!}\\
+&= \frac{e^{-(\lambda_1 + \lambda_2)}}{n!}\sum_{i=0}^{\infty}\frac{n!}{(n-k)!n!}\lambda_1^{n-k}\lambda_2^{k}\\
+&= \frac{e^{-(\lambda_1 + \lambda_2)}(\lambda_1+\lambda_2)^n}{n!}\sum_{k=0}^{\infty}\binom{n}{k}\big(\frac{\lambda_1}{\lambda_1 + \lambda_2}\big)^{n-k}(\frac{\lambda_2}{\lambda_1 + \lambda_2}\big)^{k}\\
+&= \frac{e^{-(\lambda_1 + \lambda_2)}(\lambda_1+\lambda_2)^n}{n!}\sum_{k=0}^{\infty}\binom{n}{k}\big(1-\frac{\lambda_2}{\lambda_1 + \lambda_2}\big)^{n-k}(\frac{\lambda_2}{\lambda_1 + \lambda_2}\big)^{k}
+\end{align*}
+
+We recognize the sum as the probability mass function of a binomial random variable with probability $\frac{\lambda_2}{\lambda_1 + \lambda_2}$. Thus we see 
+$$P(Y_1 + Y_2) = \frac{e^{-(\lambda_1 + \lambda_2)}(\lambda_1+\lambda_2)^n}{n!}$$
+which is the density of a Poisson random variable with parameter $\lambda_1 + \lambda_2$. Hence $Y_1 + Y_2\sim$Pois$(\lambda_1 + \lambda_2)$
+\newpage
+
+\textbf{Question 5.7} If $(X,Y)\sim BVN(\mathbf{\mu}, \mathbf{\Sigma})$ where $\mathbf{\mu} = (\mu_X,\mu_Y)^{T}$ and \[\mathbf{\Sigma} = \begin{bmatrix}\sigma_X^2 & \rho\sigma_X\sigma_Y\\\rho\sigma_X\sigma_Y & \sigma_Y^2\end{bmatrix}\] Find the conditional distribution $f_{X|Y}(x|y)$. 
+
+\textbf{Solution:} First recall that the marginal distribution of a bivariate random variable is normal. We will use the definition of marginal distribution $f_{X|Y}(x|y) = \frac{f_{X,Y}(x,y)}{f_{Y}(u)}$.  
+ \begin{align*}
+ f_{X|Y}(x|y) &= \frac{\frac{1}{2\pi\sigma_Y\sigma_X\sqrt{1-\rho^2}}\exp\Big\{-\frac{1}{2(1-\rho^2)}\Big((\frac{y-\mu_Y}{\sigma_Y})^2-2\rho(\frac{y-\mu_Y}{\sigma_Y})(\frac{x-\mu_X}{\sigma_X}) + (\frac{x-\mu_X}{\sigma_X})^2\Big)\Big\}}{\frac{1}{\sqrt{2\pi}\sigma_Y}\exp\{-\frac{(y-\mu_Y)^2}{2\sigma_Y^2}\}}\\
+ &= \frac{1}{\sqrt{2\pi}\sigma_X\sqrt{1-\rho^2}}\exp\Big\{-\frac{1}{2(1-\rho^2)}\Big(\rho^2(\frac{y-\mu_Y}{\sigma_Y})^2-2\rho(\frac{y-\mu_Y}{\sigma_Y})(\frac{x-\mu_X}{\sigma_X}) + (\frac{x-\mu_X}{\sigma_X})^2\Big)\Big\}\\
+ &=\frac{1}{\sqrt{2\pi}\sigma_X\sqrt{1-\rho^2}}\exp\Big\{-\frac{1}{2(1-\rho^2)}\Big(\rho\big(\frac{y-\mu_Y}{\sigma_Y}\big) -\big(\frac{x-\mu_X}{\sigma_X}\big)\Big)^2\Big\}\\
+ &= \frac{1}{\sqrt{2\pi}\sigma_X\sqrt{1-\rho^2}}\exp\Big\{-\frac{1}{2\sigma_X^2(1-\rho^2)}\Big(\rho\frac{\sigma_X}{\sigma_Y}(y-\mu_Y) - (x-\mu_X)\Big)^2\Big\}\\
+&= \frac{1}{\sqrt{2\pi}\sigma_X\sqrt{1-\rho^2}}\exp\Big\{-\frac{1}{2\sigma_X^2(1-\rho^2)}\Big(x-\mu_X - \rho\frac{\sigma_X}{\sigma_Y}(y-\mu_Y)\Big)^2\Big\}\\
+\end{align*}
+
+We recognize this as density of a normal distribution. Specifically $$X|Y \sim N\left(\mu_x-\rho(\sigma_X/\sigma_Y)(y-\mu_Y), \sigma_X^2(1-\rho^2)\right)$$
+
+\newpage
+
+\textbf{Question 5.8} Suppose there are $n + m$ Bernoulli trials with probability $p$. After we observe $n$ successes, find the posterior distribution of $p$ if the prior distribution of $p$ is uniform.
+
+\textbf{Solution:} By definition we have $$f_{p|n}(p|n) =\frac{P(N=n)f_P(p)}{P(N=n)}
+= \frac{\binom{n+m}{n}p^n(1-p)^{m}}{\int_{0}^{1}\binom{n+m}{n}p^n(1-p)^{m}dp}$$ Focusing on the denominator, we have 
+\begin{align*}
+\int_{0}^{1}\binom{n+m}{n}p^n(1-p)^{m}dp&= \frac{(n+m)!}{n!m!}\int_{0}^{1}p^n(1-p)^{m}dp\\
+&= \frac{\Gamma(n + m + 1)}{\Gamma(n+1)\Gamma(m+1)}\int_{0}^{1}p^{(n+1)-1}(1-p)^{(m+1)-1}dp\\
+&= \frac{1}{n+m+1}\Bigg[\frac{\Gamma(n + m + 2)}{\Gamma(n+1)\Gamma(m+1)}\int_{0}^{1}p^{(n+1)-1}(1-p)^{(m+1)-1}dp\Bigg]\\
+\end{align*}
+We recognize the bracketed term as the density of a Beta with parameters $(n+1, m+1)$. Therefore, it integrates to $1$ we are left with $\frac{1}{n+m+1}$. Plugging this into our original form we have 
+
+$$f_{P|N}(p|n) = (n+m+1)\binom{n+m}{n}p^n(1-p)^{m} = \frac{\Gamma(n+m_2)}{\Gamma(n+1)\Gamma(m+1)}p^{(n+1)-1}(1-p)^{(m+1)-1}$$
+
+Thus the posterior is a Beta random variable with parameters $(n+1, m+1)$. 
+
+
+
+\end{document} 
+

@@ -1,0 +1,144 @@
+---
+title: 'MA 575: HW4'
+author: "Benjamin Draves"
+date: "October 17, 2017"
+output: pdf_document
+---
+
+### Exercise 5.1 
+
+#### (a)
+```{r}
+#Read in data 
+dat = read.table("~/Desktop/Courses/MA 575/book_data/Latour.txt", header = TRUE)
+
+#take a peak 
+str(dat)
+
+#build model 
+interaction_model = lm(Quality ~ EndofHarvest + factor(Rain) + EndofHarvest:factor(Rain), data = dat)
+no_interaction_model = lm(Quality ~EndofHarvest + factor(Rain), data = dat)
+
+#look at summary statistics 
+summary(interaction_model)
+summary(no_interaction_model)
+```
+
+We look to show that the interaction term (EndofHarvest:Rain) is statistical significant. We will use a _parital F test_ comparing the two models above to test for the significance of the interaction term. Specifical $$F = \frac{\left(RSS(reduced) - RSS(full)\right)/(df(reduced) - df(full))}{RSS(full)/df(full)}$$ Here $df(full) = n - (p+ 1) = 44 -(3 + 1) = 40$, $df(reduced) = 44 - (2 + 1) = 41$. Moreover we can find the residual sum of squares (RSS) via the residual standard error. $RSE = \sqrt{RSS/df} \Longrightarrow RSS = df*RSE^2$. Thus $RSS(full) = 40 * 0.7578^2 = 22.97043$ and $RSS(reduced) = 41 * 0.8107^2 = 26.94661$. Thus $F$-statistic is given by $$F = \frac{\left(26.94661 - 22.9704\right)/(41-40)}{22.9704/40} = 6.925761$$ Under the null hypothesis that the interaction term has no effect on the model (i.e. regression coefficent is zero) this staistic with have degrees of freedom (1, 40). Using this we can find the rejection region given by $(R,\infty)$ where $R = F_{(1,40), \alpha/2}$. Using R we find 
+
+```{r}
+R = qf(1 - .05, 1, 40)
+```
+
+
+$R = 4.084746$ so our $F$ statistic in in the rejection region and we reject our null hypothsis that the interaction term as no effect on the model. 
+
+#### (b)
+Using the full model fitted model, in the case there is no unwanted rain (corresponding to $Rain = 0$) our model reduces to $Quality = \beta_0 + \beta_1EndofHarvest + e$. Thus decreasing $Quality$ by a full point corresponds $\beta_1EndofHarvest = -1$. Using our estimate of $\beta_1$ we solve for $EndofHarvest = \frac{-1}{-0.03145} = 31.7965$. So we expect to have to wait about 32 days to decrease the quality a full point. 
+
+Now if we have unwanted rain, $Rain = 1$ our model is given by $Y = (\beta_0 + \beta_2) + (\beta_1 + \beta_3)EndofHarvest$. Again our problem corresponds to $(\beta_1 + \beta_3)EndofHarvest = -1$. Using our estimates, we find $EndofHarvest = \frac{-1}{-0.11459} = 8.726765$. So we expect to have to wait only 9 days until the quality drops by a full point. 
+
+### Exercise 5.2 
+
+$$Var(\hat{Y}|X) = Var(X(X^{T}X)^{-1}X^{T}Y|X) =X(X^{T}X)^{-1}X^{T}Var(Y|X)\big(X(X^{T}X)^{-1}X^{T}\big)^{T} $$
+$$ = X(X^{T}X)^{-1}X^{T}\sigma^2IX\big((X^{T}X)^{-1}\big)^{T}X^{T} = \sigma^2X(X^{T}X)^{-1}X^{T}X(X^{T}X)^{-1}X^{T}$$
+
+$$ = \sigma^2X(X^{T}X)^{-1}\big[X^{T}X(X^{T}X)^{-1}\big]X^{T} = \sigma^2X(X^{T}X)^{-1}X^{T} = \sigma^2H$$
+### Exercise 5.3 
+
+#### (a)
+
+```{r}
+#read in data
+dat =read.csv("~/Desktop/Courses/MA 575/book_data/UN11.csv")
+
+#take a peak
+head(dat)
+
+#make model data
+mdat = data.frame(fertility = dat$fertility,lgppgdp = log(dat$ppgdp), pctUrban = dat$pctUrban)
+
+#take a look at the pairwise scatterplots 
+pairs(mdat)
+```
+
+It appears that log(ppGDP) and percent urban are strongly, postitively correlated. The pctUrban vs fertility plot appears that there is a negative correlation with decreasing variance where the trend looks exponetialy decreasing. The log(ppGPD) and fertility are negatively correlated with a similar exponetial decay trend and nonconstant variance. 
+
+#### (b)
+
+```{r}
+#build log(ppGDP) model  
+m1 = lm(fertility~lgppgdp, data = mdat)
+summary(m1)
+
+#build pctUrban model 
+m2 = lm(fertility~pctUrban, data = mdat)
+summary(m2)
+```
+
+Thus we see that both $\beta_1$ coefficients are significantly different than zero.
+
+#### (c)
+
+
+```{r}
+#added variable plot - pctUrban
+residY = lm(fertility~lgppgdp, data = mdat)$resid
+residX = lm(pctUrban~lgppgdp, data = mdat)$resid
+
+plot(residX, residY, xlab = "ptctUrban ~ lgppgdp", ylab = "fertility ~ lgppgdp")
+
+#added variable plot - log(ppGDP)
+residY = lm(fertility~pctUrban, data = mdat)$resid
+residX = lm(lgppgdp~pctUrban, data = mdat)$resid
+
+plot(residX, residY, xlab = "lgppgdp ~ pctUrban", ylab = "fertility ~ pctUrban")
+
+```
+There is a clear trend in the residuals when we consider the effect of log(ppGDP) on the response after removing the effect of pctUrban. There is a clear linearlly decreasing trend. On the other hand, there is little affect of pctUrban on the response variable after the effect of log(ppGDP) is removed. 
+
+```{r}
+full_model = lm(fertility ~ lgppgdp + pctUrban, data = mdat)
+summary(full_model)
+```
+
+There results of the multiple linear regression model confirm our findings in the added variables plot. log(ppGDP) is strongly significant while pctUrban is highly insignificant ($p = .918$). 
+
+#### (d)
+In the model above, the estimated coefficent of log(ppGDP) is given by $-0.6151425$. For the added variable plot, we have 
+```{r}
+#get added variable plot data
+residY = lm(fertility~pctUrban, data = mdat)$resid
+residX = lm(lgppgdp~pctUrban, data = mdat)$resid
+
+#build regression model
+model = lm(residY~residX)
+summary(model)
+```
+
+
+Here we see that the estimated coefficent is again $\hat{\beta} = -0.615$. Thus, when we "remove" the effect of the other regressors, we get the MLR coefficent. This implies, that the MLR esimate of $\beta$ is not independent for each regressor. 
+
+#### (e)
+
+```{r}
+par(mfrow = c(2,2))
+plot(model$residuals)
+plot(full_model$residuals)
+
+```
+
+Thus the residual plots are the same in both cases. 
+
+#### (f)
+
+R gives the t-value for the joint model as $t = -9.588$ and the added variable t statistic is given below
+```{r}
+#build regression for added variable plot - log(GDP)
+residY = lm(fertility~pctUrban, data = mdat)$resid
+residX = lm(lgppgdp~pctUrban, data = mdat)$resid
+
+summary(lm(residY~residX))
+```
+Here we see that $t=-9.613$. Note that the estimates are the same in both case but the standard error changes. This is due the the degrees of freedom in both model. In the joint model, we have df = n - 2 while in the added variable model we have df = n - 1. Thus this minute change affects the t-statistics in both cases. 
+  
