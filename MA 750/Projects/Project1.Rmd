@@ -7,41 +7,60 @@ fontsize: 11pt
 geometry: margin=1in
 ---
 
+### Problem 1 Variable Bandwidth Kernel Estimator
+
+### (a)
+
+Here we obtain a preliminary estimate of $f(x_i)$, $\widetilde{f}(x_i)$ using standard kernel density estimators. We consider three kenerels (Gaussian, Epanechnikov, and Triangular) along with three bandwidth, $g$, selection criterion (Rule of Thumb, Biased Cross Validation, and Maximum Likelihood Cross Validation). 
+
+```{r}
+#load in necessary libraries
+library("ftnonpar")
+library("kedd")
+
+#get sample from Claw distribution
+X = rclaw(100)
+
+#set initial kernel 
+
+k = "gaussian"
+#k = "epanechnikov"
+#k = "triangular"
+
+#define initial bandwidth g 
+g.rot = 1.06*sd(X)/length(X)^(1/5)
+g.bcv = h.bcv(X, kernel = k)$h
+g.mlcv = h.mlcv(X, kernel = k)$h 
+
+#define ftil 
+ftil = density(X, kernel = k, bw = g.bcv)
+```
+
 
 ```{r}
 
-variable_bandwidth = function(data, g, h){
-  
-  #set up random variables 
-  n = length(data)
-  
-  #get initial estimate ~f
-  f_til = density(data, bw = g, kernel = "gaussian")  
-  
-  #set up kernel 
-  kernel = function(x){exp(-(x^2)/2)/(2*pi)^(1/2)}
-  
-  #f-hat function 
-  f_hat = function(x){
-    
-    arg = (x - data)*(f_til$y[data])^(1/2)/h
-    
-    1/(n*h)
-    
-    (f_til$x)^(1/2) * kernel(     )
-    
-  }
-  
-  
-  estimate = data.frame(X = data, Y = NA)
-  estimate$Y = ()
-  
+#approximate ftil(X) for our sample
+ftilX = approx(ftil$x, ftil$y, X)
+
+#define kernel 
+K = function(y){
+	return(1/(2*pi)*exp(-(y^2)/2))	
 }
 
+#define fhat 
+fhat = function(x, h){
+	n = length(X)
+	return((1/(n*h))*sum(sqrt(ftilX$y) * K((x-X)*sqrt(ftilX$y)/h)))
+}
 
-
-
-
+#get estimated kernel
+x = seq(-3,3,by = .05)
+f = matrix(NA, ncol = 2, nrow = length(x))
+for(i in 1:nrow(f)){
+	f[i,1] = x[i]
+	f[i,2] = fhat(x[i], .2)
+}
 
 ```
+
 

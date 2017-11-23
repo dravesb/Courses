@@ -1,0 +1,139 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 779: HW6}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 7 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+\textbf{Exercise 6.1} Given as example of $\{\mathcal{F}_1^n\}_{n\geq 1}$ such that $\bigcup_{n=1}^{\infty}\mathcal{F}_{1}^{n}$ is a field but not a sigma-field. 
+
+\text{Solution:} Let $\Omega = \N$ and $X_k = k$ be the constant random variable. Then $\sigma(X_k) = \{\emptyset, \{k\}, \N\setminus\{k\},\N\}$ and $\mathcal{F}_1^k = \sigma(X_1, \ldots, X_k) = \sigma(1,2,\ldots, k)$. Let $\mathcal{F} = \bigcup_{k =1}^{\infty}\mathcal{F}_{1}^{k}$. We will now show that $\mathcal{F}$ is a field.
+
+\begin{itemize}
+\item Notice that $\N\in\mathcal{F}_1^{k}$ for all $k$. So $\N\in\mathcal{F}$
+
+\item If $A\in\mathcal{F}$, then $A\in \mathcal{F}_1^k$ for some $k$. $\mathcal{F}_1^k$ is a sigma-field by definition so $A^{C}\in\mathcal{F}_1^k$ and $A^{C}\in\mathcal{F}$
+\item Let $A,B\in \mathcal{F}$, then there exists $k_1$ and $k_2$ such that $A\in\mathcal{F}_1^{k_1}$ and $B\in\mathcal{F}_1^{k_2}$. Npw, let $k = \max\{k_1, k_2\}$. Then, by construction $A\in \mathcal{F}_1^{k_1}\subset \mathcal{F}_1^{k}$ and $B\in \mathcal{F}_1^{k_2}\subset \mathcal{F}_1^{k}$. Since $\mathcal{F}_1^{k}$ is a sigma-field, $A\cup B\in \mathcal{F}_1^{k}$. Hence $A\cup B \in \mathcal{F}$
+\end{itemize}
+
+To see why $\mathcal{F}$ is not a \textit{sigma}-field, we will show that it is not closed under countable unions. Let $2\N$ be the set of all even natural numbers. First note that for any given even number, $\{2n\}\in\mathcal{F}$. But notice that there does not exist a $k$ such that $2\N = \bigcup_{n=1}^{\infty}2n\in\mathcal{F}_1^k$. Therefore, $2\N\not\in\mathcal{F}$ although it can be written as a countable union of elements in $\mathcal{F}$. Therefore $\mathcal{F}$ is not a sigma-field. 
+
+\newpage
+
+\textbf{Exercise 6.2} Give an example of a sequence of nonindependent events in which the Borel-Cantelli Lemma II fails. 
+
+\textbf{Solution:} Consider $\Omega = [0,1]$ with the Lebesgue measure  $\lambda$. Consider the sequence of events given by $A_n = (0,1/n]$. To see why these events are not independent, notice that $\lambda(\bigcap_{n=1}^{\infty}A_n) = \lambda((0,1]) = 1$ and that $$\prod_{i=1}^{\infty} \lambda(A_i)= \prod_{n=1}^{\infty}1/n = \lim_{k\to\infty}\prod_{n=1}^k1/n = \lim_{k\to\infty}1/k! = 0$$ Therefore the events are not independent. Moreover, notice that $$\sum_{i=1}^{\infty}\lambda(A_n) = \sum_{i=1}^{\infty}\frac{1}{n} = \infty$$ Having this, we look to calculate $\lambda(A_n, i.o)$. Recall that an event happening infinitely often corresponds to the $\lim\sup$ of sets. Measuring these sets we have $$\lambda(A_n, i.o) = \lambda(\bigcap_{n=1}^{\infty}\bigcup_{k=n}^{\infty}A_n) = \lambda(\bigcap_{n=1}^{\infty}A_n) = \lambda(\emptyset) = 0$$ where the second equality is justified because for any given $k$, $A_k\supset A_{k+1}\supset A_{k+2}\supset\dots$. Hence, if the events are not independent BC II may fail. 
+
+
+\newpage
+
+
+\textbf{Exercise 6.3} Show that if an event happens infinitely often then it must be in $\mathcal{F}_{tail}$. 
+
+\textbf{Solution:} Let $B$ be an event that occurs infinitely often. This means that the pre-image of $B$ under the random variable $X_k$ is in $\mathcal{F}$ for infinitely many $X_k$. Formally, for every $n\geq 1$ there exists $k\geq n$ such that $X_k^{-1}(B)\in\mathcal{F}$. Moreover we see $B\in \sigma(X_k) = \{A:X_k^{-1}(A)\in\mathcal{F}\}$. If $B\in\sigma(X_k)$, then it must be in $\sigma(X_n, X_{n+1}, \ldots, X_{k-1}, X_{k}, X_{k+1}, \ldots)$. This is due to the fact that $\sigma(W)\subset \sigma(W,Z)$ for any random variables $W$ and $Z$. Recall that this was true for any given $n$. Hence we see $$B\in\bigcap_{n=1}^{\infty}\sigma(X_n, X_{n+1}, \dots) = \mathcal{F}_{tail}$$
+
+\newpage
+
+\textbf{Exercise 6.4} Let $h:\R^{+}\to\R^{+}$ such that $h(0) = 0$, $\lim_{x\to\infty}h(x) = \infty$, and $h$ is strictly increasing. Define $k(x) = h^{-1}(x)$ to be a pointwise inverse of $h$. Show for any $a,b\in\R^{+}$ $$ab\leq \int_{0}^{a}h(x)dx + \int_{0}^{b}k(y)dy = H(a) + K(b)$$
+
+\textbf{Solution:} First notice that we can rewrite the second integral as $$\int_{0}^{b}k(y)dy = bk(b) - \int_{0}^{k(b)}h(y)dy$$ Using this form, we have $$H(a) + K(b) = bk(b) + \int_{k(b)}^{a}h(x)dx$$ Now we break this problem into three case. 
+
+\begin{enumerate}
+\item If $a<k(b)$ then $$\int_{k(b)}^{a}h(x)dx = -\int_{a}^{k(b)}h(x)dx\geq -h(k(b))(k(b) - a) = -b(k(b) - a)$$
+The inequality is due to the fact that $h$ is increasing. Thus, $h$ attains it \textit{maximum} on $(a,k(b))$ at $k(b)$. This implies that 
+
+$$bk(b) + \int_{k(b)}^{a}h(x)dx\geq bk(b) - bk(b) + ab = ab$$
+
+\item If $a>k(b)$ then $$\int_{k(b)}^{a}h(x)dx\geq h(k(b))(a - k(b)) = ab - bk(b)$$ This is due to the fact that $h$ is increasing and attains is \textit{minimum} value at $k(b)$. Putting this together we have $$bk(b) + \int_{k(b)}^{a}h(x)dx\geq bk(b) + ab - bk(b)= ab$$
+\item If $k(b) = a$ then $\int_{k(b)}^{a}h(x)dx = 0$. So we have $$bk(b) + \int_{k(b)}^{a}h(x)dx = bk(b) = ab$$ Therefore, we attain equality when $k(b) = a$. 
+\end{enumerate}
+
+\newpage
+
+\textbf{Exercise 6.5} For $p,q$ conjugates, show that for any $a,b\in\R^{+}$ we have $$ab\leq \frac{a^p}{p} + \frac{b^q}{q}$$
+
+\textbf{Solution:} Using this result in 5.4, let $h(x) = x^{p-1}$. Then $k(y) = y^{1/(p-1)}$. Using our previous result we have $$ab\leq \int_{0}^{a}x^{p-1}dx + \int_{0}^{b}y^{1/(p-1)}dy = \frac{x^p}{p}\Big\vert_{0}^{a} + \frac{y^{p/(p-1)}}{p/(p-1)}\Big\vert_{0}^{b} = \frac{a^{p}}{p} + \frac{b^{p/(p-1)}}{p/(p-1)}$$
+
+Now notice by definition $\frac{1}{p} + \frac{1}{q} = 1$. Solving for $q$ we see $$p + q = qp \Longrightarrow p+q-qp = 0 \Longrightarrow q(1-p) = -p\Longrightarrow q = \frac{p}{p-1}$$
+
+Therefore we see $$ab\leq \frac{a^{p}}{p} + \frac{b^{q}}{q}$$
+
+\newpage
+
+\textbf{Exercise 6.6} Show Young's Inequality holds for $p = 1$, $q=\infty$. 
+
+\textbf{Solution:} 
+\begin{enumerate}
+\item If $b<1$, then $b^{q} = 0$ and $\frac{b^{q}}{q} = 0$. Thus $$\frac{a^p}{p} + \frac{b^q}{q} = a\geq ab$$
+\item if $b = 1$, then $b^{q} = 1$ and $\frac{b^q}{q} = 0$. Thus $$\frac{a^p}{p} + \frac{b^q}{q} = a = ab$$
+
+\item If $b>1$ then $b^{q} = \lim_{n\to\infty}b^{n} =\infty$. Then using L'Hospital's Rule we have $$\frac{b^q}{q} = \lim _{n\to\infty}\frac{b^n}{n} \overset{LH}{=}\lim_{n\to\infty}\frac{nb^{n-1}}{1} = \infty$$
+Thus $$\frac{a^p}{p} + \frac{b^q}{q} = \infty \geq ab$$ is the trivial upper bound on $ab$. 
+\end{enumerate}
+
+\newpage 
+
+\textbf{Exercise 6.7} Use Cauchy-Swartz to prove that $|\rho|\leq1$. 
+
+\textbf{Solution:} Recall that $$|\rho| = \bigg|\frac{\E\Big[(X - \E(X))(Y-\E(Y))\Big]}{\sqrt{\E(X - \E(X))\E(Y - \E(Y))}}\bigg|\leq \frac{\E\Big\vert(X - \E(X))(Y-\E(Y))\Big\vert}{\sqrt{\E(X - \E(X))\E(Y - \E(Y))}}$$
+
+We now apply Cauchy-Swartz to $X-\E(X)$ and $Y-\E(Y)$ to attain
+
+\begin{align*}
+|\rho|&\overset{C.S.}{\leq}\frac{\sqrt{\E\Big[(X - \E(X))^2\Big]}\sqrt{\E\Big[(Y - \E(Y))^2\Big]}}{\sqrt{\E(X - \E(X))}\sqrt{\E(Y - \E(Y))}}\\
+&= \frac{\sqrt{\E\Big[X^2 - 2X\E(X) + E(X)^2\Big]}\sqrt{\E\Big[Y^2 - 2Y\E(Y) + E(Y)^2\Big]}}{\sqrt{\E(X - \E(X))}\sqrt{\E(Y - \E(Y))}}\\
+&= \frac{\sqrt{\E(X^2) - \E(X)^2}\sqrt{\E(Y^2) - \E(Y)^2}}{\sqrt{Var(X)}\sqrt{Var(Y)}}\\
+&= \frac{\sqrt{Var(X)}\sqrt{Var(Y)}}{\sqrt{Var(X)}\sqrt{Var(Y)}}\\
+&=1
+\end{align*}
+
+\end{document} 
+

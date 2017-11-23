@@ -1,0 +1,1660 @@
+x = seq(-3,3,by = .05)
+f = matrix(NA, ncol = 2, nrow = length(x))#
+for(i in 1:nrow(f)){#
+	f[i,1] = x[i]#
+	f[i,2] = fhat(x[i], .2)#
+}
+plot(f[,1], f[,2])
+points(ftilX$x, ftilX$y)
+plot(f[,1], f[,2], ylim = c(0.25))
+plot(f[,1], f[,2])
+plot(f[,1], f[,2], ylim = c(0, .2))
+points(ftilX$x, ftilX$y)
+plot(f[,1], f[,2], ylim = c(0, .5))
+points(ftilX$x, ftilX$y)
+plot(f[,1], f[,2], ylim = c(0, .5), type = "l")
+points(ftilX$x, ftilX$y, type = "ftil")
+points(ftilX$x, ftilX$y, type = "l")
+install.packages("ftnonpar")
+X = rclaw(100)
+library("ftnonpar")#
+library("kedd")
+install.packages("kedd")
+#check out distribition#
+plot(dclaw(seq(-3, 3, len = 1000)), type = "l")
+#get sample#
+X = rclaw(100)
+k = "gaussian"#
+#k = "epanechnikov"#
+#k = "triangular"#
+#
+#define initial bandwidth g #
+g.rot = 1.06*sd(X)/length(X)^(1/5)#
+g.bcv = h.bcv(X, kernel = k)$h#
+g.mlcv = h.mlcv(X, kernel = k)$h #
+#
+#define ftil #
+ftil = density(X, kernel = k, bw = g.bcv)
+#get sample#
+X = rclaw(100)#
+#
+k = "gaussian"#
+#k = "epanechnikov"#
+#k = "triangular"#
+#
+#define initial bandwidth g #
+g.rot = 1.06*sd(X)/length(X)^(1/5)#
+g.bcv = h.bcv(X, kernel = k)$h#
+g.mlcv = h.mlcv(X, kernel = k)$h #
+#
+#define ftil #
+ftil = density(X, kernel = k, bw = g.bcv)
+g.bcv = h.bcv(X, kernel = k)$h
+library("kedd")
+#check out distribition#
+plot(dclaw(seq(-3, 3, len = 1000)), type = "l")#
+#
+#get sample#
+X = rclaw(100)#
+#
+k = "gaussian"#
+#k = "epanechnikov"#
+#k = "triangular"#
+#
+#define initial bandwidth g #
+g.rot = 1.06*sd(X)/length(X)^(1/5)#
+g.bcv = h.bcv(X, kernel = k)$h#
+g.mlcv = h.mlcv(X, kernel = k)$h #
+#
+#define ftil #
+ftil = density(X, kernel = k, bw = g.bcv)
+#approximate ftil(X) for our sample#
+ftilX = approx(ftil$x, ftil$y, X)
+ftilX
+plot(ftilX$x, ftilX$y)
+#get estimated kernel#
+x = seq(-3,3,by = .05)#
+f = matrix(NA, ncol = 2, nrow = length(x))#
+for(i in 1:nrow(f)){#
+	f[i,1] = x[i]#
+	f[i,2] = fhat(x[i], .2)#
+}
+#define fhat #
+fhat = function(x, h){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(ftilX$y) * K((x-X)*sqrt(ftilX$y)/h)))#
+}
+#get estimated kernel#
+x = seq(-3,3,by = .05)#
+f = matrix(NA, ncol = 2, nrow = length(x))#
+for(i in 1:nrow(f)){#
+	f[i,1] = x[i]#
+	f[i,2] = fhat(x[i], .2)#
+}
+#define kernel #
+K = function(y){#
+	return(1/(2*pi)*exp(-(y^2)/2))	#
+}#
+#
+#define fhat #
+fhat = function(x, h){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(ftilX$y) * K((x-X)*sqrt(ftilX$y)/h)))#
+}#
+#
+#get estimated kernel#
+x = seq(-3,3,by = .05)#
+f = matrix(NA, ncol = 2, nrow = length(x))#
+for(i in 1:nrow(f)){#
+	f[i,1] = x[i]#
+	f[i,2] = fhat(x[i], .2)#
+}
+f
+plot(f[,1], f[,2])
+points(x, rep(0,100), type = 2, col = "red")
+points(X, rep(0,100), type = 2, col = "red")
+rep(0,100)
+X
+rep(0,100)
+points(X, rep(0,100), pch = 2, col = "red")
+points(X, rep(0,100), pch = 3, col = "red")
+plot(f[,1], f[,2])#
+points(X, rep(0,100), pch = 3, col = "red")
+plot(f[,1], f[,2], type = "l")
+points(X, rep(0,100), pch = 3, col = "red")
+estK = function(h){#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h)#
+	}#
+	return(f)	#
+}
+H = seq(.01, .1, .01)
+H
+H = seq(.1, .5, .1)
+H = seq(.1, .5, .1)#
+par(mfrow = c(3,2))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2])#
+}
+H = seq(.01, .2, .05)
+H
+H = seq(.01, .2, .05)#
+par(mfrow = c(2,2))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2])#
+}
+H = seq(.01, .2, .05)#
+par(mfrow = c(2,2))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l")#
+}
+H = seq(.01, .5, .05)
+H
+length(H)
+H = seq(.01, .4, .05)
+H
+H = seq(.01, .4, .05)#
+par(mfrow = c(4,2))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+par(mfrow = c(4,2), gap = 0.4)
+par(mfrow=c(4,2), mai = c(1, 0.1, 0.1, 0.1))
+H = seq(.01, .4, .05)#
+par(mfrow=c(4,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+H = seq(.1, .2, .02)#
+par(mfrow=c(4,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+H = seq(.1, .2, .02)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+library("ftnonpar")#
+library("kedd")
+plot(dclaw(seq(-3, 3, len = 1000)), type = "l")
+X = rclaw(100)
+#get sample#
+X = rclaw(100)#
+#
+k = "gaussian"#
+#k = "epanechnikov"#
+#k = "triangular"
+#define initial bandwidth g #
+g.rot = 1.06*sd(X)/length(X)^(1/5)#
+g.bcv = h.bcv(X, kernel = k)$h#
+g.mlcv = h.mlcv(X, kernel = k)$h
+ftil = density(X, kernel = k, bw = g.bcv)
+ftilX = approx(ftil$x, ftil$y, X)
+#define fhat #
+fhat = function(x, h){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(ftilX$y) * K((x-X)*sqrt(ftilX$y)/h)))#
+}
+estK = function(h){#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h)#
+	}#
+	return(f)	#
+}
+H = seq(.01, .4, .05)#
+par(mfrow=c(4,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+#define kernel #
+K = function(y){#
+	return(1/(2*pi)*exp(-(y^2)/2))	#
+}
+#define fhat #
+fhat = function(x, h){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(ftilX$y) * K((x-X)*sqrt(ftilX$y)/h)))#
+}#
+#
+#get estimated kernel#
+#
+estK = function(h){#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h)#
+	}#
+	return(f)	#
+}#
+#
+H = seq(.01, .4, .05)#
+par(mfrow=c(4,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+H = seq(.1, .2, .02)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+X
+hist(X)
+X = rclaw(100)
+k = "gaussian"#
+#k = "epanechnikov"#
+#k = "triangular"#
+#
+#define initial bandwidth g #
+g.rot = 1.06*sd(X)/length(X)^(1/5)#
+g.bcv = h.bcv(X, kernel = k)$h#
+g.mlcv = h.mlcv(X, kernel = k)$h #
+#
+#define ftil #
+ftil = density(X, kernel = k, bw = g.bcv)#
+#
+#approximate ftil(X) for our sample#
+ftilX = approx(ftil$x, ftil$y, X)#
+#
+#define kernel #
+K = function(y){#
+	return(1/(2*pi)*exp(-(y^2)/2))	#
+}#
+#
+#define fhat #
+fhat = function(x, h){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(ftilX$y) * K((x-X)*sqrt(ftilX$y)/h)))#
+}#
+#
+#get estimated kernel#
+#
+estK = function(h){#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h)#
+	}#
+	return(f)	#
+}#
+#
+H = seq(.01, .4, .05)#
+par(mfrow=c(4,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}#
+#
+H = seq(.1, .2, .02)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+H = seq(.01, .4, .05)#
+par(mfrow=c(4,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+H = seq(.05, .3, .05)
+length(H)
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+H = seq(.1, .2, .02)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+f = estK(hopt)
+hopt = .12
+f = estK(hopt)
+f
+plot(f[,1],f[,2], col = "blue")
+plot(f[,1],f[,2], col = "blue", type = "l")
+plot(f[,1],f[,2], col = "blue", type = "l", ylab = "")
+plot(f[,1],f[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth")
+points(ftil, col = "orange", type = "l")
+plot(f[,1],f[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth", ylim = c(0, .3))
+points(ftil, col = "orange", type = "l")
+plot(f[,1],f[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth", ylim = c(0, .35))
+points(ftil, col = "orange", type = "l")
+#define kernel #
+K = function(y){#
+	return(1/sqrt(2*pi)*exp(-(y^2)/2))	#
+}
+#define fhat #
+fhat = function(x, h){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(ftilX$y) * K((x-X)*sqrt(ftilX$y)/h)))#
+}#
+#
+#get estimated kernel#
+#
+estK = function(h){#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h)#
+	}#
+	return(f)	#
+}#
+#
+H = seq(.05, .3, .05)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+H = seq(.1, .2, .02)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = estK(h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+hopt = .12 #
+f = estK(hopt)
+plot(f[,1],f[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth")
+points(ftil, col = "orange", type = "l")
+plot(f[,1],f[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth", xlab = "")
+legend("topright",  c("Variable h", "Fixed h"), col = c("blue", "orange"))
+plot(f[,1],f[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth", xlab = "")#
+points(ftil, col = "orange", type = "l")#
+legend("topright",  c("Variable h", "Fixed h"), col = c("blue", "orange"))
+legend("topright",  c("Variable h", "Fixed h"), col = c("blue", "orange"), lty = 1)
+plot(f[,1],f[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth", xlab = "")#
+points(ftil, col = "orange", type = "l")#
+legend("topright",  c("Variable h", "Fixed h"), col = c("blue", "orange"), lty = 1)
+#k = "gaussian"#
+k = "epanechnikov"#
+#k = "triangular"
+#define initial bandwidth g #
+g.rot = 1.06*sd(X)/length(X)^(1/5)#
+g.bcv = h.bcv(X, kernel = k)$h#
+g.mlcv = h.mlcv(X, kernel = k)$h #
+#
+#define ftil #
+ftil = density(X, kernel = k, bw = g.rot)
+ftil
+#approximate ftil(X) for our sample#
+ftilX = approx(ftil$x, ftil$y, X)
+#define fhat #
+fhat = function(x, h){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(ftilX$y) * K((x-X)*sqrt(ftilX$y)/h)))#
+}
+estK = function(h){#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h)#
+	}#
+	return(f)	#
+}
+f = estK(hopt)
+plot(f[,1],f[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth", xlab = "")
+ftil_triangular_rot = density(X, kernel = "triangular", bw = g.rot)
+ftil_gaussian_rot = density(X, kernel = "gaussian", bw = g.rot)#
+ftil_gaussian_bcv = density(X, kernel = "gaussian", bw = g.bcv)#
+ftil_gaussian_mlcv = density(X, kernel = "gaussian", bw = g.mlcv)#
+#
+ftil_epanechnikov_rot = density(X, kernel = "epanechnikov", bw = g.rot)#
+ftil_epanechnikov_bcv = density(X, kernel = "epanechnikov", bw = g.bcv)#
+ftil_epanechnikov_mlcv = density(X, kernel = "epanechnikov", bw = g.mlcv)#
+#
+ftil_triangular_rot = density(X, kernel = "triangular", bw = g.rot)#
+ftil_triangular_bcv = density(X, kernel = "triangular", bw = g.bcv)#
+ftil_triangular_mlcv = density(X, kernel = "triangular", bw = g.mlcv)
+#define ftil #
+ftil_gaussian_rot = density(X, kernel = "gaussian", bw = g.rot)#
+ftil_gaussian_bcv = density(X, kernel = "gaussian", bw = g.bcv)#
+ftil_gaussian_mlcv = density(X, kernel = "gaussian", bw = g.mlcv)#
+#
+ftil_epanechnikov_rot = density(X, kernel = "epanechnikov", bw = g.rot)#
+ftil_epanechnikov_bcv = density(X, kernel = "epanechnikov", bw = g.bcv)#
+ftil_epanechnikov_mlcv = density(X, kernel = "epanechnikov", bw = g.mlcv)#
+#
+ftil_triangular_rot = density(X, kernel = "triangular", bw = g.rot)#
+ftil_triangular_bcv = density(X, kernel = "triangular", bw = g.bcv)#
+ftil_triangular_mlcv = density(X, kernel = "triangular", bw = g.mlcv)#
+#
+#approximate ftil(X) for our sample#
+ftilX_gaussian_rot = approx(ftil_gaussian_rot$x, ftil_gaussian_rot$y, X)#
+ftilX_gaussian_bcv = approx(ftil_gaussian_bcv$x, ftil_gaussian_bcv$y, X)#
+ftilX_gaussian_mlcv = approx(ftil_gaussian_mlcv$x, ftil_gaussian_mlcv$y, X)
+ftilX_gaussian_rot
+#define ftil #
+ftil_gaussian_rot = density(X, kernel = "gaussian", bw = g.rot)#
+ftil_gaussian_bcv = density(X, kernel = "gaussian", bw = g.bcv)#
+ftil_gaussian_mlcv = density(X, kernel = "gaussian", bw = g.mlcv)#
+#
+ftil_epanechnikov_rot = density(X, kernel = "epanechnikov", bw = g.rot)#
+ftil_epanechnikov_bcv = density(X, kernel = "epanechnikov", bw = g.bcv)#
+ftil_epanechnikov_mlcv = density(X, kernel = "epanechnikov", bw = g.mlcv)#
+#
+ftil_triangular_rot = density(X, kernel = "triangular", bw = g.rot)#
+ftil_triangular_bcv = density(X, kernel = "triangular", bw = g.bcv)#
+ftil_triangular_mlcv = density(X, kernel = "triangular", bw = g.mlcv)#
+#
+#approximate ftil(X) for our sample#
+ftilX_gaussian_rot = approx(ftil_gaussian_rot$x, ftil_gaussian_rot$y, X)#
+ftilX_gaussian_bcv = approx(ftil_gaussian_bcv$x, ftil_gaussian_bcv$y, X)#
+ftilX_gaussian_mlcv = approx(ftil_gaussian_mlcv$x, ftil_gaussian_mlcv$y, X)#
+#
+ftilX_epanechnikov_rot = approx(ftil_epanechnikov_rot$x, ftil_epanechnikov_rot$y, X)#
+ftilX_epanechnikov_bcv = approx(ftil_epanechnikov_bcv$x, ftil_epanechnikov_bcv$y, X)#
+ftilX_epanechnikov_mlcv = approx(ftil_epanechnikov_mlcv$x, ftil_epanechnikov_mlcv$y, X)#
+#
+ftilX_triangular_rot = approx(ftil_triangular_rot$x, ftil_triangular_rot$y, X)#
+ftilX_triangular_bcv = approx(ftil_triangular_bcv$x, ftil_triangular_bcv$y, X)#
+ftilX_triangular_mlcv = approx(ftil_triangular_mlcv$x, ftil_triangular_mlcv$y, X)
+ftil = density(X, kernel = k, bw = g.rot)
+K = function(y){#
+	return(1/sqrt(2*pi)*exp(-(y^2)/2))	#
+}#
+f = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else if(bw_name == "bcv"){#
+		g = h.bcv(X, kernel = k)$h#
+	}else if(bw_name = "mlcv"){#
+		g = h.mlcv(X, kernel = k)$h #
+	}else{#
+		exit(-1)#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g.rot)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#define fhat #
+	fhat = function(x, h){#
+		n = length(X)#
+		return((1/(n*h))*sum(sqrt(ftilX$y) * K((x-X)*sqrt(ftilX$y)/h)))#
+	}#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h)#
+	}#
+#
+	#return estimate #
+}
+#define kernel #
+K = function(y){#
+	return(1/sqrt(2*pi)*exp(-(y^2)/2))	#
+}#
+#
+#define Kernel density estimate#
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else if(bw_name == "bcv"){#
+		g = h.bcv(X, kernel = k)$h#
+	}else if(bw_name = "mlcv"){#
+		g = h.mlcv(X, kernel = k)$h #
+	}else{#
+		exit(-1)#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g.rot)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#define fhat #
+	fhat = function(x, h){#
+		n = length(X)#
+		return((1/(n*h))*sum(sqrt(ftilX$y) * K((x-X)*sqrt(ftilX$y)/h)))#
+	}#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}
+#define fhat #
+fhat = function(x, h, est){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(est$y) * K((x-X)*sqrt(estX$y)/h)))	#
+}
+#define kernel #
+K = function(y){#
+	return(1/sqrt(2*pi)*exp(-(y^2)/2))	#
+}#
+#define fhat #
+fhat = function(x, h, est){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(est$y) * K((x-X)*sqrt(estX$y)/h)))	#
+}
+#define Kernel density estimate#
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else if(bw_name == "bcv"){#
+		g = h.bcv(X, kernel = k)$h#
+	}else if(bw_name = "mlcv"){#
+		g = h.mlcv(X, kernel = k)$h #
+	}else{#
+		exit(-1)#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g.rot)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h, ftil)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}
+#define kernel #
+K = function(y){#
+	return(1/sqrt(2*pi)*exp(-(y^2)/2))	#
+}#
+#define fhat #
+fhat = function(x, h, est){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(est$y) * K((x-X)*sqrt(estX$y)/h)))	#
+}#
+#
+#define Kernel density estimate#
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else if(bw_name == "bcv"){#
+		g = h.bcv(X, kernel = k)$h#
+	}else if(bw_name == "mlcv"){#
+		g = h.mlcv(X, kernel = k)$h #
+	}else{#
+		exit(-1)#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g.rot)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h, ftil)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}
+f_var_bw(X, "guassian", "rot", .12)
+f_var_bw(X, "gaussian", "rot", .12)
+#define kernel guassian kernel#
+K = function(y){#
+	return(1/sqrt(2*pi)*exp(-(y^2)/2))	#
+}#
+#define fhat #
+fhat = function(x, h, est){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(est$y) * K((x-X)*sqrt(est$y)/h)))	#
+}
+f_var_bw(X, "gaussian", "rot", .12)
+warnings()
+X
+fhat(1, .4, ftil)
+ftilX
+x
+#define kernel guassian kernel#
+K = function(y){#
+	return(1/sqrt(2*pi)*exp(-(y^2)/2))	#
+}#
+#define fhat #
+fhat = function(x, h, est){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(est$y) * K((x-X)*sqrt(est$y)/h)))	#
+}#
+#
+#define Kernel density estimate#
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else if(bw_name == "bcv"){#
+		g = h.bcv(X, kernel = k)$h#
+	}else if(bw_name == "mlcv"){#
+		g = h.mlcv(X, kernel = k)$h #
+	}else{#
+		exit(-1)#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g.rot)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h, ftilX)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}
+f_var_bw(X, "gaussian", "rot", .12)
+z = f_var_bw(X, "gaussian", "rot", .12)
+plot(z[,1], z[,2])
+H = seq(.05, .3, .05)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = f_var_bw(X, "gaussian", "rot", h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+H = seq(.1, .2, .02)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = f_var_bw(X, "gaussian", "rot", h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+1.06 * sd(X) * (length(X))^(-1/5)
+f_vbw = f_var_bw(X, "gaussian", "rot", hopt)#
+f_fbw = density(X, "gaussian", h = 1.06 * sd(X) * (length(X))^(-1/5))
+f_fbw = density(X, "gaussian", bw = 1.06 * sd(X) * (length(X))^(-1/5))
+1.06 * sd(X) * (length(X))^(-1/5)
+?density
+rot_bw = 1.06 * sd(X) * (length(X))^(-1/5)
+f_fbw = density(X, "gaussian", bw = rot_bw)
+rot_bw
+f_fbw = density(X, bw = rot_bw, kernel = "gaussian")
+plot(f_fbw)
+plot(f_vbw[,1],fvbw[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth", xlab = "")
+plot(f_vbw[,1],f_vbw[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth", xlab = "")
+#find fixed bandwidth (fbw) kernel#
+rot_bw = 1.06 * sd(X) * (length(X))^(-1/5)#
+f_fbw = density(X, bw = rot_bw, kernel = "gaussian")
+#Comparison to ftil#
+plot(f_vbw[,1],f_vbw[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth", xlab = "")#
+points(f_fbw, col = "orange", type = "l")#
+legend("topright",  c("Variable h", "Fixed h"), col = c("blue", "orange"), lty = 1)
+plot(seq(-3,3), 1)
+plot(seq(-3,3), seq(0,1))
+plot(c(1,1), ylim = c(0,4), xlim = c(-3,3), col = "white")
+K = c("triangular", "gaussian", "epanechnikov")#
+BW = c("rot", "bcv", "mlcv")#
+#
+plot(c(1,1), ylim = c(0,4), xlim = c(-3,3), col = "white")#
+for(k in 1:3){#
+	for(bw in 1:3){#
+		#get estimate #
+		f = f_var_bw(X, K[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw)#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw)#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw)#
+		}#
+	}#
+}
+K = function(y){#
+	return(1/sqrt(2*pi)*exp(-(y^2)/2))	#
+}
+Kern = c("triangular", "gaussian", "epanechnikov")#
+BW = c("rot", "bcv", "mlcv")#
+#
+plot(c(1,1), ylim = c(0,4), xlim = c(-3,3), col = "white")#
+for(k in 1:3){#
+	for(bw in 1:3){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw)#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw)#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw)#
+		}#
+	}#
+}
+#define Kernel density estimate#
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else if(bw_name == "bcv", deriv.order = 0){#
+		g = h.bcv(X, kernel = k, deriv.order = 0)$h#
+	}else if(bw_name == "mlcv", deriv.order = 0){#
+		g = h.mlcv(X, kernel = k)$h #
+	}else{#
+		exit(-1)#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g.rot)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h, ftilX)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}#
+#
+#------------------------------------------------
+#define Kernel density estimate#
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else if(bw_name == "bcv", deriv.order = 0){#
+		g = h.bcv(X, kernel = k, deriv.order = 0)$h#
+	}else if(bw_name == "mlcv", deriv.order = 0){#
+		g = h.mlcv(X, kernel = k)$h #
+	}else{#
+		exit(-1)#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g.rot)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h, ftilX)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else if(bw_name == "bcv"){#
+		g = h.bcv(X, kernel = k, deriv.order = 0)$h#
+	}else if(bw_name == "mlcv", deriv.order = 0){#
+		g = h.mlcv(X, kernel = k)$h #
+	}else{#
+		exit(-1)#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g.rot)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h, ftilX)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}
+#define Kernel density estimate#
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else if(bw_name == "bcv"){#
+		g = h.bcv(X, kernel = k, deriv.order = 0)$h#
+	}else if(bw_name == "mlcv"){#
+		g = h.mlcv(X, kernel = k, deriv.order = 0)$h #
+	}else{#
+		exit(-1)#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g.rot)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h, ftilX)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}
+Kern = c("triangular", "gaussian", "epanechnikov")#
+BW = c("rot", "bcv", "mlcv")#
+#
+plot(c(1,1), ylim = c(0,4), xlim = c(-3,3), col = "white")#
+for(k in 1:3){#
+	for(bw in 1:3){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw)#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw)#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw)#
+		}#
+	}#
+}
+?densit
+?density
+Kern = c("rectangular", "gaussian", "epanechnikov")#
+BW = c("rot", "bcv", "mlcv")#
+#
+plot(c(1,1), ylim = c(0,4), xlim = c(-3,3), col = "white")#
+for(k in 1:3){#
+	for(bw in 1:3){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw)#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw)#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw)#
+		}#
+	}#
+}
+library("kedd")
+H = seq(.05, .3, .05)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = f_var_bw(X, "gaussian", "rot", h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}#
+#
+H = seq(.1, .2, .02)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = f_var_bw(X, "gaussian", "rot", h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}#
+#
+hopt = .12 #
+#
+#-------------------------------------------------------#
+##
+#		Compare to fixed bandwidth #
+##
+#-------------------------------------------------------#
+ #find variable bandwidth (vbw) kernel#
+f_vbw = f_var_bw(X, "gaussian", "rot", hopt)#
+#
+#find fixed bandwidth (fbw) kernel#
+rot_bw = 1.06 * sd(X) * (length(X))^(-1/5)#
+f_fbw = density(X, bw = rot_bw, kernel = "gaussian")#
+#
+#Comparison to ftil#
+plot(f_vbw[,1],f_vbw[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth", xlab = "")#
+points(f_fbw, col = "orange", type = "l")#
+legend("topright",  c("Variable h", "Fixed h"), col = c("blue", "orange"), lty = 1)#
+#
+#-----------------------------------------------------------#
+##
+#		Compare starting kernels #
+##
+#-----------------------------------------------------------#
+#
+Kern = c("rectangular", "gaussian", "epanechnikov")#
+BW = c("rot", "bcv", "mlcv")#
+#
+plot(c(1,1), ylim = c(0,4), xlim = c(-3,3), col = "white")#
+for(k in 1:3){#
+	for(bw in 1:3){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw)#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw)#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw)#
+		}#
+	}#
+}
+#define Kernel density estimate#
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else if(bw_name == "bcv"){#
+		g = h.bcv(X, kernel = k)$h#
+	}else if(bw_name == "mlcv"){#
+		g = h.mlcv(X, kernel = k)$h #
+	}else{#
+		exit(-1)#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g.rot)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h, ftilX)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}#
+#
+#-------------------------------------------------------#
+##
+#		Find opt h #
+##
+#-------------------------------------------------------#
+#
+H = seq(.05, .3, .05)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = f_var_bw(X, "gaussian", "rot", h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}#
+#
+H = seq(.1, .2, .02)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = f_var_bw(X, "gaussian", "rot", h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}#
+#
+hopt = .12 #
+#
+#-------------------------------------------------------#
+##
+#		Compare to fixed bandwidth #
+##
+#-------------------------------------------------------#
+ #find variable bandwidth (vbw) kernel#
+f_vbw = f_var_bw(X, "gaussian", "rot", hopt)#
+#
+#find fixed bandwidth (fbw) kernel#
+rot_bw = 1.06 * sd(X) * (length(X))^(-1/5)#
+f_fbw = density(X, bw = rot_bw, kernel = "gaussian")#
+#
+#Comparison to ftil#
+plot(f_vbw[,1],f_vbw[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth", xlab = "")#
+points(f_fbw, col = "orange", type = "l")#
+legend("topright",  c("Variable h", "Fixed h"), col = c("blue", "orange"), lty = 1)
+Kern = c("rectangular", "gaussian", "epanechnikov")#
+BW = c("rot", "bcv", "mlcv")#
+#
+plot(c(1,1), ylim = c(0,4), xlim = c(-3,3), col = "white")#
+for(k in 1:3){#
+	for(bw in 1:3){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw)#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw)#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw)#
+		}#
+	}#
+}
+Kern = c("gaussian", "epanechnikov")#
+BW = c("rot", "bcv", "mlcv")#
+#
+plot(c(1,1), ylim = c(0,4), xlim = c(-3,3), col = "white")#
+for(k in 1:2){#
+	for(bw in 1:3){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw)#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw)#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw)#
+		}#
+	}#
+}
+plot(c(1,1), ylim = c(0,.4), xlim = c(-3,3), col = "white")#
+for(k in 1:2){#
+	for(bw in 1:3){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}
+BW = seq(.1, .5, .1)
+Kern = c("gaussian", "epanechnikov")#
+BW = seq(.1, .5, .1)#
+#
+plot(c(1,1), ylim = c(0,.4), xlim = c(-3,3), col = "white")#
+for(k in 1:2){#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else if(bw_name == "bcv"){#
+		g = h.bcv(X, kernel = k)$h#
+	}else if(bw_name == "mlcv"){#
+		g = h.mlcv(X, kernel = k)$h #
+	}else{#
+		g = bw#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g.rot)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h, ftilX)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}
+#define Kernel density estimate#
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else{#
+		g = bw#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g.rot)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h, ftilX)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}
+H = seq(.05, .3, .05)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = f_var_bw(X, "gaussian", "rot", h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}#
+#
+H = seq(.1, .2, .02)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = f_var_bw(X, "gaussian", "rot", h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}
+Kern = c("gaussian", "epanechnikov")#
+BW = seq(.1, .5, .1)#
+#
+plot(c(1,1), ylim = c(0,.4), xlim = c(-3,3), col = "white")#
+for(k in 1:2){#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}
+Kern = c("gaussian")
+plot(c(1,1), ylim = c(0,.4), xlim = c(-3,3), col = "white")#
+for(k in 1:2){#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}
+Kern = c("gaussian")#
+BW = seq(.1, .5, .1)#
+#
+plot(c(1,1), ylim = c(0,.4), xlim = c(-3,3), col = "white")#
+for(k in 1:length(Gaussian)){#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}
+Kern = c("gaussian")#
+BW = seq(.1, .5, .1)#
+#
+plot(c(1,1), ylim = c(0,.4), xlim = c(-3,3), col = "white")#
+for(k in 1:length(Kern)){#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}
+f1 = f_var_bw(X, "gaussian", .1, hopt)
+f1 = f_var_bw(X, "gaussian", .1, hopt)#
+f2 = f_var_bw(X, "gaussian", .2, hopt)#
+f3 = f_var_bw(X, "gaussian", .3, hopt)#
+f4 = f_var_bw(X, "gaussian", .4, hopt)
+plot(f1[,1], f1[,2], type = "l", col = "red")
+plot(f2[,1], f2[,2], type = "l", col = "red")
+plot(f1[,1], f1[,2], type = "l", col = "red")#
+points(f2[,1], f2[,2], type = "l", col = "red")
+f1[,1] == f2[,2]
+f4 = f_var_bw(X, "gaussian", .4, hopt)
+plot(f1[,1], f1[,2], type = "l", col = "red")#
+points(f4[,1], f4[,2], type = "l", col = "red")
+points(f4[,1], f4[,2], type = "l", col = "red")
+cbind(f1[,1], f4[,1])
+cbind(f1[,2], f4[,2])
+#define Kernel density estimate#
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else{#
+		g = bw#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h, ftilX)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}
+H = seq(.05, .3, .05)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = f_var_bw(X, "gaussian", "rot", h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}#
+#
+H = seq(.1, .2, .02)#
+par(mfrow=c(3,2), mai = c(1, 0.1, 0.1, 0.1))#
+for(h in H){#
+	f = f_var_bw(X, "gaussian", "rot", h)#
+	plot(f[,1],f[,2], type = "l", main = paste("H: ", h))#
+}#
+#
+hopt = .12
+#find variable bandwidth (vbw) kernel#
+f_vbw = f_var_bw(X, "gaussian", "rot", hopt)#
+#
+#find fixed bandwidth (fbw) kernel#
+rot_bw = 1.06 * sd(X) * (length(X))^(-1/5)#
+f_fbw = density(X, bw = rot_bw, kernel = "gaussian")#
+#
+#Comparison to ftil#
+plot(f_vbw[,1],f_vbw[,2], col = "blue", type = "l", ylab = "", main = "Variable Bandwidth vs Fixed Bandwidth", xlab = "")#
+points(f_fbw, col = "orange", type = "l")#
+legend("topright",  c("Variable h", "Fixed h"), col = c("blue", "orange"), lty = 1)
+Kern = c("gaussian")#
+BW = seq(.1, .5, .1)#
+#
+plot(c(1,1), ylim = c(0,.4), xlim = c(-3,3), col = "white")#
+for(k in 1:length(Kern)){#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}
+Kern = c("gaussian","rectangular", "triangular")#
+BW = seq(.1, .5, .1)
+plot(c(1,1), ylim = c(0,.4), xlim = c(-3,3), col = "white")#
+for(k in 1:length(Kern)){#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}
+par(mfrow = c(3,1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4))#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}
+Kern = c("gaussian","rectangular", "triangular")#
+BW = seq(.1,.25,.5)
+par(mfrow = c(3,1),  mai = c(1, 0.1, 0.1, 0.1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4))#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}
+Kern = c("gaussian","rectangular", "triangular")#
+BW = seq(.1,.25,.5)#
+#
+par(mfrow = c(3,1),  mai = c(1, 0.1, 0.1, 0.1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4))#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}
+par(mfrow = c(3,1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4))#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}#
+f1 = f_var_bw(X, "gaussian", .1, hopt)#
+f2 = f_var_bw(X, "gaussian", .2, hopt)#
+f3 = f_var_bw(X, "gaussian", .3, hopt)#
+f4 = f_var_bw(X, "gaussian", .4, hopt)#
+#
+plot(f1[,1], f1[,2], type = "l", col = "red")#
+points(f4[,1], f4[,2], type = "l", col = "red")
+BW = c(.1,.25,.5)
+par(mfrow = c(3,1),  mai = c(1, 0.1, 0.1, 0.1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4))#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#controll structures to make good graphics#
+		if(k == 1){#
+			points(f[,1], f[,2], col = "green", lty = bw, type = "l")#
+		}#
+		if(k == 2){#
+			points(f[,1], f[,2], col = "red", lty = bw, type = "l")#
+		}#
+		if(k == 3){#
+			points(f[,1], f[,2], col = "blue", lty = bw, type = "l")#
+		}#
+	}#
+}
+par(mfrow = c(3,1),  mai = c(1, 0.1, 0.1, 0.1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4))#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#plot with different color#
+		points(f[,1], f[,2], col = bw, type = "l")#
+	}#
+}
+par(mfrow = c(3,1),  mai = c(1, 0.1, 0.1, 0.1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4), xlab = "", main = "")#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#plot with different color#
+		points(f[,1], f[,2], col = bw, type = "l")#
+	}#
+}
+par(mfrow = c(3,1),  mai = c(1, 0.1, 0.1, 0.1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4), xlab = "", main = "")#
+	legened("topright",c("h = .1", "h = 0.25", "h = 0.5") )#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#plot with different color#
+		points(f[,1], f[,2], col = bw+1, type = "l")#
+	}#
+}
+Kern = c("gaussian","rectangular", "triangular")#
+BW = c(.1,.25,.5)#
+#
+par(mfrow = c(3,1),  mai = c(1, 0.1, 0.1, 0.1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4), xlab = "", main = "")#
+	legend("topright",c("h = .1", "h = 0.25", "h = 0.5") )#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#plot with different color#
+		points(f[,1], f[,2], col = bw+1, type = "l")#
+	}#
+}
+par(mfrow = c(3,1),  mai = c(1, 0.1, 0.1, 0.1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4), xlab = "", main = "")#
+	legend("topright",c("h = .1", "h = 0.25", "h = 0.5"), col = c("red", "green", "blue"))#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#plot with different color#
+		points(f[,1], f[,2], col = bw+1, type = "l")#
+	}#
+}
+par(mfrow = c(3,1),  mai = c(1, 0.1, 0.1, 0.1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4), xlab = "", main = "")#
+	legend("topright",c("h = .1", "h = 0.25", "h = 0.5"), col = c("red", "green", "blue"), lty = 1)#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#plot with different color#
+		points(f[,1], f[,2], col = bw+1, type = "l")#
+	}#
+}
+par(mfrow = c(1,3),  mai = c(1, 0.1, 0.1, 0.1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4), xlab = "", main = "")#
+	legend("topright",c("h = .1", "h = 0.25", "h = 0.5"), col = c("red", "green", "blue"), lty = 1)#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#plot with different color#
+		points(f[,1], f[,2], col = bw+1, type = "l")#
+	}#
+}
+par(mfrow = c(1,3),  mai = c(1, 0.1, 0.1, 0.1))#
+for(bw in 1:length(BW)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4), xlab = "", main = "")#
+	legend("topright",c("Gaussian", "Uniform", "Triangular"), col = c("red", "green", "blue"), lty = 1)#
+	for(k in 1:length(Kern)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#plot with different color#
+		points(f[,1], f[,2], col = k+1, type = "l")#
+	}#
+}
+par(mfrow = c(1,3),  mai = c(1, 0.1, 0.1, 0.1))#
+for(bw in 1:length(BW)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4), xlab = paste("h = ",BW[bw]), main = "")#
+	legend("topright",c("Gaussian", "Uniform", "Triangular"), col = c("red", "green", "blue"), lty = 1)#
+	for(k in 1:length(Kern)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#plot with different color#
+		points(f[,1], f[,2], col = k+1, type = "l")#
+	}#
+}
+par(mfrow = c(1,3),  mai = c(1, 0.1, 0.1, 0.1))#
+for(k in 1:length(Kern)){#
+	plot(c(1,1), col = "white", xlim = c(-3,3), ylim = c(0,0.4), xlab = Kern[k], main = "")#
+	legend("topright",c("h = .1", "h = 0.25", "h = 0.5"), col = c("red", "green", "blue"), lty = 1)#
+	for(bw in 1:length(BW)){#
+		#get estimate #
+		f = f_var_bw(X, Kern[k], BW[bw], hopt)#
+		#plot with different color#
+		points(f[,1], f[,2], col = bw+1, type = "l")#
+	}#
+}
+write.table(X, "nonparmdata.txt")
+getwd()
+#plot estimate #
+est = f_var_bw(X, "gaussian", "rot", hopt)#
+plot(est[,1], est[,2], type = "l")
+setwd("~/Destkop/Proj1")
+setwd("~/Destkop/proj1")
+setwd("~/Desktop/Proj1")
+X = read.table("nonparmdata.txt")[,1]
+X
+library(kedd)
+#define n #
+n = length(X)#
+#
+#Assuming Guassian Kernel #
+Knorm = 1/(2*sqrt(pi)) #
+mu2K = 1
+#numerical integration for ||~f''||_2^2	#
+ftil2prime = dkde(X, kernel = "gaussian", deriv.order = 2, h = 1.06 * sd(X) * (length(X))^(-1/5))
+#appoximate area under curve#
+dx = diff(ftil2prime$eval.points)[1]#
+A = sum(dx * ftil2prime$est.fx^2)#
+#
+#define ci#
+ftil = density(X, kernel = "gaussian", bw = 1.06*sd(X)/length(X)^(1/5))#
+ci = approx(ftil$x, ftil$y, X)$y
+#fint opt h #
+top = Knorm * mean(ci)#
+bottom = mu2K * A* (mean(ci^(-2)))^2#
+hopt = (top/bottom)^(1/5) * n^(-1/5)#
+#
+#plot estimate #
+est = f_var_bw(X, "gaussian", "rot", hopt)#
+plot(est[,1], est[,2], type = "l")
+#define kernel guassian kernel#
+K = function(y){#
+	return(1/sqrt(2*pi)*exp(-(y^2)/2))	#
+}#
+#define fhat #
+fhat = function(x, h, est){#
+	n = length(X)#
+	return((1/(n*h))*sum(sqrt(est$y) * K((x-X)*sqrt(est$y)/h)))	#
+}#
+#
+#define Kernel density estimate#
+f_var_bw = function(X, k, bw_name, h){#
+	#get initial bandwidth#
+	if(bw_name == "rot"){#
+		g = 1.06*sd(X)/length(X)^(1/5)#
+	}else{#
+		g = bw#
+	}#
+	#get initial estimate #
+	ftil = density(X, kernel = k, bw = g)#
+	#approximate ftil(X) for our sample#
+	ftilX = approx(ftil$x, ftil$y, X)#
+	#get estimated kernel#
+	x = seq(-3,3,by = .05)#
+	f = matrix(NA, ncol = 2, nrow = length(x))#
+	for(i in 1:nrow(f)){#
+		f[i,1] = x[i]#
+		f[i,2] = fhat(x[i], h, ftilX)#
+	}#
+#
+	#return estimate #
+	return(f)#
+}
+#plot estimate #
+est = f_var_bw(X, "gaussian", "rot", hopt)#
+plot(est[,1], est[,2], type = "l")
+hopt
+plot(est[,1], est[,2], type = "l", ylab = "", xlab = "", main = "h = 0.077", col = "blue")
+setwd("~/Desktop/Proj1")
+X = read.table("nonparmdata.txt")[,1]
+X
+library(kedd)
+n = length(X)
+#Assuming Guassian Kernel #
+Knorm = 1/(2*sqrt(pi)) #
+mu2K = 1
+ftil2prime = dkde(X, kernel = "gaussian", deriv.order = 2, h = 1.06 * sd(X) * (length(X))^(-1/5))
+dx = diff(ftil2prime$eval.points)[1]#
+A = sum(dx * ftil2prime$est.fx^2)
+ftil = density(X, kernel = "gaussian", bw = 1.06*sd(X)/length(X)^(1/5))#
+ci = approx(ftil$x, ftil$y, X)$y
+top = Knorm * mean(ci)#
+bottom = mu2K * A* (mean(ci^(-2)))^2#
+hopt = (top/bottom)^(1/5) * n^(-1/5)
+hopt

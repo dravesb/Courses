@@ -1,0 +1,211 @@
+---
+title: "MA 575 HW 8"
+author: "Benjamin Draves"
+date: "November 14"
+#output: pdf_document
+output: html_document
+fontsize: 11pt
+geometry: margin=1in
+---
+
+### Exerices 8.1
+
+#### (a)
+
+```{r}
+#read in data 
+pga = read.csv("~/Desktop/Courses/MA 575/book_data/pgatour2006.csv")
+
+#take a look 
+head(pga)
+
+#build model matrix 
+mdat = pga[,c(3,5:10,12)]
+mdat[,1] = log(mdat[,1])
+
+#Set up data structures 
+best = matrix(0, ncol = 5, nrow = 2^7)
+colnames(best) = c("Model", "R^2", "AIC", "AICc", "BIC")
+n = nrow(pga)
+
+#build aicc function 
+AICC = function(model,K, n){
+  return(AIC(model) + 2*(K)*(K+1)/(n - K-1))
+}
+
+#build list of all possible subsets 
+subsets = lapply(0:7, function(x) combn(7,x))
+
+#fix boundary case 
+m = lm(mdat$PrizeMoney ~ 1)
+best[1,] = as.numeric(c(0, summary(m)$adj.r.squared, AIC(m), AICC(m, 1, n), BIC(m)))
+```
+
+To this point we've only prepared to search over all possible subsets of the seven input variables. 
+
+
+```{r}
+
+#loop over all possible subsets
+counter = 2 
+#loop over subsets of size 1, 2,..., 7
+for(i in 2:length(subsets)){ 
+  #loop over subsets of size i
+  for(j in 1:length(subsets[[i]][1,])){
+  
+    #get variable indices we'll be using
+    variable_indices = subsets[[i]][,j] + 1
+    #build the model
+    m = lm(PrizeMoney~. , data = mdat[,c(1, variable_indices)])
+    
+    #get statistics 
+    name = as.numeric(paste(variable_indices, collapse = ""))
+    r2 = summary(m)$adj.r.squared 
+    aic = AIC(m)
+    aicc = AICC(m, 1 + length(variable_indices),n)
+    bic = BIC(m)
+    best[counter,] = c(name, r2, aic, aicc, bic)
+    counter = counter + 1
+  }
+}
+
+#identify best models
+R2m = best[which.max(best[,2]),1]
+AICm = best[which.min(best[,3]),1]
+AICcm = best[which.min(best[,4]),1]
+BICm = best[which.min(best[,5]),1]
+
+c(R2m, AICm, AICcm, BICm)
+
+```
+From here, we see that $R^2_{adj}$, $AIC$, and $AICc$ all choose the same model referring to $$\log(PrizeMoney) = \beta_0 + \beta_3x_3 + \beta_5x_5 + \beta_6x_6+ \beta_7x_7+ \beta_8x_8 $$ while $BIC$ chooses a more parsimonious model $$\log(PrizeMoney) = \beta_0 + \beta_3x_3 + \beta_5x_5 + \beta_7x_7$$
+
+#### (b)
+
+```{r}
+library(MASS)
+initialM = lm(PrizeMoney ~., data = mdat)
+lowerM = formula(Prize ~1)
+
+AICm = stepAIC(initialM,scope = c(lower = lowerM), direction = "backward")
+BICm = stepAIC(initialM,scope = c(lower = lowerM), direction = "backward", k = log(n))
+
+summary(AICm)
+summary(BICm)
+```
+Here we see that the backwards stepwise $AIC$ and the backwards stepwise $BIC$ approach recover the _best_ model as identified in part $a$. That is we see that this process finds that the optimal model given by $AIC$ is 
+$$\log(PrizeMoney) = \beta_0 + \beta_3x_3 + \beta_5x_5 + \beta_6x_6+ \beta_7x_7+ \beta_8x_8 $$ and $BIC$ chooses a more parsimonious model $$\log(PrizeMoney) = \beta_0 + \beta_3x_3 + \beta_5x_5 + \beta_7x_7$$
+
+#### (c)
+
+
+```{r}
+initialM = lm(PrizeMoney ~1, data = mdat)
+topM = formula(PrizeMoney~DrivingAccuracy +GIR +PuttingAverage +BirdieConversion +SandSaves +Scrambling +PuttsPerRound)
+
+
+AICm = stepAIC(initialM,scope = c(upper = topM), direction = "forward")
+BICm = stepAIC(initialM,scope = c(upper = topM),direction = "forward", k = log(n))
+
+summary(AICm)
+summary(BICm)
+```
+
+Here we see that again AIC choose the same model as above but BIC chooses a slightly different model. That is BIC chooses
+$$\log(PrizeMoney) = \beta_0 + \beta_3x_3 + \beta_5x_5 + \beta_7x_7+ \beta_8x_8$$
+#### (d)
+
+By the way the forward/backward method proceeds answers why these processes choose different models. The backwards method removes the unneeded variables but has all variables in the model that are significant. For this reason, it always possess the significant variables involved. For this reason, the exhaustive and the backwards models are the same. In the forwards selection we see that Putts Per Round is included in the BIC model in the second iteration of the algorithm. In the next two iterations of the algorithm, we add in two correlated variables that actually make the Putts Per Round variable insignificant. But because we can never remove a variable in forwards selection, we must leave it in the model. 
+
+#### (e)
+
+By working with this dataset before, we have high colinearity amongst the variables. This redundancy can lead to inflated varianes of coefficents. For this reason, I choose the most simple model, chosen by BIC, as 
+$$\log(PrizeMoney) = \beta_0 + \beta_3x_3 + \beta_5x_5 + \beta_7x_7$$ where $x_3 = GIR$, $x_5 = BirdieConversion$ and $x_7 = Scrambling$. 
+
+#### (f)
+
+```{r}
+final_model = lm(PrizeMoney ~ GIR + BirdieConversion + Scrambling, data = mdat)
+summary(final_model)
+```
+
+
+Here we see that a one unit increase in GIR correlates to a $15%$ increase in prize money, a one unit increase in BirdieConversion correlates to a $20%$ increase in prize money, and a one unit increase in scrambling correlates to a $9%$ increase in prize money.
+
+We should be cautious. We chose the optimal model using the data we are using to report these values. Therefore, some of the significance in these variables may simply be noise - and we have not corrected for that. If we wanted to be certain of our inferential statements, we would need to have a complete training, validation, and testing set. 
+
+### Exercise 8.2 
+
+For ease of notation, let $\textbf{X}_C = X$, $\mathbf{X}_{C(i)} = X_{(i)}$. That is, no subscript implies we are considering the full candidate set, and $(i)$ refers to removing the ith entry. Before, we show our result, we will verify three equation useful in our derivations. 
+
+1. \textbf{Claim:} $X_{(i)}^{T}X_{(i)} = X^{T}X - x_ix_i^{T}$. To see this consider the matrices given below 
+
+\begin{align*}
+X_{(i)}^{T}X_{(i)} &= 
+\begin{bmatrix}
+\sum_{k\neq i}x_{k}(1)x_k(1) & \sum_{k\neq i}x_{k}(1)x_k(2) & \ldots & \sum_{k\neq i}x_{k}(1)x_k(n)\\ 
+\sum_{k\neq i}x_{k}(2)x_k(1) & \sum_{k\neq i}x_{k}(2)x_k(2) & \ldots & \sum_{k\neq i}x_{k}(2)x_k(n)\\
+\vdots & \vdots &\ddots & \vdots \\
+\sum_{k\neq i}x_{k}(n)x_k(1) & \sum_{k\neq i}x_{k}(n)x_k(2) & \ldots & \sum_{k\neq i}x_{k}(n)x_k(n)\\
+\end{bmatrix}\\
+&= \begin{bmatrix}
+\sum_{k=1}^{n}x_{k}(1)x_k(1) & \sum_{k=1}^{n}x_{k}(1)x_k(2) & \ldots & \sum_{k=1}^{n}x_{k}(1)x_k(n)\\ 
+\sum_{k=1}^{n}x_{k}(2)x_k(1) & \sum_{k=1}^{n}x_{k}(2)x_k(2) & \ldots & \sum_{k=1}^{n}x_{k}(2)x_k(n)\\
+\vdots & \vdots &\ddots & \vdots \\
+\sum_{k=1}^{n}x_{k}(n)x_k(1) & \sum_{k=1}^{n}x_{k}(n)x_k(2) & \ldots & \sum_{k=1}^{n}x_{k}(n)x_k(n)\\
+\end{bmatrix} - 
+\begin{bmatrix}
+x_{i}(1)x_i(1) & x_{i}(1)x_i(2) & \ldots & x_{i}(1)x_i(n)\\ 
+x_{i}(2)x_i(1) & x_{i}(2)x_i(2) & \ldots & x_{i}(2)x_i(n)\\
+\vdots & \vdots &\ddots & \vdots \\
+x_{i}(n)x_i(1) & x_{i}(n)x_i(2) & \ldots & x_{i}(n)x_i(n)\\
+\end{bmatrix} \\
+&= X^{T}X - x_ix^{T}
+\end{align*}
+
+2. X_{(i)}^{T} Y_{(i)} = X^{T}Y - x_iy_i. To see this we have the following 
+
+\begin{align*}
+X_{(i)}^{T}Y_{(i)} &= \begin{bmatrix}
+\sum_{k\neq i}x_{k}(1)y(k) \\ 
+\sum_{k\neq i}x_{k}(2)y(k) \\ 
+\vdots\\
+\sum_{k\neq i}x_{k}(n)y(k)\\
+\end{bmatrix}\\
+&= \begin{bmatrix}
+\sum_{k = 1}^{n}x_{k}(1)y(k) \\ 
+\sum_{k = 1}^{n}x_{k}(2)y(k) \\ 
+\vdots\\
+\sum_{k = 1}^{n}x_{k}(n)y(k)\\
+\end{bmatrix} - 
+\begin{bmatrix}
+x_{i}(1)y(i) \\ 
+x_{i}(2)y(i) \\ 
+\vdots\\
+x_{i}(n)y(i)\\
+\end{bmatrix}\\
+&= X^{T}Y - x_iy_i
+\end{align*}
+
+3. $x_i^{T}(X^{T}X)^{-1}x_i = h_{ii}$. Notice that $H = X(X^{T}X)^{-1}X^{T}$. Therefore, $H(i,i)$ corresponds to $x_i^{T}(X^{T}X)^{-1}x_i$.
+
+Having these facts, look to show that $$y_i - x_i^{T}\hat{\beta}_{(i)} = \frac{\hat{e}_i}{1-h_{ii}}$$ Noting that $\hat{e}_{i} = y_i - \hat{y}_i$, we can rearrange terms to show this is equivalent to $$x_i^{T}\hat{\beta}_{(i)} = \frac{\hat{y}_i - y_ih_{ii}}{1-h_{ii}}$$
+Using this, consider the following 
+
+\begin{align*}
+x_{i}^{T}\hat{\beta}_{(i)} &= x_i(X_{(i)}^{T}X_{(i)})^{-1}X_{(i)}^{T}Y_{(i)}\\
+&= x_i^{T}(X^{T}X-x_ix_i^T)^{-1}(X^{T}Y - x_iy_i )
+\end{align*}
+
+Now, by the Sherman Morrison formula, with $A = X^{T}X$, $u = -x_i$, and $v^{T} = x_i^{T}$, we see 
+
+\begin{align*}
+&= x_i^{T}\left((X^TX)^{-1}+\frac{(X^TX)^{-1}x_ix_i^T(X^TX)^{-1}}{1 - x_i^{T}(X^TX)^{-1}x_i}\right)(X^{T}Y - x_iy_i )\\
+&= x_i^{T}\hat{\beta} + \frac{h_{ii}x_i^T\hat{\beta}}{1-h_{ii}} - h_{ii}y_i - \frac{h_{ii}^2y_i}{1-h_{ii}}\\
+&= \frac{\hat{y_i}(1-h_{ii}) + h_{ii}\hat{y_i} - h_{ii}(1-h_{ii})y_i -h_{ii}^2y_i}{1-h_{ii}}\\
+&= \frac{\hat{y_i}-h_{ii}y_i}{1 - h_{ii}}
+\end{align*}
+
+This implies that $$y_i - x_i^T\hat{\beta}_{(i)} = \frac{\hat{e}_i}{1-h_{ii}}$$ 
+
+and $$PRESS = \sum_{i=1}^{n}(y_i - x_i^T\hat{\beta}_{(i)})^2 =\sum_{i=1}^{n} \left(\frac{\hat{e}_i}{1-h_{ii}}\right)^2$$

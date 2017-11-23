@@ -1,0 +1,284 @@
+---
+title: "MA 575 HW"
+author: "Benjamin Draves"
+date: "October 24, 2017"
+output: pdf_document
+fontsize: 11pt
+geometry: margin=1in
+---
+
+### Exerices 6.1 
+
+#### (a)
+
+```{r}
+#read ind data
+dat = read.csv("~/Desktop/Courses/MA 575/book_data/cars04.csv", header = TRUE)
+
+#take a peak 
+str(dat)
+
+#cast Hybrid as a factor 
+dat$Hybrid = as.factor(dat$Hybrid)
+
+#build model 
+model = lm(SuggestedRetailPrice ~ EngineSize + Cylinders + Horsepower + HighwayMPG + Weight + WheelBase + Hybrid, data = dat)
+```
+
+Having built the model we will now look at some diagnostics - scatter matrix of covariates, added variable plots, diagnostic plots etc. 
+
+```{r}
+#Scatter matrix 
+scat.mat = dat[,c(2,5:7, 9:11)]
+
+#Scatter matrix plot
+pairs(scat.mat, gap = 0.4)
+```
+
+
+It appears that most of our covariates are related. Specifically weight and wheel base are strongly linearly related. We should be careful when testing significance of either of these variables with high VIF. There are other trends that can be seen - Horsepower vs Weight, Enginesize vs HighwayMPG, Engine Size vs Wheel base. These are all closely related to the overall size of the vehicle. (Some PC regression would do really well here..). Next we'll look at added variable plots. 
+
+```{r}
+#added variable plots 
+library(car)
+
+par(mfrow=c(2,3))
+avPlots(model, ~EngineSize)
+avPlots(model, ~Cylinders)
+avPlots(model, ~Horsepower)
+avPlots(model, ~HighwayMPG)
+avPlots(model, ~Weight)
+avPlots(model, ~WheelBase)
+
+```
+
+It looks like all variables add a significant amount of information to our regression (i.e. each regression explains additional variance in the price) expect for Wheel Base which is almost entirely constant after removing affects of other variables. Notice that weight does not have this effect but we noted how closely related they were. We may need to consider removing that variable to improve the colinearity issue. 
+
+```{r}
+#Recast hybrid as a numeric for correlation purposes 
+scat.mat$Hybrid = as.numeric(as.character(scat.mat$Hybrid))
+
+#cast scat.mat as a matrix 
+scat.mat = as.matrix(scat.mat)
+
+#correlation matrix 
+x = cor(scat.mat)
+x
+
+#visual representaion of pairiwse 
+hist(abs(x[upper.tri(x, diag = FALSE)]), main = "", xlab = "Correlation Coefficent", breaks = 15)
+```
+As we noted in the pairwise plots - we have colinearity issues with our covariates. 
+
+```{r}
+#take a look at the standardized residuals
+par(mfrow = c(2,2))
+plot(model)
+```
+The residuals appear to have some heteroskedasiticy issues. As the fitted values grow, so does the variance. Specifically for estimated price over $40,000, we see that the variance is quite high. I would say that this is *not* a valid model. 
+
+#### (b)
+
+As stated above, we can say that there are issues with estimating the tails of the distribution. As see in the Q-Q plot, our model underestimates prices for low price vehicles and for high price vehicles. This implies that we have some skewness issues - which could be corrected by taking a log of the response variable price.
+
+  
+#### (c)
+
+It appears that points labeled 222, 223, and 229 are all bad leverage points. They all are quite high on the theoretical quartile and have high residuals. This is again due to the fact that we underestimate high price vehicles. 
+
+```{r}
+dat[c(222,223, 229),]
+```
+Here we see that all three vehicles are luxury Mercedes-Benz with the lowest suggested retail price of 86,970 (almost triple the mean of Suggested Retail Price!). We severely underestimate this value and these leverage points skew our regression line. 
+
+#### (d)
+```{r}
+#create new data frame with transformed variables
+bcdat = data.frame(tSuggestedRetailPrice = log(dat$SuggestedRetailPrice), tEngineSize = (dat$EngineSize)^(1/4),tCylinders =  log(dat$Cylinders),tHorsepower = log(dat$Horsepower), tHighwayMPG = (dat$HighwayMPG)^(-1),tWeight = dat$Weight, tWheelBase = log(dat$WheelBase),tHybrid = as.factor(dat$Hybrid)) 
+
+#build box-cox model
+bcmodel = lm(tSuggestedRetailPrice ~ tEngineSize + tCylinders + tHorsepower + tHighwayMPG + tWeight + tWheelBase + tHybrid, data = bcdat)
+```
+
+We complete the same procedure as above. This time however, we will produce all plots then discuss. 
+
+```{r}
+#Scatter matrix 
+bcdat$tHybrid = as.numeric(as.character(bcdat$tHybrid))
+bcdat.mat = as.matrix(bcdat)
+pairs(bcdat.mat, gap = 0.4)
+
+#Added variable plots 
+par(mfrow=c(2,3))
+avPlots(bcmodel, ~tEngineSize)
+avPlots(bcmodel, ~tCylinders)
+avPlots(bcmodel, ~tHorsepower)
+avPlots(bcmodel, ~tHighwayMPG)
+avPlots(bcmodel, ~tWeight)
+avPlots(bcmodel, ~tWheelBase)
+
+#model diagnostics
+par(mfrow = c(2,2))
+plot(bcmodel)
+                  
+```
+
+Here we see that we still have colinearity but less so (most of our variables underwent nonlinear transformations). The added variable plots here show that tWheelBase's and tHighwayMPG could be adding little additional information to our model. Lastly, we see that we have significant improvement in our skewness issues. While there is still slight deviation in the Normal Q-Q plot there still could be like heteroskedasity issues. While this model isn't perfect, it could very _useful_ at this point. 
+
+#### (e)
+
+```{r}
+#look at the summary of the model 
+summary(bcmodel)
+
+#define reduced model without insignifcant materials
+bcreduced = lm(tSuggestedRetailPrice ~ tEngineSize + tCylinders + tHorsepower + tWeight + tHybrid, data = bcdat)
+
+#preform parital F 
+anova(bcreduced, bcmodel)
+  ```
+
+Here we see that the paritial F-test shows that we do not have sufficent evidence to suggest either tHighwayMPG or tWheel base is not zero. This implies that is a sensible strategy to remove both variables in this case. 
+
+#### (f) 
+We could simply add in another factor variable - Tayota Yes or No - to our regression that would model this covariance. 
+
+
+### Exercise 6.2
+
+```{r}
+#Read in data 
+dat = read.table("~/Desktop/Courses/MA 575/book_data/krafft.txt", header = TRUE)
+
+#take a peak
+str(dat)
+
+#build initial model 
+model = lm(KPOINT ~ RA + HEAT + VTINV + DIPINV, data = dat)
+
+#Take a look at model summary
+summary(model)
+```
+```{r}
+#scatter matrix 
+scat.mat = dat[,1:4]
+pairs(scat.mat)
+
+#Added variable plots 
+library(car)
+par(mfrow=c(2,2))
+avPlots(model, ~HEAT)
+avPlots(model, ~RA)
+avPlots(model, ~VTINV)
+avPlots(model, ~DIPINV)
+
+#Model diagnostics
+par(mfrow = c(2,2))
+plot(model)
+```
+The covariates clearly have some colinearity issues. Also, for Heat/RA vs VTINIV/DIPINV there appears to be bands or groups of points that are not accounted for in the data. The added variable plots suggest that each covariate successfully explains some variance in the Krafft point, with relatively small sample sizes, we note that this effect is not difficult to achieve. Lastly, the model diagnostic plots suggest that there are some moderate issues with this model. The normal Q-Q plots show some skewness which is also evident in the residual plots. It actually appears that the highest leverage points are in the center of the theoretical quantiles. This suggests that the skewness may not be affecting the residual plots that drastically. With all this being said, unless we can account for this banding/grouping - the model can be useful. 
+
+#### (b)
+This suggests that the skewness in the response variable is most evident for both RA and VTINV. This implies that the residual error in our model could be drastic against these two. Therefore, I suggest we consider a log transformation of the responses or some power transformation for RA and VTINV. 
+
+#### (c)
+Using $r$ as a model selection criterion is flawed. We see that there may be some nonlinear behavior between the covariates and the response at the boundary. Thus, if we only consider the linear correlation, represented by $r$, we do not penalize/reward models that fail/succeed in explaining this tail behavior. Moreover, $r$ would simply choose a more complex model in this case because a more complex model would be guaranteed to explain more behavior than a simple one. (This is why we must consider regularization ideas).  
+
+For the same reason as $r$, standard deviation $s$, measures deviation from a linear relationship. So for all the reasons that $r$ would not be a good criterion $s$ would also be a poor measure of model performance. 
+
+Using $F$ statistics and ANOVA/ANCOVA type analysis is only valid if our assumptions are valid. Here we see that without exploring transforming any variables that this methodology could be flawed. This framework, however, is the most powerful of those suggested thus far. 
+
+This last suggestion is a good one. As we discussed above, there needs to be some form regularization to the method. By restraining our model to a relatively simple model via examining the proportion of covariate and the number of samples, we allow models to be constructed that explain the variability in the tails of our response in addition to the high variance in the center of the residuals. I would use a combination of this method and ANOCA framework explained above. 
+
+### Exericse 6.3 
+
+#### (a)
+
+
+```{r}
+#read in PGA data
+pga = read.csv("~/Desktop/Courses/MA 575/book_data/pgatour2006.csv")
+
+#take a peak
+str(pga)
+
+#omg Tiger was so good he get's his own degree or freedom... 
+
+#Build model 
+model = lm(PrizeMoney ~ DrivingAccuracy + GIR + PuttingAverage + BirdieConversion + SandSaves + Scrambling + PuttsPerRound, data = pga)
+```
+
+```{r}
+#normal diagnostic stuff 
+scat.mat = pga[,c(5:10, 12)]
+pairs(scat.mat, gap = 0.4)
+
+#Added variable plots 
+library(car)
+par(mfrow=c(2,2))
+avPlots(model, ~DrivingAccuracy)
+avPlots(model, ~GIR)
+avPlots(model, ~PuttingAverage)
+avPlots(model, ~BirdieConversion)
+
+par(mfrow=c(2,2))
+avPlots(model, ~SandSaves)
+avPlots(model, ~Scrambling)
+avPlots(model, ~PuttsPerRound)
+
+#Model diagnostics
+par(mfrow = c(2,2))
+plot(model)
+```
+
+The scatter matrix shows that there is linear relationships between Putting Average and Birdie Conversion, Putting Average and Putts Per Round, and small correlations between Sand Saves and Scrambling. All three of these relationships does not come as a surprise. Other covariates are relatively uncorrelated. From the added variable plots, its hard to distinguish any clearly significant pairwise variables. It appears that GIR, Birdie Conversions, Sand Saves, and Scrambling all explain additional variance in prize money while Putts Per Round, Putting Average add no additional information and Driving accuracy could be either. There are some very clear issues in our model diagnostics. First, there is some serious heteroskedasticty issues. Secondly, it appears that participant 178 (Tiger Woods) is a horrible, horrible leverage point.  
+
+I initial disagree with the analyst. I believe we should add a factor variable for Tiger Woods (model Alien Golfers vs Human Golfers) and then possibly apply a log transformation to account for the larger purse events. 
+
+#### (b)
+
+We will follow the suggestions above. 
+
+```{r}
+#tiger model 
+tigermodel = lm(PrizeMoney ~ DrivingAccuracy + GIR + PuttingAverage + BirdieConversion + SandSaves + Scrambling + PuttsPerRound + TigerWoods, data = pga)
+
+#model diagnostics
+par(mfrow=c(2,2))
+plot(tigermodel)
+```
+
+Here we see we fix some issues with the leverage due to Tiger Woods. Now, we still see some Skewness in the Normal Q-Q plot and a huge good leverage point in the Prize Money. We will try to remedy this problem with taking a log transformation. 
+
+```{r}
+#Box Cox to confirm log transform 
+library(MASS)
+boxcox(tigermodel)
+
+#tiger model 
+logtigermodel = lm(log(PrizeMoney) ~ DrivingAccuracy + GIR + PuttingAverage + BirdieConversion + SandSaves + Scrambling + PuttsPerRound + TigerWoods, data = pga)
+
+#model diagnostics
+par(mfrow=c(2,2))
+plot(logtigermodel)
+
+#summary of model 
+summary(logtigermodel)
+```
+We see here that we have a very strong model. The Normal Q-Q plot is almost perfect, the residuals  plots are relatively uncorrelated. There appears to be more variance in lower prize events as to be expected (not all elite golfers may attend these events). Therefore, on average, this is a strong model but for lower prized events we could see more variance in our estimates. 
+
+#### (c)
+Here made Tiger Woods his own group. In any chance of analyzing normal of average performance, we needed to remove him from the equation. You can see this almost immediately after we added his factor group. There is also a single outlier in the prize money events. It appears to be a good leverage point however, so we include it in the model. This may however affect the higher variance in the lower priced events. We maybe should consider a weighted MLR that takes into account the size of the event as a proxy for the Prize Money. This may account for the small - nonconstant variance. 
+
+#### (d)
+As stated above, higher variance in lower purse events could be an issue for prediction. Moreover, having Tiger Woods as his own group we have no sense of variability for his performance. This implies that any ANCOVA is impossible between these sets of golfers. This is a significant issue with the model. We do not have the framework/tools to predict or estimate how his performance affect other golfers in this framework. Instead we opt to consider the game as one that the "Tiger Effect" is modeled separately than the field. 
+
+#### (e)
+
+Our model output suggests that GIR ($\widehat{\beta} \approx 0.199796$) and BirdieConversion ($\widehat{\beta} \approx 0.199796$) is the most important aspect of expected Prize Money. As we saw in the scatter matrix, these variables are clearly not independent of the other variables in the model. Thus if we remove the insignificant variables, you actually remove some of overall affect of the golfer's performance. For instance, Birdie Conversion and Putting Average are highly correlated. Both serve as proxies for a golfer's putting game. By removing a piece of information about the golfer's putting game, our proxies become weaker because we cannot model the overall affect of these variables. 
+
+
+
+
+
+

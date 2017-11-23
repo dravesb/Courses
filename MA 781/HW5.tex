@@ -1,0 +1,271 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 781: HW5}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 7 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+
+\begin{enumerate}
+\item Let $X_1, X_2, \ldots, X_n \sim f(x_i|\theta)$ where $f(x|\theta) = \frac{1}{2i\theta}I_{\{-i(1-\theta), i(\theta + 1)\}}(x_i)$. Before we derive the distribution of the sample, we note that $$\{w_i: -i(1-\theta)<w_i <i(\theta + 1)\} = \{w_i/i: \theta-1<w_i/i<\theta + 1\}$$ From this we see that $$I_{\{-i(\theta-1), i(\theta + 1)\}}(w_i) = I_{\{\theta-1),\theta + 1\}}(w_i/i)$$ Using this, we can write the joint distribution of the sample as below. 
+
+\begin{align*}
+f(\underline{x}|\theta) &= \prod_{i=1}^{n}\frac{1}{2i\theta}I_{\{-i(1-\theta), i(\theta + 1)\}}(x_i)\\
+&=\frac{1}{n!(2\theta)^n}\prod_{i=1}^{n}I_{\{\theta-1, \theta + 1\}}(x_i/i)\\
+&=\frac{1}{n!(2\theta)^n}\prod_{i=1}^{n}I_{\{\theta-1, \max(x_i/i)\}}(x_i/i)\prod_{i=1}^{n}I_{\{\min(x_i/i), \theta + 1\}}(x_i/i)\\
+&=\frac{1}{n!(2\theta)^n}I_{\{\theta-1, \max(x_i/i)\}}(\min(x_i/i))I_{\{\min(x_i/i), \theta + 1\}}(\max(x_i/i))\\
+\end{align*}
+
+Now, by letting $Y_i = X_i/i$ we see $$f(\underline{x}|\theta) = \frac{1}{n!(2\theta)^n}I_{\{\theta-1, Y_{(n)}\}},(Y_{(1)})I_{\{Y_{(1))}, \theta + 1\}}(Y_{(n)})$$
+
+Therefore, if we let $g(T(X),\theta) = f(\underline{x}|\theta) = \frac{1}{n!(2\theta)^n}I_{\{\theta-1, Y_{(n)}\}},(Y_{(1)})I_{\{Y_{(1))}, \theta + 1\}}(Y_{(n)})$ and $h(x) = 1$, we see that $$T(\underline{x}) = (Y_{(1)}, Y_{(n)}) = (\min x_i/i, \max x_i/i)$$
+
+is a sufficent statistic for $\theta$. 
+
+\item 
+\begin{enumerate}
+
+\item Let $\underline{X}$ and $\underline{Y}$ be samples from $f(z|\theta) = e^{-(z-\theta)}I_{(\theta, \infty)}(z)$. The distribution of $\underline{X}$ is given by 
+\begin{align*}
+f(\underline{x}|\theta) &= \prod_{i=1}^{n} e^{-(x_i-\theta)}I_{(\theta, \infty)}(x_i)\\
+&= \exp\{-\sum_{i=1}^{n}(x_i - \theta)\}\prod_{i=1}^{n}I_{(\theta, \infty)}(x_i)\\
+&=\exp\{n\theta - \sum_{i=1}^{n}x_i\}I_{(\theta,\infty)}(x_{(1)})\\
+&=\exp\{n\theta\}\exp\{-\sum_{i=1}^{n}x_i\}I_{(\theta,\infty)}(x_{(1)})
+\end{align*}
+
+Using this, we see that the ratio of the distribution of $\underline{X}$ and $\underline{Y}$ is given by 
+\begin{align*}
+\frac{f(\underline{x}|\theta)}{f(\underline{y}|\theta)} &= \frac{\exp\{n\theta\}\exp\{-\sum_{i=1}^{n}x_i\}I_{(\theta,\infty)}(x_{(1)})}{\exp\{n\theta\}\exp\{-\sum_{i=1}^{n}y_i\}I_{(\theta,\infty)}(y_{(1)})}\\
+&=\exp\{\sum_{i=1}^{n}(y_i - x_i)\}\frac{I_{(\theta,\infty)}(x_{(1)})}{I_{(\theta,\infty)}(y_{(1)})}
+\end{align*}
+
+Here we see that this ratio is free from $\theta$ if and only if $x_{(1)} = y_{(1)}$. Therefore, we see that $X_{(1)}$, the first order statistic is a minimal sufficent statistic for $\theta$. 
+\item Following the same procedure as above, let $\underline{X}$ and $\underline{Y}$ be samples from $$f(z|\theta) = \frac{\exp\{-(z-\theta)\}}{(1 + \exp\{-(z-\theta)\})^2}$$ Finding the density of $\underline{X}$ we have 
+
+\begin{align*}
+f(\underline{x}|\theta) &= \prod_{i=1}^{n}\frac{\exp\{-(x_i-\theta)\}}{(1 + \exp\{-(x_i-\theta)\})^2}\\
+&= \frac{\exp\{n\theta\}\exp\{-\sum_{i=1}^{n}x_i\}}{\prod_{i=1}^n (1 + \exp\{-(x_i-\theta)\})^2}
+\end{align*}
+
+Now considering the ratio of the two distributions we see 
+
+\begin{align*}
+\frac{f(\underline{x}|\theta)}{f(\underline{y}|\theta)} &= \frac{\exp\{n\theta\}\exp\{-\sum_{i=1}^{n}x_i\}}{\prod_{i=1}^n (1 + \exp\{-(x_i-\theta)\})^2} \cdot \frac{\prod_{i=1}^n (1 + \exp\{-(y_i-\theta)\})^2}{\exp\{n\theta\}\exp\{-\sum_{i=1}^{n}y_i\}}\\
+&= \exp\{\sum_{i=1}^{n}(y_i - x_i)\}\left(\frac{\prod_{i=1}^n (1 + \exp\{-(y_i-\theta)\})}{\prod_{i=1}^n (1 + \exp\{-(x_i-\theta)\})}\right)^2
+\end{align*}
+
+In order this expression to be free from $\theta$, we require that $$\prod_{i=1}^n (1 + \exp\{-(x_i-\theta)\})^2 = \prod_{i=1}^n (1 + \exp\{-(y_i-\theta)\})^2$$ The only way this can occur is if $\underline{X} = \underline{Y}$ \textit{up to permuation}. Thus the order statistics of $\underline{X}$ or simply the sample $\underline{X}$ serves as a sufficent statistic for $\theta$. Here we see that \textit{no data reduction occurs}. 
+
+\end{enumerate}
+
+\item Suppose $X_1, X_2\sim f(x|\alpha) = \alpha x^{\alpha - 1}e^{-x^{\alpha}}I_{(0, \infty)}(x)$ and $\alpha >0$. Then we see that $$\log(X_1) \sim g(y|\alpha) = \alpha(e^{y})^{(\alpha - 1)}e^{-(e^{y})^{\alpha}}e^{y} = \alpha \exp\big\{y\alpha - e^{\alpha y}\big\}$$ Now, let $\psi(t) = \exp\{t - e^t\}$. Then $g(y|\alpha) = \frac{1}{1/\alpha}\psi(\frac{1}{1/\alpha}y)$. From this, we see that $g(y|\alpha)$ is a scale familiy with scale parameter $1/\alpha$. Therefore, we know there exists $Y_1 = \frac{1}{\alpha}\log(X_1)$ and  $Y_2 = \frac{1}{\alpha}\log(X_2)$ where $Y_i\sim\psi(t)$ \textit{which is free from} $\alpha$. This gives that $$\frac{\log(X_1)}{\log(X_2)} = \frac{1/\alpha Y_1}{1/\alpha Y_2} = \frac{Y_1}{Y_2}$$ Recall that $X_1$ and $X_2$ were indepenent, so $Y_1$ and $Y_2$ are independent. Therefore, ther joing density $f(Y_1, 1/Y_2) = f(Y_1)f(1/Y_2)$. We know $Y_1\sim \psi(t_1)$ and by the continuous mapping theorem $Y_2 \sim \frac{1}{\psi(t_2)}$. Thus $$\frac{Y_1}{Y_2}\sim \frac{\psi(t_1)}{\psi(t_2)}$$ which is free from $\alpha$. From here we see see the distribution function of $\frac{\log(X_1)}{\log(X_2)}$, $F(x)$ is given by $$F(x) = \int_{0}^{x}\frac{\psi(t_1)}{\psi(t_2)}dt$$ The integrand is free from $\alpha$ and the limits to do not depend on $\alpha$ so $F(x)$ is free from $\theta$. Therefore, we see that $\frac{\log(X_1)}{\log(X_2)}$ is an ancillary statistic. 
+
+\item If $X_1,\ldots, X_n\sim F(x-\theta)$ are from a location familiy, then there exists $Z_1,\ldots, Z_n\sim F(x)$ such that $X_i = Z_i + \theta$. From here we have  $$M_X = median(X_1, \ldots, X_n)= median(Z_1+\theta, \ldots, X_n+\theta) = \theta + median(Z_1, \ldots, Z_n) = \theta + M_Z$$
+$$\overline{X} = \frac{1}{n}\sum_{i=1}^{n}X_i = \frac{1}{n}\sum_{i=1}^{n}(Z_i + \theta)   =\frac{1}{n}\sum_{i=1}^{n}Z_i + \frac{1}{n}\sum_{i=1}^{n}\theta = \overline{Z} + \theta$$
+
+Therefore the statistic $M_X - \overline{X} = M_Z - \overline{Z}$. Now $M_Z$ and $\overline{Z}$ are combinations of random variables from the same distribution $F(x)$ which is \textit{free from} $\theta$. Therefore, the distribution of $M_Z - \overline{Z}$ will also be free from $\theta$. Hence, $M_X - \overline{X}$ is an ancillary statistic. 
+
+\item 
+
+\begin{enumerate}
+\item Since, $x$ is bounded above by $\theta$ and $f(x|\theta)$ is monotone with respect to $\theta$, we conjecture that $X_{(n)}$ is a complete sufficent statistic for $\theta$. We first check sufficency. Let $X_1, \ldots, X_n \sim f(x|\theta)$. Then the joint distribution of these random variables is given by 
+
+\begin{align*}
+f(\underline{x}|\theta) &= \prod_{i=1}^{n}\frac{2x_i}{\theta^2}I_{(0,\theta)}(x_i)\\
+&= \left(\frac{2}{\theta^2}\right)^n\prod_{i=1}^{n}x_i\prod_{i=1}^{n}I_{(0,\theta)}(x_i)\\
+&= \left(\frac{2}{\theta^2}\right)^nI_{(0,\theta)}(x_{(n)})\prod_{i=1}^{n}x_i\\
+\end{align*}
+
+Letting $g(T(x),\theta) = \left(\frac{2}{\theta^2}\right)^nI_{(0,\theta)}(x_{(n)})$ and $h(\underline{x}) = \prod_{i=1}^{n}x_i$ we see that $T(X) = x_{(n)}$ is a sufficent statistic for $\theta$. For completeness, consider an aribtrary measureabl function $g(\cdot)$. We will analyze $\E_{\theta}(g(X_{(n)}))$ but will need the density of our statistic. Recall for the $n$th order statistic $f_{X_{n}}(y) = n[F_{X}(y)]^{(n-1)}f_X(y)$. Then $$F_X(y) = \int_{0}^{y}\frac{2t}{\theta^2}dt = \frac{y^2}{\theta^2}$$ So we have $$f_{X_{(n)}} = n\Big[\frac{y^2}{\theta^2}\Big]^{(n-1)}\frac{2y}{\theta^2} = \frac{2n}{\theta^{2n}}y^{2n-1}$$
+Now for any $g(\cdot)$ measurable, we have 
+\begin{align*}
+\E_{\theta}(g(X_{(n)})) &= \int_{0}^{\theta}g(y)f_{X_{(n)}}(y)dy = 0 \\
+&= \int_{0}^{\theta}g(y)\frac{2n}{\theta^{2n}}y^{2n-1}dy\\
+&\overset{Leibnitz}{=} g(\theta)\frac{2n}{\theta^{2n}}\theta^{2n-1} + \int_{0}^{\theta}\frac{\partial}{\partial \theta}g(y)\frac{2n}{\theta^{2n}}y^{2n-1}dy\\
+&= g(\theta)\frac{2n}{\theta} + \int_{0}^{\theta}g(y)2ny^{2n-1}(\frac{-2n}{\theta^{2n+1}})dy\\
+&= g(\theta)\frac{2n}{\theta} + \frac{-2n}{\theta}\int_{0}^{\theta}g(y)\frac{2n}{\theta^{2n}}y^{2n-1}dy\\
+&= g(\theta)\frac{2n}{\theta} + \frac{-2n}{\theta}\E_{\theta}(g(X_{(n)}))\\
+&= g(\theta)\frac{2n}{\theta}
+\end{align*}
+
+From here we see that $g(\theta)\frac{2n}{\theta} =0$ which implies $g(\theta) = 0$ for $\theta>0$. Since $0<x<1$ we see that $g(x) = 0$ for all $x$. Therefore, $X_{(n)}$ is a complete sufficent statistic. 
+
+\item Let $X_1, \ldots, X_n\sim f(x|\theta) = \frac{\theta}{(1+x)^{(1+\theta)}}I_{(0,\infty)}(x)$. First notice that $\theta$ is one dimensional and $$f(x|\theta) = \theta \exp\{-(1+\theta)\log(1+x)\}$$ is a \textit{full} exponential family. Therefore, $T(\underline{X}) = \sum_{i=1}^{n}\log(1+x_i)$ is a sufficent statistic for $\theta$. Moreover, since $\{(\theta-1):\theta\in\R\} = \R$ is an open set we see that by $\sum_{i=1}^{n}\log(1+x_i)$ is a complete sufficent statistic for $\theta$. 
+\item Let $X_1, \ldots, X_n\sim f(x|\theta) = \frac{(\log(\theta)\theta^x)}{\theta - 1}I_{(0,1)}(x)$ for $\theta >1$. Again notice that $\theta$ is one dimensional and 
+\begin{align*}
+f(x|\theta) &= \frac{(\log(\theta))\theta^x}{\theta - 1}\\
+&= \exp\{\log(\log(\theta)) + x\log(\theta) - \log(\theta-1) \}\\
+&= \frac{\log(\theta)}{\theta-1}\exp\{x\log(\theta)\}\\
+\end{align*}
+is an exponential family. Therefore, $T(\underline{X}) = \sum_{i=1}^nx_i$ is a sufficent statistic for $\theta$. Moreover, $\{\log(\theta): \theta>1\} = \R$ is an open set. Therefore, $\sum_{i=1}^nx_i$ is a complete sufficent statistic for $\theta$. 
+\end{enumerate} 
+
+\item 
+
+\begin{enumerate}
+\item Let $X$ be an observation from $f(x|\theta) = \left(\frac{\theta}{2}\right)^{|x|}(1-\theta)^{1-|x|}I_{\{-1,0,1\}}(x)$ for $0\leq \theta\leq 1$. If
+$X$ were a complete sufficent statistic, then $\E_{\theta}(g(X)) = 0$ would imply $g(X) = 0$. Now, since the support of $X$ is only three points, we have 
+\begin{align*}
+\E_{\theta}(g(X)) &= g(-1)\frac{\theta}{2} + g(0)(1-\theta) + g(1)\frac{\theta}{2} = 0
+\end{align*}
+
+Clearly from this we see there are measureable functions such that $g(x)\neq =$ but satisfy this equation. For instance, if $g(-1) = 1 = -g(1)$ and $g(x) = 0$ otherwise then $\E_{\theta}(g(x)) = 0$ but $g(x)\not\equiv 0$. Hence $X$ is not a complete sufficent statistic. 
+
+\item To see why $|X|$ is a sufficent statistic consider the following 
+
+\begin{align*}
+f(\underline{x}|\theta) &= \left(\frac{\theta}{2}\right)^{|x|}(1-\theta)^{1-|x|}\\
+&=\exp\big\{|x|\log(\theta/2) + (1-|x|)\log(1-\theta)\big\}\\
+&=\exp\big\{|x|\log(\theta/2) + \log(1-\theta) -|x|\log(1-\theta)\big\}\\
+&= (1-\theta)\exp\big\{|x|\log(\theta/2) -|x|\log(1-\theta)\big\}\\
+&= (1-\theta)\exp\big\{|x|(\log(\theta/2) -\log(1-\theta))\big\}\\
+\end{align*}
+
+Therefore, $f(x|\theta)$ is an exponential family and since our sample is has $n=1$ we have $T(\underline{X}) = \sum_{i=1}^{1}|x_i| = |x|$. Thus $|x|$ is a sufficent statistic. 
+
+To see why it is complete, consider the following 
+$$\E_{\theta}(g(|x|)) = g(1)\theta + g(0)(1-\theta) = 0 $$
+Taking the derivative with respect to $\theta$ yeilds. $$g(1)-g(0) = 0$$ hence $g(1) = -g(0)$. Plugging this into our original equation we have 
+
+\begin{align*}
+-g(0)\theta + g(0)(1-\theta) &= 0\\
+g(0) &= 2\theta g(0)
+\end{align*}
+
+This equality holds for all $\theta$ only when $g(0) = 0$. Thus, $g(1) = -g(0) = 0$. Thus $g(|x|) \equiv 0$ for all values of $\theta$. 
+
+\item Yes. Recall from part $b$ we have $$f(x|\theta) = (1-\theta)\exp\big\{|x|(\log(\theta/2) -\log(1-\theta))\big\}$$ Letting $h(x)>1$, $c(\theta) = (1-\theta)\geq 0$, $w(\theta) = \log(\theta/2) -\log(1-\theta)$, and $t(x) = |x|$. 
+
+\end{enumerate}
+
+\item 
+\begin{enumerate}
+\item Let $\underline{X}$ be a sample from $f(x|\theta)$. Then we have $$f(\underline{x}|\theta) = \prod_{i=1}^{n}\theta x^{\theta -1} = \theta^n\left(\prod_{i=1}^{n}x_i\right)^{\theta -1}$$ So by Neyman - Fisher Factorization $\prod_{i=1}^{n}x_i$ is a sufficent statistic for $\theta$, but $\sum_{i=1}^{n}x_i$ is not sufficent. 
+
+\item We already showed that $\prod_{i=1}^{n}x_i$ is sufficent. All we must show now is that $\prod_{i=1}^{n}x_i$ is complete as well. First notice that 
+\begin{align*}
+f(x|\theta) &= \theta x^{\theta - 1}\\
+&= \exp\big\{\log(\theta) + (\theta - 1)\log(x)\big\}\\
+&= \theta\exp\big\{(\theta - 1)\log(x)\big\}
+\end{align*}
+
+So we see that $f(x|\theta)$ an exponential family. Thus, $\sum_{i=1}^{n}\log(x_i)$ is a complete statistic for $\theta$. But notice that $\sum_{i=1}^{n}\log(x_i) = \log\left(\prod_{i=1}^n x_i\right)$ and since $\log(\cdot)$ is one to one, so $\prod_{i=1}^{n}x_i$ is also a complete statistic. Therefore, $\prod_{i=1}^{n}x_i$ is a complete and sufficent statistic. 
+
+\end{enumerate}
+
+\item 
+\begin{enumerate}
+\item First we will show that $X_{(1)}$ is a sufficent statistic using Neyman-Fisher's factorization theorem. 
+
+\begin{align*}
+f(\underline{x}|\mu) &= \prod_{i=1}^n e^{-(x_i-\mu)}I_{(\mu, \infty)}(x_i)\\
+&= \exp\big\{-\sum_{i=1}^{n}(x_i -\mu)\big\}\prod_{i=1}^{n}I_{(\mu, \infty)}(x_i)\\
+&= \exp\big\{-\sum_{i=1}^{n}x_i +n\mu\big\}I_{(\mu, \infty)}(x_{(1)})\\
+&= \frac{\exp\{n\mu\}}{\exp\{\sum_{i=1}^{n}x_i\}}I_{(\mu, \infty)}(x_{(1)})\\
+\end{align*}
+
+Letting $h(\underline{x}) = \exp\{-\sum_{i=1}^n x_i\}$ and $g(T(x),\theta) = \exp{n\mu}I_{\mu, \infty}(X_{(1)})$. Therefore, we see that $X_{(1)}$ is a sufficent statistic for $\mu$. 
+
+To see why it is complete, we will need to first find the density of $X_{(1)}$. First recall that for the first order statistic we have $f_{X_{(1)}}(y) =n\big[1-F_X(y)\big]^{n-1}f_X(y)$. Here $$F_X(y) = \int_{\mu}^{y}e^{-(t-\mu)}dt = 1-e^{-(y-\mu)}$$ Then we see that $$F_{X_{(1)}}(y) = n\big[1 - 1+ e^{-(y-\mu)}\big]^{n-1}e^{-(y-\mu)} = ne^{-n(y-\mu)}$$ Now, let $g(\cdot)$ be any measurable function. We now analyze $\E_{\mu}(g(X_{(1)})$. 
+
+\begin{align*}
+\E_{\mu}(g(X_{(1)})) &= \int_{\mu}^{\infty}g(y)ne^{-n(y-\mu)}dy  = 0\\
+\end{align*}
+
+Now taking a derivate with respect to $\mu$, we see 
+\begin{align*}
+0 &= \frac{\partial}{\partial \mu}\int_{\mu}^{\infty}g(y)ne^{-n(y-\mu)}dy \\
+&= -g(\mu)ne^{-n(\mu-\mu)}\frac{d}{d\mu}\mu +  \int_{\mu}^{\infty}\frac{\partial}{\partial\mu}g(y)ne^{-n(y-\mu)}dy\\
+&= -g(\mu)ne^{-n(\mu-\mu)}\frac{d}{d\mu}\mu +  \int_{\mu}^{\infty}\frac{\partial}{\partial\mu}g(y)ne^{-n(y-\mu)}dy\\
+&= -g(\mu)n +  \int_{\mu}^{\infty}g(y)n^2e^{-n(y-\mu)}dy\\
+&= -ng(\mu) + n\E_{\mu}(g(X_{(1)})\\
+&= -ng(\mu)
+\end{align*}
+
+Therefore, we see that $g(\mu) = 0$ for $\infty <\mu<y$. Recall that this calculation was for arbitrary $x$, so letting $x\to\infty$, we see that $g(x)\equiv 0$. Therfore, $X_{(1)}$ is a complete sufficent statistic for $\mu$. 
+
+\item To use Basu's theorem, we must first show that $S^2$ is an ancillary statistic. Let $\psi(t) = e^{-t}$. Then we see that $f(x|mu) = \psi(t-\mu)$. Therefore $f(x|\mu)$ is a location family. Thus, for each $X_1, \ldots, X_n$ we have $X_i = Z_i + c$ for $Z_i \sim \psi$ which is \textit{free from} $\mu$. This will allow us to show $S^2$ is ancillary - but first consider the following calculation $$\overline{X} = \frac{1}{n}\sum_{i=1}^{n}X_i = \frac{1}{n}\sum_{i=1}^{n}Z_i + c = \overline{Z} + c$$
+
+Hence we see that $$S_X^2 = \frac{1}{n-1}\sum_{i=1}^{n}(X_i - \overline{X})^2  = \frac{1}{n-1}\sum_{i=1}^{n}(Z_i + c - \overline{Z} - c)^2= \frac{1}{n-1}\sum_{i=1}^{n}(Z_i - \overline{Z})^2=S^2_Z $$ We now see that $S^2$ is a combination of random variables that do not depend on $\mu$. Therefore, we see that $S^2$ does not depend on $\mu$. That is the distribution of $S^2$ is constant with respect to $\mu$. Thus, $S^2$ is ancillary statistic for $\mu$. 
+
+Therefore, using Basu's theorem we see that $X_{(1)}$ and $S^2$ are independent. 
+\end{enumerate}
+
+\item 
+\begin{enumerate}
+\item If $X_1, \ldots, X_n \sim \frac{1}{a}\psi(\frac{x - b}{a})$ where $a>0$ and $-\infty < b <\infty$ there there exists $Z_1, \ldots, Z_n$ such that $X_i = aZ_i + b$ with $Z_i\sim\psi(z)$. With this and the property of the statistics, we see that 
+
+\begin{align*}
+\frac{T_1(X_1, \ldots, X_n)}{T_2(X_1, \ldots, X_n)} &= \frac{T_1(aZ_1 + b , \ldots, aZ_n + b )}{T_2(aZ_1 + b , \ldots, aZ_n + b )}\\
+&= \frac{aT_1(Z_1, \ldots, Z_n)}{aT_2(Z_1, \ldots, Z_n)}\\
+&= \frac{T_1(Z_1, \ldots, Z_n)}{T_2(Z_1, \ldots, Z_n)}\\
+\end{align*} 
+
+Now notice that since $Z_i$ are independent of $a,b$, then so is $T_i(Z_1, \ldots, Z_n)$. Therefore the distribution of $T_1/T_2$ is an ancillary statistic. 
+
+\item If $R$ is the sample range, than using the same notation as above, we see that $$R_X = X_{(n)} - X_{(1)} = (aZ_{(n)} + b ) - (aZ_{(1)} + b)  = a(Z_{(n)} - Z_{(1)}) = aR_Z$$
+
+Before we calculate the sample standard deviation, we have $$\overline{X} = \frac{1}{n}\sum_{i=1}^nX_i = \frac{1}{n}\sum_{i=1}^n (aZ_i + b) = a\overline{Z} + b$$
+
+Then for the sample standard deviation, we have 
+\begin{align*}
+S &= \left(\frac{1}{n-1}\sum_{i=1}^{n}(X_i - \overline{X})^2\right)^{1/2}\\
+ &= \left(\frac{1}{n-1}\sum_{i=1}^{n}(aZ_i + b - a\overline{Z} - b)^2\right)^{1/2}\\
+ &= \left(\frac{1}{n-1}\sum_{i=1}^{n}a^2(Z_i  - \overline{Z})^2\right)^{1/2}\\
+ &= a\left(\frac{1}{n-1}\sum_{i=1}^{n}(Z_i  - \overline{Z})^2\right)^{1/2}\\
+ &= aS_Z
+\end{align*}
+
+Therefore, using the result from above, we see that $$R/S = R_Z/R_S$$ which is independent of $a$ and $b$. Therefore $R/S$ is an ancillary statistic. 
+\end{enumerate}
+\end{enumerate}
+\end{document} 
+

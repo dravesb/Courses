@@ -1,0 +1,236 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 781: HW6}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 7 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+
+\begin{enumerate}
+\item 
+\begin{enumerate}
+\item Let $X_1, \ldots, X_n$ be a random sample from $f(x|\theta) = \theta x^{-2}I_{(\theta, \infty)}(x)$. Then we have 
+\begin{align*}
+f(x_1, \ldots, x_n|\theta) &= \prod_{i=1}^{n} \theta x_i^{-2}I_{[\theta, \infty)}(x_i)= \theta^n\left(\prod_{i=1}^{n}x_i\right)^{-2}I_{[\theta, \infty)}(X_{(1)})
+\end{align*}
+Therefore letting $g(T(\underline{X}), \theta) = \theta^{n}I_{\theta, \infty}(X_{(1)})$ and $h(x) = \prod_{i=1}^{n}x_i^{-2}$ we see that $X_{(1)}$ is a sufficent statistic for $\theta$ by the Neyman - Fisher factorization theorem. 
+
+\item As above we can define the likelihood of the sample as $$\mathcal{L}(\theta) = \theta^n\left(\prod_{i=1}^{n}x_i\right)^{-2}I_{[\theta, \infty)}(X_{(1)})$$ Notice that $\prod_{i=1}^{n}x_i^{-2}>0$ and is constant with respect to $\theta$. Hence we only look to maximize $\theta^nI_{[\theta, \infty)}(X_{(1)})$. $\theta^n$ increases as $\theta$ increases. But notice that $\mathcal{L}(\theta) = 0$ when $\theta>X_{(1)}$. Therefore we look to maximize $\theta$ with respect to $\theta \leq X_{(1)}$. Thus $$\hat{\theta}_{MLE} = X_{(1)}$$
+
+\item Since $\theta$ is one dimensional, we need only solve $\overline{X} = \mu(f)$. But notice that
+\begin{align*}
+\mu(f) = \int_{\theta}^{\infty}x\frac{\theta}{x}dx = \theta\int_{\theta}^{\infty}\frac{1}{x}dx = \theta\log(x)\Big\vert_{\theta}^{\infty} = \infty
+\end{align*}
+Therefore, for $X\sim f$, $\E(X^k)$ does not exist for all $k = 1,2, \ldots$. Therefore the method of moments estiamtor does not exist.
+\end{enumerate}
+
+\item Let $X_1, \ldots, X_n$ be a random sample from $f(x|\theta) = \frac{1}{\theta}I_{[0,\theta]}(x)$. Then find the likelihood as follows.
+\begin{align*}
+\mathcal{L}(\theta) = \prod_{i=1}^{n}\frac{1}{\theta}I_{[0,\theta]}(x_i) = \frac{1}{\theta^n}I_{[0,\theta]}(X_{(n)})
+\end{align*}
+Now, we see that $\mathcal{L}$ increases as $\theta$ decreases. But notice that $\mathcal{L} = 0$ when $\theta < X_{(n)}$. So we look to make $\theta$ as small as possible with respect to $\theta \geq X_{(n)}$. This of course corresponds to $$\hat{\theta}_{MLE} = X_{(n)}$$ 
+Now, deriving the mean and variance of this estimate we have $X_{(n)}\sim f(y|\theta) = n(F_X(y))^{n-1}f_X(y) = \frac{n}{\theta^n}y^{n-1}$. This leads to the mean and variance calculations 
+\begin{align*}
+\E(\hat{\theta}_{MLE}) &= \int_{0}^{\theta}\frac{n}{\theta^n}y^{n}dy = \frac{n}{\theta^n}\cdot\frac{1}{n+1}y^{n+1}\Big\vert_{0}^{\theta} = \frac{n}{n+1}\theta\\
+\E(\hat{\theta}_{MLE}^2) &= \int_{0}^{\theta}\frac{n}{\theta^n}y^{n+1}dy = \frac{n}{\theta^n}\cdot\frac{1}{n+2}y^{n+2}\Big\vert_{0}^{\theta} = \frac{n}{n+2}\theta^2\\
+\mathbb{V}(\theta_{MLE}) &= \Big[\frac{n}{n+2}\theta^2\Big] - \Big[\frac{n}{n+1}\theta\Big]^2 = \frac{n}{(n+2)(n+1)^2}\theta^2
+\end{align*}
+Now looking to find the method of momements estimator notice that $\theta$ is one dimensional so we need only consider $\overline{X} = \mu(f)$. Finding this value, we see that $$\mu(f) = \int_{0}^{\theta}\frac{x}{\theta}dx = \frac{x^2}{2\theta}\Big\vert_{0}^{\theta} = \frac{\theta}{2}$$ Using this, we see that $$\hat{\theta}_{MOM} = 2\overline{X}$$
+Finding the mean and variance of this estimator we see that 
+\begin{align*}
+\E(\hat{\theta}_{MOM}) &= \E(2\overline{X}) = 2\E(\overline{X}) = 2\frac{\theta}{2} = \theta\\
+\mathbb{V}(\hat{\theta}_{MOM}) &= 4\mathbb{V}(\overline{X}) = 4\frac{\theta^2}{12n} = \frac{\theta^2}{3n} 
+\end{align*}
+
+Notice that the MLE is biased (slightly) but has variance that converges faster to zero than the variance of the MOM estimator. Moreover, asympotically, the MLE is unbiased. For small sample sizes MOM is preferable while for large sample sizes the MLE is preferable. In general, I would choose the MLE as it is a lower variance estimate. 
+
+\item 
+\begin{enumerate}
+\item Let $X_1,\ldots, X_n \sim F(x)$ where $F(x) = \begin{cases} 0 &\text{if}\hspace{1em} x<0\\ \left(\frac{x}{\beta}\right)^{\alpha}&\text{if}\hspace{1em} 0\leq x\leq \beta\\ 1 & \text{if}\hspace{1em} x>\beta\end{cases}$. This corresponds to $f(x) = \alpha(x/\beta)^{\alpha - 1}I_{[0,\beta]}(x)$. Therefore, we can find the joint distribution of the sample as 
+\begin{align*}
+f(\underline{X}|\alpha,\beta) = \prod_{i=1}^{n}\alpha(x/\beta)^{\alpha - 1}I_{[0,\beta]}(x) = \frac{\alpha^n}{\beta^{n(\alpha -1)}}\left(\prod_{i=1}^n x_i\right)^{\alpha-1}I_{[0,\beta]}(X_{(n)})
+\end{align*}
+Therefore, letting $g(T(X), \alpha, \beta) = f(\underline{X}|\alpha, \beta)$ and $h(x) = 1$, we see that $\left(\prod_{i=1}^n x_i, X_{(n)}\right)$ are sufficent statistics for $(\alpha, \beta)$. 
+\item We first find the MLE of $\hat{\beta}$. Notice that for $f(\underline{X}|\alpha,\beta) = \mathcal{L}(\alpha,\beta)$ as $\beta$ deceases, $\mathcal{L}$ increases. However, $\mathcal{L} = 0$ when $\beta<X_{(n)}$. Therefore, we look to minimize $\beta$ with respect to $\beta\geq X_{(n)}$. Thus $$\hat{\beta}_{MLE} =   X_{(n)}$$ We now look to minimize $\mathcal{L}(\alpha, \beta)$ with respect to $\alpha$. This is equivalent to minimizing 
+\begin{align*}
+\ell(\alpha,\beta)&\equiv \log(\mathcal{L}(\alpha,\beta))\\
+&= n\log(\alpha) - n(\alpha - 1)\log(\beta) + (\alpha -1)\sum_{i=1}^{n}\log(x_i)+ \log(I_{[0,\beta]}(X_{(n)}))
+\end{align*} Taking the derivative with respect to $\alpha$ and setting equal to zero we have 
+\begin{align*}
+\frac{\partial}{\partial\alpha}\ell(\underline{X},\alpha,\beta) = \frac{n}{\alpha} - n\log(\beta) + \sum_{i=1}^{n}\log(x_i) &\overset{set}{=}0\\
+\end{align*}
+This yields 
+\begin{align*}
+\frac{n}{\alpha} = n\log(\beta) - \sum_{i=1}^n\log(x_i) = \frac{n}{n\log(\beta) - \sum_{i=1}^n\log(x_i)} = \left(\log(\beta) - \frac{1}{n}\sum_{i=1}^n\log(x_i)\right)^{-1}\\
+\end{align*}
+Now due to the invariance property of MLE's we can plug in $\hat{\beta}_{MLE}$ to achieve our MLE $$\hat{\alpha}_{MLE} = \left(\log(X_{(n)}) - \frac{1}{n}\sum_{i=1}^n\log(x_i)\right)^{-1}$$
+
+Since $$\frac{\partial^2}{\partial\alpha^2}\ell(\alpha, \beta)\Big\vert_{\alpha = \hat{\alpha}_{MLE}} = -\frac{n}{\hat{\alpha}_{MLE}^2} = -\left(\frac{\sqrt{n}}{\hat{\alpha}_{MLE}}\right)^2<0$$ $\hat{\alpha}_{MLE}$ is a in fact an MLE. 
+
+\item From the data, we see that $X_{(n)} = 25$ and $\sum_{i=1}^n\log(x_i) = 43.9527$. This yields $\hat{\beta}_{MLE} = 25$ and $\hat{\alpha}_{MLE} = 12.59487$. 
+\end{enumerate}
+
+\item 
+\begin{enumerate}
+\item Let $X_1, X_2, \ldots, X_n\sim f(x|\theta) = \theta x^{\theta - 1}I_{[0,1]}(x)$ Then we can define the likelihood as $$\mathcal{L}(\theta) = \prod_{i=1}^n \theta x_i^{\theta-1} = \theta^n\left(\prod_{i=1}^n x_i\right)^{\theta - 1}$$ We can then write the log-likelihood as $$\ell(\theta) = n\log(\theta) + \theta\sum_{i=1}^n\log(x_i) - \log\left(\prod_{i=1}^n x_i\right)$$
+Differentiating with respect to $\theta$ and setting to zero we have
+$$\frac{\partial}{\partial \theta}\ell(\theta) = \frac{n}{\theta} + \sum_{i=1}^n\log(x_i) \overset{set}{=}0$$
+
+This implies that $$\hat{\theta}_{MLE} = \left(-\frac{1}{n}\sum_{i=1}^{n}\log(x_i)\right)^{-1}$$
+
+Moreover we see $$\frac{\partial^2}{\partial\theta^2}\ell(\theta)\Big\vert_{\theta = \hat{\theta}_{MLE}} = -\frac{n}{\theta^2}\Big\vert_{\theta = \hat{\theta}_{MLE}} = -\left(\frac{\sqrt{n}}{\hat{\theta}_{MLE}}\right)^2<0$$ so $\hat{\theta}_{MLE}$ is in fact a maximum. To calculate the variance, notice that $$-\log(X_i)\sim f_{X}(e^{-y})\big\vert\frac{d}{dy}e^{-y}\big\vert = \theta e^{-y(\theta-1)}e^{-y} = \theta e^{-y\theta}$$ Therefore, we see that $-\log(X_i)\sim Exp(1/\theta)$ and $G:= \sum_{i=1}^{n}-\log(x_i)\sim Gamma(n, 1/\theta)$. Now, defining $$\hat{\theta}_{MLE} = \frac{n}{\sum_{i=1}^{n}-\log(X_i)} = \frac{n}{G}$$ we look to first find the density function of $\frac{n}{G}$. Using the same transformation formula we see that $$\frac{n}{G}\sim f_{G}(1/y)|\frac{d}{dt}1/y| = \frac{n\theta^n}{\Gamma(n)}y^{n+1}e^{\theta y}$$ From here we have 
+\begin{align*}
+\E(\frac{n}{G}) &= \frac{n\theta^n}{\Gamma(n)}\int_{0}^{\infty} \frac{1}{y}y^{n+1}e^{-\theta y}dy = \frac{\theta n}{n-1}\\
+\E((\frac{n}{G})^2) &= \frac{n^2\theta^n}{\Gamma(n)}\int_{0}^{\infty} \frac{1}{y^2}y^{n+1}e^{-\theta y}dy = \frac{\theta^2 n^2}{(n-1)(n-2)}\\
+Var(\frac{n}{G}) &=  \frac{\theta^2 n^2}{(n-1)(n-2)} - \left(\frac{\theta n}{n-1}\right)^2 = \frac{\theta^2}{(n-1)(n-2)}\longrightarrow 0 
+\end{align*}
+
+
+\item Now to derive the method of moments estimator for $\theta$, note that $\theta$ is one dimensional so we need only consider $\overline{X} = \mu(f)$. 
+\begin{align*}
+\E(X) = \int_{0}^1 \theta x^{\theta -1}xdx = \frac{\theta}{\theta+1}x^{\theta + 1}\Big\vert_{0}^1 = \frac{\theta}{1+\theta}
+\end{align*}
+Setting equal to $\overline{X}$ and solving for $\theta$, we see $$\hat{\theta}_{MOM} = \frac{\overline{X}}{1-\overline{X}}$$
+\end{enumerate}
+
+\item 
+\begin{enumerate}
+\item Following the model $Y_i = \beta x_i + \e_i$ with $\e_i \sim N(0,\sigma^2)$ we see that $Y_i\sim N(\beta x_i, \sigma^2)$. Thus for a random sample $Y_1, \ldots, Y_n$ following this model, we can derive the joint distribution as follows 
+\begin{align*}
+f(\underline{Y}|\beta, \sigma^2) &= \prod_{i=1}^{n}\frac{1}{\sqrt{2\pi\sigma^2}}\exp\Big\{-\frac{1}{2\sigma^2}(y_i - \beta x_i)^2\Big\}\\
+&= \left(\frac{1}{2\pi\sigma^2}\right)^{n/2}\exp\Big\{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i - \beta x_i)^2\Big\}\\
+&= \left(\frac{1}{2\pi\sigma^2}\right)^{n/2}\exp\Big\{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}y_i^2 +\frac{1}{\sigma^2}\sum_{i=1}^{n}\beta y_ix_i - \frac{1}{2\sigma^2}\sum_{i=1}^{n}\beta^2x_i^2\Big\}\\
+&= \left(\frac{1}{2\pi\sigma^2}\right)^{n/2}\exp\Big\{ - \frac{1}{2\sigma^2}\sum_{i=1}^{n}\beta^2x_i^2\Big\}\exp\Big\{-\frac{1}{2\sigma^2}\sum_{i=1}^{n}y_i^2 +\frac{\beta}{\sigma^2}\sum_{i=1}^{n} y_ix_i\Big\}\\
+\end{align*}
+Now, letting $c(\beta, \sigma^2) = \left(\frac{1}{2\pi\sigma^2}\right)^{n/2}\exp\Big\{ - \frac{1}{2\sigma^2}\sum_{i=1}^{n}\beta^2x_i^2\Big\}$, $h(x) =1$ we see we have an exponential family. Therefore we see that $T(\theta) = (\sum_{i=1}^ny_i^2, \sum_{i=1}^{n}y_ix_i)$ is a sufficent statistic for $(\sigma^2, \beta)$. 
+
+\item Using the form from above, we can write the log-likelihood function as 
+\begin{align*}
+\ell(\beta,\sigma) &= -\frac{n}{2}\log(2\pi\sigma^2) -\frac{1}{2\sigma^2}\sum_{i=1}^{n}y_i^2 +\frac{\beta}{\sigma^2}\sum_{i=1}^{n} y_ix_i - \frac{\beta^2}{2\sigma^2}\sum_{i=1}^{n}x_i^2
+\end{align*}
+Differentiating with respect to $\beta$, we have 
+\begin{align*}
+\frac{\partial}{\partial\beta}\ell(\beta, \sigma^2) &= \frac{1}{\sigma^2}\sum_{i=1}^ny_ix_i - \frac{\beta}{\sigma^2}\sum_{i=1}^{n}x_i^2
+\end{align*}
+Setting eqaual to zero and solving for $\beta$, we have $$\hat{\beta}_{MLE} = \frac{\sum_{i=1}^ny_ix_i}{\sum_{i=1}^nx_i^2}$$
+
+To see why the estimate is unbiased consider the following $$\E(\hat{\beta}_{MLE}) = \E\left( \frac{\sum_{i=1}^ny_ix_i}{\sum_{i=1}^nx_i^2}\right) =  \frac{\sum_{i=1}^nx_i\E(y_i)}{\sum_{i=1}^nx_i^2} = \beta\frac{\sum_{i=1}^nx_i^2}{\sum_{i=1}^nx_i^2} = \beta$$
+
+\item Notice that $\hat{\beta}_{MLE}$ is a linear combination of normal random variables. Therefore, $\hat{\beta}$ is also normally distributed. This distribution is specificed by its mean and variance. In part $b$ we saw the mean was $\beta$. So all we must do is derive the varince. 
+
+$$\mathbb{V}(\hat{\beta}_{MLE}) = \mathbb{V}\left(\frac{\sum_{i=1}^ny_ix_i}{\sum_{i=1}^nx_i^2}\right) = \frac{\sum_{i=1}^nx_i^2\mathbb{V}(y_i)}{\left(\sum_{i=1}^nx_i^2\right)^2} = \sigma^2\frac{\sum_{i=1}^nx_i^2}{\left(\sum_{i=1}^nx_i^2\right)^2} = \frac{\sigma^2}{\sum_{i=1}^nx_i^2}$$ Therefore we see that $$\hat{\beta}_{MLE}\sim N\left(\beta, \frac{\sigma^2}{\sum_{i=1}^n x_i^2}\right)$$
+\end{enumerate}
+
+\item 
+\begin{enumerate}
+\item Consider the estimator of $\beta$, $\hat{\beta}' = \sum Y_i/\sum x_i$. Then $$\E(\hat{\beta}') = \E\left(\frac{\sum_{i=1}^n Y_i}{\sum_{i=1}^n x_i}\right) = \frac{\sum_{i=1}^n \E(Y_i)}{\sum_{i=1}^n x_i} = \beta \frac{\sum_{i=1}^n x_i}{\sum_{i=1}^n x_i} = \beta$$
+Therefore this estimator is unbiased. 
+\item Now calculating the the variance to compare to the MLE 
+$$\mathbb{V}(\hat{\beta}') = \mathbb{V}\left(\frac{\sum_{i=1}^ny_i}{\sum_{i=1}^nx_i}\right) = \frac{\sum_{i=1}^n\mathbb{V}(y_i)}{\left(\sum_{i=1}^nx_i\right)^2} = \frac{n\sigma^2}{(\sum_{i=1}^n x_i)^2}$$ 
+Now notice, in general, $(\sum x_i)^2\leq \sum x_i^2$ so we see that $\frac{1}{(\sum x_i)^2}\geq \frac{1}{\sum x_i^2}$. This gives $$\mathbb{V}(\hat{\beta}_{MLE}) = \frac{\sigma^2}{\sum x_i^2}\leq \frac{\sigma^2}{(\sum x_i)^2}<\frac{n\sigma^2}{(\sum x_i)^2} = \mathbb{V}(\hat{\beta}')$$
+\end{enumerate}
+
+\item \begin{enumerate}
+\item Consider the estimator $\tilde{\beta} = \frac{1}{n}\sum Y_i/x_i$. Then we see that $$\E(\tilde{\beta}) = \frac{1}{n}\sum_{i=1}^n \frac{1}{x_i}\E(Y_i) = \frac{1}{n}\sum_{i=1}^n \frac{\beta x_i}{x_i} = \frac{n\beta}{n} = \beta$$
+Thus, $\tilde{\beta}$ is another unbiased estimate of $\beta$. 
+
+\item We now can calculate the variance of the estimator as follows. 
+
+$$\mathbb{V}(\tilde{\beta}) = \frac{1}{n^2}\sum_{i=1}^n\frac{1}{x_i^2}\mathbb{V}(Y_i) = \frac{\sigma^2}{n^2}\sum_{i=1}^n \frac{1}{x_i^2}$$
+
+Notice that this is just an arithmetic mean of the $1/x_i^2$ and the variance of $\tilde{\beta}$ is the harmonic mean of the $1/x_i^2$. So we see that $$\mathbb{V}(\hat{\beta}_{MLE})\leq \mathbb{V}(\hat{\beta}')$$ Now notice that we also have $$\mathbb{V}(\hat{\beta}') = \frac{n\sigma^2}{\left(\sum x_i\right)^2}\leq \frac{\sigma^2}{n^2}\sum\frac{1}{x_i^2} = \mathbb{V}(\tilde{\beta})$$  This is due to the fact that by Jensen's Inequality we have $\frac{n}{(\sum x_i)^2}\leq \sum\frac{1}{n^2x_i^2}$
+\end{enumerate}
+
+\item 
+\begin{enumerate}
+\item Let $a\in\R$. Then using the fact that $\overline{X}$ and $S^2$ are independent for this curved family we see
+\begin{align*}
+\E(a\overline{X} + (1 - a)cS) = a\E(\overline{X}) + (1-a)\E(cS) = a\theta + \theta - a\theta = \theta
+\end{align*}
+\item Again using the fact that $S^2$ and $\overline{X}$ are independent we see that
+\begin{align*}
+Var(a\overline{X} + (1 - a)cS) &= a^2Var(\overline{X}) + (1-a)^2Var(cS)\\ 
+&= a^2\frac{\theta^2}{n} + (1-a)^2\left[\E((cS)^2) - (\E(cS))^2\right]\\
+&= a^2\frac{\theta^2}{n} + (1-a)^2(c^2\E(S^2)-\theta^2)\\
+&= a^2\frac{\theta^2}{n} + (1-a)^2(c^2-1)\theta^2\\
+\end{align*}
+Now minimizing over $a$ we see 
+\begin{align*}
+\frac{\partial}{\partial a}a^2\frac{\theta^2}{n} + (1-a)^2(c^2-1)\theta^2 = 2a\frac{\theta^2}{n} - 2(1-a)(c^2-1)\theta^2 &\overset{set}{=}0\\
+\frac{a}{n} - (c^2-1) + a(c^2-1) &= 0 \\
+a &= \frac{c^2 - 1}{1/n + c^2 - 1}
+\end{align*}
+Also notice that $$\frac{\partial^2}{\partial^2a^2}a^2\frac{\theta^2}{n} + (1-a)^2(c^2-1)\theta^2 = 2\theta^2(\frac{1}{n}+c^2+1)\geq 0$$ Therefore, $a = \frac{c^2 - 1}{1/n + c^2 - 1}$ is in fact a minimum.
+
+\item We've shown in class that $(\overline{X}, S^2)$ is a sufficent statistic for $N(\mu, \sigma^2)$. So letting $\mu = \theta$ and $\sigma^2 = \theta^2$ we see that $(\overline{X}, S^2)$ is certainly a sufficent statistic. But notice $$\E(\overline{X} - cS) = \theta - \theta = 0$$ but $\overline{X}-cS$ need not be zero. Therefore, we see that $(\overline{X}, cS)$ is not complete.
+\end{enumerate}
+
+\item 
+\begin{enumerate}
+\item First note that $X\sim Pois(\lambda)$, $f_X(x) = e^{-\lambda}\lambda^x/x! = \exp\{x\log(\lambda) - \lambda - \log(x!)\}$. Therefore, the Poisson is an exponential family, with complete sufficent statistic $\sum x_i$ by Theorem 6.2.25 (take the open set to be $\R$). Now let $\phi(x) = x/n$. Then the statistic $\phi(\sum x_i)$ is unbiased for $\lambda$. Then by Theorem 7.3.23 is is the unique, best unbiased estimator of $\lambda$.  
+
+\item We will show that $\E(S^2|\overline{X})$ and $\overline{X}$ are both unique best unbiased estimators for $\lambda$. This will imply the result. First notice that both $S^2$ and $\overline{X}$ are unbiased estimators for $\lambda$. Moreover since $\sum x_i$ is a complete sufficent statistic for $\lambda$, then so is $\overline{X} = \phi(\sum x_i)$ because $\phi(\cdot)$ is one to one. Therefore, by Theorem 7.3.17, we see that $\E(S^2|\overline{X}) = \lambda$ is a unqiue best estimator of $\lambda$. But by Theorem 7.3.23 with $\theta(\overline{X}) = \overline{X}$, we see that $\overline{X}$ is the unique best estimator of $\lambda$. Therefore, since both results are unique, we have $$\E(S^2|\overline{X}) = \overline{X}$$
+\begin{align*}
+Var(S^2) &= \E(Var(S^2|X)) + Var(\E(S^2|\overline{X}))\\
+&= \E(Var(S^2|X)) + Var(\overline{X})\\
+&>Var(\overline{X})
+\end{align*}
+
+\item We have two results from above. (1) Any statistic has greater variance than the CSS if they have the same expectation. (2) The conditional expected value of a statistic given a CSS is the CSS. Formally we have the following; 
+
+Let $T(X)$ be a CSS and $R(X)$ being another statistic, with $\E(T(X)) = \E(R(X))$ then \begin{itemize}\item $Var(T(X))\leq Var(R(X))$ \item $\E(R(X)|T(X)) = T(X)$\end{itemize}
+\end{enumerate}
+
+
+\end{enumerate}
+
+\end{document} 
+

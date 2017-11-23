@@ -1,0 +1,135 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 779: HW8}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 7 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+
+\textbf{Exercise 8.1} If $|X_n|\leq |Y_n|$ almost surely and $Y_n$ is uniformly integrable then $X_n$ is uniformly integrable.
+
+\textbf{Solution} $|X_n|\leq |Y_n|$ almost surely, so for any given $a\in\R$,  $$\{\omega: |X_n(\omega)|>a\}\subset \{\omega: |Y_n(\omega)|>a\}$$ This implies $$I_{|X_n|>a}(x)\leq I_{|Y_n|>a}(x)$$ Moreover since expectation is linear $|X_n|\leq |Y_n|$ implies $$\E|X_n|\leq \E|Y_n|$$ Now, all inequalities here are between two positive numbers so we can multiple them together to see $$\E|X_n|I_{|X_n|>a}(x)\leq \E|Y_n |I_{|Y_n|>a}(x)$$
+Recall that $Y_n$ is uniformly integrable so $\lim_{a\to\infty}\E|Y_n |I_{|Y_n|>a}(x) = 0$ uniformly in $n$. Thus $$\lim_{a\to\infty}\E|X_n |I_{|X_n|>a}(x) = 0 \hspace{1em} \text{uniformly in}\hspace{.3em}n$$
+
+Therefore, $X_n$ is uniformly integrable. 
+
+\newpage
+
+\textbf{Exercise 8.2} If $X_n$ is increasing and $X_n\overset{P}{\to}X$ then $X_n\overset{a.s.}{\to}X$. 
+
+\textbf{Solution} Let $\e>0$ be given. Then there exists $k\in\N$ such that $0<\frac{1}{k}<\e$. Let $A_n = \big\{\omega:|X_n(\omega)-X(\omega)|<\frac{1}{k}\big\}$. Then by monotonicity of $X_n$ we see that $A_n\subset A_{n+1}$. Notice that by monotonicity and convergence in probability we see 
+$$P(\lim_{n\to\infty}|X_{n} - X| = 0) = P\Big(\bigcap_{n=1}^{\infty}A_n\Big) \overset{Monont.}{=} \lim_{n\to\infty}P(A_n) \overset{C in P}{=} 1$$
+
+Therefore $X_n\overset{a.s.}{\to}X$
+
+\newpage
+
+\textbf{Exercise 8.3} Show that $\R$ has the subsubsequence property. 
+
+\textbf{Solution}($\Longrightarrow$) Suppose that $a_n \to a$ pointwise. Then for $\e>0$, then there exists $N(\e)\in\N$ such that for all $n\geq N(\e)$ we have $|a_n - a|<\e$. Now for any subsequence $a_{n_k}$, for $n_k>N(\e)$ we have $|a_{n_k} - a|<\e$. Lastly for any further subsequence $a_{n_{k_j}}$, if $n_{k_{j}}>N(\e)$ we see $|a_{n_{k_j}}-a|<\e$. Hence every subsequence has a subsequence that converges pointwise $a$. 
+
+($\Longleftarrow$) Suppose that for any subsequence $a_{n_k}$ there exists a further subsequence $a_{n_{k_k}}\to a$. Now, for the sake of contradiction, assume that $a_n\not\overset{P}{\to}a$. This implies for $\e>0$ that there exists $a_{n_k}$ such that $|a_{n_k}-a|>\e$ \textit{for all} $n_k$. Then any further subsequence, $a_{n_{k_j}}$ we have  $|a_{n_{k_j}}-a|>\e$ by construction. Therefore, we see there is a sequence such that there does not exist any subsequence that converges to $a$. This is a contradiction to our initial assumption. Therefore, we must have $a_n \to a$. 
+\newpage
+
+\textbf{Exercise 8.4} Show that convergence in probability has the subsubsequence property. 
+
+\textbf{Solution}($\Longrightarrow$) Suppose that $X_n\overset{P}{\to}X$. Then we know that every subsequence of $X_n$ has a further subsequence such that $X_{n_{k_j}}\overset{a.s.}{\to}X$. Recall that almost sure convergence implies convergence in probability. Thus, we see that $X_{n_{k_j}}\overset{P}{\to}X$. 
+
+($\Longleftarrow$) Assume that for every subsequence of $X_n$, there exists a further subsequence such that $X_{n_{k_j}}\overset{P}{\to}X$. Now assume for the sake of contradiction that $X_n\not\overset{P}{\to}X$. Then there exists some $X_{n_k}$ such that for some $\e>0$ and $\delta>0$ that $P(|X_{n_k}-X|>\delta)>\e$ for all $n_k$. Then by construction, we see $\lim_{j\to\infty}P(|X_{n_{k_j}}-X|>\delta)>\e$. Hence there is a subsubsequence that does not converge in probability. Thus we have a contradiction and see that $X_n\overset{P}{\to}X$. 
+\newpage
+
+\textbf{Exercise 8.5} Show that $$d(X,Y) = \E\bigg[\frac{|X-Y|}{1+|X-Y|}\bigg]$$ gives a metric.
+
+\textbf{Solution}
+\begin{enumerate}
+\item First note that $\frac{|X-Y|}{1+|X-Y|}\geq0$ so $d(X,Y)\geq 0$. Now if $d(X,Y) = 0$ iff $\int\frac{|X-Y|}{1+|X-Y|}dF(X,Y) = 0$. Notice that the integrand is nonnegative and $F(X,Y)\geq0$. So this implies  $\int\frac{|X-Y|}{1+|X-Y|}dF(X,Y) = 0$ iff $\frac{|X-Y|}{1+|X-Y|} \overset{a.s}{=} 0$ iff $|X-Y| \overset{a.s}{=} 0$ iff $X \overset{a.s}{=} Y$. 
+\item $$d(X,Y) = \E\bigg[\frac{|X-Y|}{1+|X-Y|}\bigg] = \E\bigg[\frac{|Y-X|}{1+|Y-X|}\bigg] = d(Y,X)$$
+\item First note that $|X-Y|\leq |X-Z| + |Z-Y|$ by the triangle inequality. Moreover, by the results proved in 8.6 with $\e = |X-Y|$ and $a = |X-Z| + |Z-Y|$  we have 
+\begin{align*}
+\frac{|X-Y|}{1 + |X-Y|}&\leq \frac{|X-Z| + |Z-Y|}{1 + |X-Z| + |Z-Y|} \\
+&= \frac{|X-Z|}{1 + |X-Z| + |Z-Y|} + \frac{|X-Z|}{1 + |X-Z| + |Z-Y|}\\
+&\leq \frac{|X-Z|}{1 + |X-Z|} + \frac{|X-Z|}{1 + |Z-Y|}\end{align*}
+
+Now applying the expectation we see $$\E\bigg[\frac{|X-Y|}{1 + |X-Y|}\bigg]\leq \E\bigg[\frac{|X-Z|}{1 + |X-Z| + |Z-Y|}\bigg] + \E\bigg[\frac{|X-Z|}{1 + |X-Z| + |Z-Y|}\bigg]$$
+Thus $d(X,Y)\leq d(X,Z) + d(Z,Y)$
+\end{enumerate}
+\newpage
+
+\textbf{Exercise 8.6} Show that if $a>0$ that $a>\e$ iff $\frac{a}{1+a}>\frac{\e}{1+\e}$
+
+\textbf{Solution}
+
+\begin{align*}
+a &> \e\\
+a +a\e &> \e+a\e\\
+a(1+\e)&> \e(1+a)\\
+\frac{a}{1+a}&>\frac{\e}{1+\e}
+\end{align*}
+
+\newpage
+
+\textbf{Exercise 8.7} Show that $X_n\overset{P}{\to}X$ is equivalent to $d(X_n, X)\to0$.
+
+\textbf{Solution} First let $Z_n = \frac{|X_n-X|}{1 + |X_n-X|}$. Then $d(X_n,X) = \E\bigg[\frac{|X-Y|}{1+|X-Y|}\bigg] = \E(Z_n)$. ($\Longleftarrow$) Now if $d(X_n, X)\to 0$ then $\E(Z_n)\to 0$ and $\lim_{n\to\infty}\int Z_ndF(Z_n) = 0$. Since $Z_n\geq 0$ and $F(Z_n)\geq 0$ this implies that $\lim_{n\to\infty}Z_n \overset{a.s}{=} 0$ or $Z_n\overset{P}{\to}0$. This implies for any $\e>0$
+
+\begin{align*}
+\lim_{n\to\infty}P\Big(\frac{|X_n -X|}{1 +|X_n -X|}<\e\Big) &= 1\\
+\lim_{n\to\infty}P\Big(|X_n -X|<\e + \e|X_n -X|\Big) &= 1\\
+\lim_{n\to\infty}P\Big(|X_n -X|<\frac{\e}{1-\e}\Big) &= 1\\
+\end{align*}
+$\e$ was arbitrary so $X_n\overset{P}{\to}X$. ($\Longrightarrow$) If $X_n\overset{P}{\to}X$ then by Slutksy $Z_n = \frac{|X_n -X|}{1+|X_n -X|}\overset{P}{\to} 0$. This implies that $$\lim_{n\to\infty}\E(Z_n) = \lim_{n\to\infty}\int Z_n dF(Z_n) = 0$$
+But notice that $$\lim_{n\to\infty}\E(Z_n) = \lim_{n\to\infty}d(X_n, X) = 0 $$
+
+
+
+
+\end{document} 
+

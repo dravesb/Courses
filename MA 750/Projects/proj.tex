@@ -1,0 +1,38 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size}
+\title{MA 750 - Final Project}
+\author{
+  Nate Josephs\\
+  \and
+  Matthew Wiens 
+  \and 
+  Ben Draves
+}
+
+
+\begin{document}
+\maketitle 
+
+
+
+\begin{abstract} One of the most fundamental tasks in Statistics is to understand the relationship between two random variables, $X,Y$, via an unspecified function $Y = f(X)$. Typically, $f(\cdot)$ is unknown and must be estimated from data relating $X$ and $Y$. Estimating $f(\cdot)$ using maximum likelihood yields no meaningful solution when we consider \textit{all} functions. Hence statisticians turn to estimating $f\in\mathcal{F}$ where $\mathcal{F}$ is a function space with some structure that provides meaningful solutions to the problem at hand. In most cases however, these function spaces are fixed, with no regard to the sample from which we are trying to infer $f$. In order to utilize all information inherent in the data while still imposing structure on $\mathcal{F}$, \textit{Sieve Estimation} allows $\mathcal{F}$ to grow in complexity as $n$ increases. Heuristically, as $n$ increases, we attain a more robust understanding of $f$ and should allow our modeling procedure to consider more complex forms of $f$. Sieve achieves this by introducing more complex functions to $\mathcal{F}$ as $n$ increases. Here, we consider the function space $$\mathcal{F}_n = \Big\{g(x): g(x) = \sum_{d=1}^{D(n)}\beta_dx^d\Big\}$$ where $D(n)\to\infty$ as $n\to\infty$. We focus our efforts on estimating $D(n)$ as a function of the data. This report is organized as follows; in sections 1 and 2 we summarize some of the foundational results on Sieve estimation and introduce notation used throughout the report. In section 3 we introduce some theoretical applications and in section 4 we offer some methodologies of estimating $D(n)$. Lastly, in section 5 we analyze our methods via intensive simulation study and a real data application.
+
+
+\end{abstract}
+  
+\section{Introduction}
+\section{Developing Sieve Estimation}
+\section{Theoretical Applications}
+\subsection{Parametric Problems}
+\subsection{Nonparametric Problems}
+\subsubsection{Kernel Density Estimation}
+\subsubsection{Regression}
+\section{Estimating $D(n)$}
+\section{Simulation and Applications}
+\section{Conclusion}
+
+
+
+\end{document} 
+

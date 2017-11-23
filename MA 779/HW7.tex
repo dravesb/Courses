@@ -1,0 +1,185 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 779: HW7}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 7 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+
+\textbf{Exercise 7.1} Suppose that $a\leq X \leq b $ with $a<b$ and $\E(X) = 0$. Show for $t>0$
+
+$$\E(e^{tX})\leq \exp\Big\{\frac{t^2(b-a)^2}{8}\Big\}$$
+
+\textbf{Solution} Consider the function $\Phi(t) = ta + \log(\frac{b}{b-a} - \frac{a}{b-a}e^{t(b-a)})$ 
+
+First note that $X = \left(\frac{X-a}{b-a}\right)b + \left(\frac{b-X}{b-a}\right)a$ and $\left(\frac{X-a}{b-a}\right)\leq 1$ and $\left(\frac{b-X}{b-a}\right)\leq 1$. Then by convexity we see 
+
+$$\exp\Big\{tX\Big\}\leq \left(\frac{X-a}{b-a}\right)e^{tb} + \left(\frac{b-X}{b-a}\right)e^{ta}$$
+
+Using this, and the fact that $\E(\cdot)$ is a linear operator we see 
+
+\begin{align*}
+\E\left(\exp\Big\{tX\Big\}\right)&\leq \E\left(\left(\frac{X-a}{b-a}\right)e^{tb} + \left(\frac{b-X}{b-a}\right)e^{ta}\right)\\
+&= \frac{-a}{b-a}e^{tb} + \frac{b}{b-a}e^{ta}\\
+&= \frac{be^{ta} - ae^{tb}}{b-a}\\
+&= \frac{b}{b-a}e^{ta} - \frac{a}{b-a}e^{tb}\frac{e^{ta}}{e^{ta}}\\
+&= e^{ta}\left(\frac{b}{b-a} - \frac{a}{b-a}e^{t(b-a)}\right)\\
+&= e^{ta}\exp\left[\log\left(\frac{b}{b-a} - \frac{a}{b-a}e^{t(b-a)}\right)\right]\\
+&= \exp\left[ta + \log\left(\frac{b}{b-a} - \frac{a}{b-a}e^{t(b-a)}\right)\right]\\
+&= \exp(\Phi(t))
+\end{align*}
+Now we will consider the Taylor expansion of $\Phi(t)$ around $t = 0$. By Taylor's theorem, we know there exists a point $a<\xi\leq t$ such that $\Phi(t) = \Phi(0) + t\Phi'(0) + \frac{t^2}{2}\Phi''(\xi)$. Notice that we have 
+
+\begin{align*}
+\Phi(0) &= 0 + \log\left(\frac{b}{b-a} - \frac{a}{b-a}\right) = \log(1) = 0 \\
+\Phi'(t)\big\vert_{t=0} &= a  - \frac{ae^{t(b-a)}}{\frac{b}{b-a} - \frac{a}{b-a}e^{t(b-a)}}\Big\vert_{t=0} = a - \frac{a}{\frac{b}{b-a}-\frac{a}{b-a}} = 0 \\
+\Phi''(t) &= \frac{\Big[\frac{b}{b-a} - \frac{a}{b-a}e^{t(b-a)}\Big]\Big[-a(b-a)e^{t(b-a)}\Big]-\Big[ae^{t(b-a)}\Big]^2}{\Big[\frac{b}{b-a}-\frac{a}{b-a}e^{t(b-a)}\Big]^2}\\
+&= \left(\frac{-a(b-a)e^{t(b-a)}}{\frac{b}{b-a}-\frac{a}{b-a}e^{t(b-a)}}\right)\left(1 + \frac{a(b-a)e^{t(b-a)}}{\frac{b}{b-a}-\frac{a}{b-a}e^{t(b-a)}}\cdot\frac{1}{(b-a)^2}\right)\\
+&= \left(\frac{-a(b-a)^2e^{t(b-a)}}{b-ae^{t(b-a)}}\right)\left(1-\frac{-a(b-a)^2e^{t(b-a)}}{b-ae^{t(b-a)}}\cdot\frac{1}{(b-a)^2}\right)\\
+&= C(t)\left(1-\frac{C(t)}{(b-a)^2}\right)\\
+&= C(t) - \frac{C^2(t)}{(b-a)^2}
+\end{align*}
+Now recall that $X$ had mean zero. Thus $a<0$. This implies $-a(b-a)^2e^{t(b-a)}>0$. Moreover we see 
+\begin{align*}
+be^{ta}&\geq 0 \geq ae^{tb}\\
+b &\geq ae^{t(b-a)}\\
+b - ae^{t(b-a)} &\geq 0\\
+\end{align*}
+Having this, we see that $C(t)>0$. We now see that $\Phi''(t) = C(t)(1-\frac{C(t)}{(b-a)^2})$ with critical value $\frac{(b-a)^2}{2}$. Since $\Phi''(t)$ is concave, with one unique critical point this implies that $C(t) = (b-a)^2/2$ corresponds to a global maximum. Therefore we see that $$\frac{(b-a)^2}{2}\left(1 - \frac{(b-a)^2}{2}\cdot\frac{1}{(b-a)^2}\right) = \frac{(b-a)^2}{4}$$serves as an upper bound of $\Phi''(t)$. This gives $$\Phi(t) = \Phi(0) + t\Phi'(0) + \frac{t^2}{2}\Phi''(\xi) = \frac{t^2}{2}\Phi''(\xi)\leq \frac{t^2(b-a)^2}{8}$$
+Hence $$\E e^{tX} \leq \exp\Big\{\frac{t^2(b-a)^2}{8}\Big\}$$
+
+\newpage
+
+\textbf{Exercise 7.2} Recall from the proof of Hoeffding's Inequality that $$P(S_n - \E(S_n)>\e)\leq \exp\Big\{\frac{t^2\sum_{k=1}^{n}(b_k -a_k)^2}{8} - t\e\Big\}$$
+Show that $t = \frac{4\e}{\sum_{k=1}^{n}(b_k - a_k)^2}$ gives an optimal bound. 
+
+\textbf{Solution} We look to minimize $\exp\Big\{\frac{t^2\sum_{k=1}^{n}(b_k -a_k)^2}{8} - t\e\Big\}$ with respect to $t$. Since $\exp(\cdot)$ is convex this corresponds to minimizing $\frac{t^2\sum_{k=1}^{n}(b_k -a_k)^2}{8} - t\e$. Taking this derivative with respect to $t$ we see 
+
+\begin{align*}
+\frac{\partial}{\partial t}\frac{t^2\sum_{k=1}^{n}(b_k -a_k)^2}{8} - t\e &= 0\\
+\frac{t\sum_{k=1}^{n}(b_k -a_k)^2}{4} - \e &= 0\\
+t &=\frac{4\e}{\sum_{k=1}^{n}(b_k -a_k)^2} \\
+\end{align*}
+
+Moreover note that the second derivative $\frac{\partial^2}{\partial t^2}\frac{t^2\sum_{k=1}^{n}(b_k -a_k)^2}{8} - t\e$ is clearly positive. Thus this $t$ does in fact corresponds to a minimum. Using this minimization, we see that the optimal bound is give by 
+
+\begin{align*}
+P(S_n - \E(S_n)>\e)&\leq \exp\bigg\{\left(\frac{4\e}{\sum_{k=1}^{n}(b_k -a_k)^2} \right)^2\frac{\sum_{k=1}^{n}(b_k -a_k)^2}{8} - \left(\frac{4\e}{\sum_{k=1}^{n}(b_k -a_k)^2} \right)\e\bigg\}\\
+&= \exp\bigg\{\frac{2\e}{\sum_{k=1}^{n}(b_k -a_k)^2} - \frac{4\e^2}{\sum_{k=1}^{n}(b_k -a_k)^2}\bigg\}\\
+&= \exp\bigg\{\frac{-2\e}{\sum_{k=1}^{n}(b_k -a_k)^2}\bigg\}
+\end{align*}
+\newpage
+
+\textbf{Exercise 7.3} Let $X_1, X_2, \ldots, X_n$ be independent and bounded, i.e. $P(a_k \leq X_k\leq b_k) = 1$ for some $-\infty<a_k$ and $b_k<\infty$. If $S_n = \sum_{i=1}^{n}X_i$ then $$P(|S_n -\E(S_n)|>\e)\leq 2\exp\Big\{\frac{-2\e}{\sum_{i=1}^{n}(b_k-a_k)^2}\Big\}$$
+
+\textbf{Solution} First note that $a_k\leq X_k \leq b_k$ implies $-b_k \leq -X_k \leq -a_k$. Then by Hoeffding's Inequality, we see that for $T_n = \sum_{i=1}^{n}-X_i = -S_n$ that $$P(T_n - \E(T_n)>\e)\leq \exp\Big\{\frac{-2\e}{\sum_{i=1}^{n}(-a_k - (-b_k))^2}\Big\} = \exp\Big\{\frac{-2\e}{\sum_{i=1}^{n}(b_k - a_k))^2}\Big\}$$ With this, we can show the desired result 
+\begin{align*}
+P(|S_n - \E(S_n)|>\e) &= P(S_n -\E(S_n)<-\e) + P(S_n - \E(S_n)>\e)\\
+&= P(\E(S_n) - S_n > -\e) + P(S_n - \E(S_n))\\
+&= P(T_n - \E(T_n) > -\e) + P(S_n - \E(S_n))\\
+&\leq \exp\Big\{\frac{-2\e}{\sum_{i=1}^{n}(b_k - a_k))^2}\Big\} + \exp\Big\{\frac{-2\e}{\sum_{i=1}^{n}(b_k - a_k))^2}\Big\}\\
+&= 2\exp\Big\{\frac{-2\e}{\sum_{i=1}^{n}(b_k - a_k))^2}\Big\}
+\end{align*}
+
+
+\newpage
+
+\textbf{Exercise 7.4} Suppose that $||\cdot||_r$ is a norm. Show that $$\Big|||x||_r - ||y||_r\Big|\leq ||x-y||_r$$
+
+\textbf{Solution} First, we bound $||x||_r$ and $||y||_r$ individually by the triangle inequality. $$||x||_r = ||x-y +y||_r\leq ||x-y||_r + ||y||_r$$ $$||y||_r = ||y-x +x||_r\leq ||x-y||_r + ||x||_r$$ Rearranging the two inequalities above, we see $$||x||_r-||y||_r \leq ||x-y||_r$$$$||y||_r-||x||_r \leq ||x-y||_r$$ This implies our result $$\Big|||x||_r - ||y||_r\Big|\leq ||x-y||_r$$
+
+\newpage
+
+\textbf{Exercise 7.5} We can define the \textit{convergence set} of a random variable as $$A = \bigcap_{\e>0}\bigcup_{n=1}^{\infty}\bigcap_{m=n}^{\infty}\{\omega\in\Omega:|X_m(w)-X(w)|<\e\}$$ Show that this set is equivalent to 
+
+$$A'=\bigcap_{k=1}^{\infty}\bigcup_{n=1}^{\infty}\bigcap_{m=n}^{\infty}\{\omega\in\Omega:|X_m(w)-X(w)|<\frac{1}{k}\}$$
+\textbf{Solution} Recall that $\Q$ is dense in $\R$ and $\R$ is dense in $\Q$. This implies that for any $\e>0$, there exists $k(\e)$ such that $0<\frac{1}{k(\e)}<\e$. Thus if $a'\in A'$, then for $k(\e)$ chosen with respect to any given $\e>0$, we have for any $n\geq 1$ there exists $m'\geq n$ such that $|X_{m'}(a') - X(a')|<\frac{1}{k(\e)}<\e$. This was true for any $\e>0$. Thus we see that $a'\in A$. Hence $A'\subset A$.
+
+Let $a\in A$. Then for any $k\in\N$, there exists $\e(k)>0$ such that $0<\e(k)<\frac{1}{k}$. With this $k$ given, and $\e(k)$ fixed, for any $n\in\N$, there exists $m\geq n$ such that $|X_{m}(a) - X(a)|<\e(k)<\frac{1}{k}$. This was true for any $k\in\N$. Therefore we see $a\in A'$ and that $A\subset A'$. Thus $A=A'$. 
+
+\newpage
+
+\textbf{Exercise 7.6} Show that the characterization of $Xn\overset{a.s.}{\to}0$ $$\forall\e>0\hspace{1em} \lim_{N\to\infty}P(\sup_{n\geq N}\{w:|X_n(w)|>\e\})= 0$$ iff $$\forall\e>0\hspace{1em} \lim_{N\to\infty}P(\{w:\sup_{n\geq N}|X_n(w)|>\e\})= 0$$
+
+\textbf{Solution} Let $A_N = \bigcup_{n=N}^{\infty}\{w:|X_n(w)|>\e\}$. Then we can write the first statement as $\lim_{N\to\infty}P(A_N) = 0$. Note that $A_N\searrow A$ where $A$ is some set with $P(A) = 0$. Now, let $B_N = \{w: \sup_{n\geq N}|X_n(w)|>\e\}$. For any $\omega\in B_N$, we see that there exists an $n\geq N$ such that $|X_n(w)|>\e$. This implies that $\omega\in\{w:|X_n(\omega)|>\e\}\subseteq \bigcup_{n=N}^{\infty}\{w:|X_n(\omega)|>\e\}$. Therefore, we see that $B_N\subset A_N$. Now by assumption $A_N\searrow A$ which implies $B_N\searrow B$ where $P(B)\leq P(A) = 0$. Thus we see $$\forall\e>0\hspace{1em} \lim_{N\to\infty}P(\{w:\sup_{n\geq N}|X_n(w)|>\e\})= 0$$
+
+Now assume that $$\forall\e>0\hspace{1em} \lim_{N\to\infty}P(\{w:\sup_{n\geq N}|X_n(w)|>\e\})= 0$$ Then notice that $$\{\omega: \sup_{n\geq N}|X_n(\omega)|>\e\}\supset \{w:|X_n(\omega)|>\e\}\supset \sup_{n\geq N}\{\omega: |X_n(\omega)|>\e\}$$ where the first containment is is due to fact that the supremum will only add values to the set and the second containment is due to the fact that we are only considering sets with $n\geq N$. Now assuming that $P(\{\omega: \sup_{n\geq N}|X_n(\omega)|>\e\})\searrow 0$ then we see taht $$\forall\e>0\hspace{1em} \lim_{N\to\infty}P(\sup_{n\geq N}\{w:|X_n(w)|>\e\})= 0$$
+
+
+\newpage
+
+\textbf{Exercise 7.7} Let $X_n \sim \text{Exp}(\lambda_n)$. Find a necessary and sufficient condition for $\{X_n\}_{n\geq 1}$ to be uniformly integrable.   
+
+\textbf{Solution} If $\{X_n\}_{n\geq1}$ were uniformly integrable, then we would have 
+$$\lim_{a\to\infty}\sup_{n\geq 1}\int_a^{\infty}\lambda_n xe^{x\lambda_n}dx = 0 $$ Analyzing this integral we have $$\lim_{a\to\infty}\sup_{n\geq 1}\int_{a}^{\infty}\lambda_nxe^{x\lambda_n}dx = \lim_{a\to\infty}\sup_{n\geq 1}\Big[\frac{a}{e^{a\lambda_n}} + \frac{1}{\lambda_ne^{a\lambda_n}}\Big]$$ 
+
+For this quanity to go to zero we need $$\lim_{a\to\infty}\sup_{n\geq n}\frac{a}{e^{a\lambda_n}} =  \lim_{a\to\infty}\sup_{n\geq n}\frac{1}{\lambda_ne^{a\lambda_n}}$$
+This implies that $a\lambda_n e^{-\lambda_n a} + e^{-\lambda_na} \to 0$ as $a\to 0$. From this we see that $\lambda_n = \frac{1}{a}$ and as $a\to\infty$ we see that $\lambda_n \to 0$.  
+Therefore, our requirement is that $\lambda_n \to 0$. 
+
+For example, let $\lambda_n = 1/n$. Then see that $$\lim_{a\to\infty}\sup_{n\geq 1} \E|X_n|I(\{|X_n|>a\}) = \lim_{a\to\infty}\sup_{n\geq 1}\frac{a+n}{e^{a/n}} \to 0$$ and $X_n \sim\text{Exp}(\frac{1}{n})$ is unfiromly integrable. Now consider $X_n \sim\text{Exp}(n)$. Then
+
+$$\lim_{a\to\infty}\sup_{n\geq 1} \E|X_n|I(\{|X_n|>a\}) = \lim_{a\to\infty}\sup_{n\geq 1}\frac{an+1}{ne^{a/n}} \to \infty$$
+
+
+Hence $X_n \sim\text{Exp}(1/n)$ is uniformly integrable while $X_n \sim\text{Exp}(n)$ is not unfiromly integrable
+
+
+\newpage 
+
+\textbf{Exercise 7.8} Show that convergence in probability does not imply convergence almost surely. 
+
+\textbf{Solution} Let $X_n(\omega)$ be the strip function that we discussed in class and let $\ell_n$ be the length of the $nth$ interval. Then we see that $$P(|X_n(\omega) - 0|>\e) - \ell_n$$
+Notice that $\lim_{n\to\infty}\ell_n = 0$ so we see that $$\lim_{n\to\infty}P(|X_n(\omega)-0|>\e) = \lim_{n\to\infty}\ell_n = 0 \hspace{2em}\text{and}\hspace{1em} X_n\overset{P}{\to}0 $$
+Now consider the following $$P(\lim_{n\to\infty}|X_n-0|>\e)$$ Recall that for every $n\in\N$ and for any $\e \in (0,1)$, say, that $X_n(\omega) = 1>\e$ for some $\omega\in\Omega$. This implies that $|X_n - 0|>\e$ \textit{infinitly often}. Therefore, we see that $$P(\lim_{n\to\infty}|X_n - 0|>\e) = 1$$ Hence $X_n(\omega)$ converges in probability but does not almost surely. 
+
+\end{document} 
+
