@@ -2,10 +2,8 @@
 title: "MA 575 HW 9"
 author: "Benjamin Draves"
 date: "November 21"
-output:
-  prettydoc::html_pretty:
-    theme: cayman
-    highlight: github
+output: pdf_document
+#output: html_document
 fontsize: 11pt
 geometry: margin=1in
 ---

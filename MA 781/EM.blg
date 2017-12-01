@@ -1,0 +1,9 @@
+[0] Config.pm:354> INFO - This is Biber 2.7
+[0] Config.pm:357> INFO - Logfile is 'EM.blg'
+[48] biber-darwin:303> INFO - === Wed Nov 29, 2017, 09:24:34
+[74] Biber.pm:359> INFO - Reading 'EM.bcf'
+[194] Biber.pm:835> INFO - Found 0 citekeys in bib section 0
+[207] Utils.pm:164> WARN - The file 'EM.bcf' does not contain any citations!
+[216] bbl.pm:608> INFO - Writing 'EM.bbl' with encoding 'UTF-8'
+[216] bbl.pm:712> INFO - Output to EM.bbl
+[216] Biber.pm:109> INFO - WARNINGS: 1
