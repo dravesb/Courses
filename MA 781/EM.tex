@@ -50,28 +50,22 @@ In several stochastic systems, statisticians are tasked with the \textit{latent 
 
 Formally, the EM algorithm creates a sequence of estimates $\{\theta^{(r)}\}_{r=0}^{\infty}$ that are guaranteed to converge to the MLE estimate, $\theta_{MLE}$. For complete data situations (i.e. no latent variables or missing data), the algorithm is entirely derivative due to the arsenal of statistical techniques that already exist for maximum likelihood estimation. In the incomplete data situations (i.e. latent variables or missing), however, these techniques breakdown. One simple solution to this problem is to disregard the missing data and find the MLE on the incomplete dataset. This naive approach however is not desirable as it disregards the true structure of the underlying problem. In this case, EM algorithm proves very useful as it connects the desired incomplete data likelihood with the complete data likelihood in which we are quite comfortable handling. Specifically, for the incomplete data $\mathbf{Y} = (Y_1, Y_2, \ldots, Y_n)$ and the missing data $\mathbf{X} = (X_1, X_2, \ldots, X_m)$, then by the law of total probability we have the relationship $$g(\mathbf{y}|\theta) = \int f(\mathbf{y}, \mathbf{x}|\theta)dx$$ where $g(\mathbf{y}|\theta)$ is the incomplete data density and $f(\mathbf{x},\mathbf{y}|\theta)$ is the complete data density both parametrized by $\theta$. From here we can define the respective likelihoods as $L(\theta|\mathbf{y}) = g(\mathbf{y}|\theta)$ and $L(\theta|\mathbf{y}, \mathbf{x}) = f(\mathbf{x},\mathbf{y}|\theta)$. 
 
-The power of the EM algorithm is that it allows us to maximize the incomplete data likelihood $L(\theta|\mathbf{y})$ through our knowledge of $L(\theta|\mathbf{x}, \mathbf{y})$. First, let $h(\mathbf{x}|\theta,\mathbf{y})$ be the conditional density of the missing data $\mathbf{x}$ given the observed data $\mathbf{y}$. Then we see that 
-\begin{align*}
-h(\mathbf{x}|\theta,\mathbf{y}) &= \frac{f(\mathbf{x},\mathbf{y}|\theta)}{g(\mathbf{y}|\theta)}\\
-h(\mathbf{x}|\theta,\mathbf{y}) &= \frac{L(\theta|\mathbf{x},\mathbf{y})}{L(\theta|\mathbf{y})}\\
-\log\left[h(\mathbf{x}|\theta,\mathbf{y})\right] &= \log\left[L(\theta|\mathbf{x},\mathbf{y})\right]-\log\left[L(\theta|\mathbf{y})\right]\\
-\log\left[L(\theta|\mathbf{y})\right] &= \log\left[L(\theta|\mathbf{x},\mathbf{y})\right]-\log\left[h(\mathbf{x}|\theta,\mathbf{y})\right]\\
-\end{align*}
-From this, we see that maximization of $L(\theta|\mathbf{y})$ is equivalent to maximization of $\log\left[L(\theta|\mathbf{x},\mathbf{y})\right]-\log\left[h(\mathbf{x}|\theta,\mathbf{y})\right]$ \textit{which relies on unobserved data} $\mathbf{x}$. While this quantity is unknown with respect to the the missing data $\mathbf{x}$, one reasonable next step is to replace this value with its \textit{expectation} under the conditional distribution $h(\cdot|\tilde{\theta}, \mathbf{y})$ for some value of $\theta$, $\tilde{\theta}$. With this goal in mind, we can write 
+The power of the EM algorithm is that it allows us to maximize the incomplete data likelihood $L(\theta|\mathbf{y})$ through our knowledge of $L(\theta|\mathbf{x}, \mathbf{y})$. First, let $k(x)$ be some distribution over the missing data $\mathbf{x}$. Then by Jensen's Inequality we see that 
 
 \begin{align*}
-\log L(\theta|\mathbf{y}) &= \int \log L(\theta|\mathbf{y}) h(\mathbf{x}|\tilde{\theta},\mathbf{y})dx\\
-&= \int h(\mathbf{x}|\tilde{\theta},\mathbf{y}) \log \frac{L(\theta|\mathbf{x},\mathbf{y})}{L(\theta, \mathbf{y}|\mathbf{x})} dx\\
-&= \int h(x|\tilde{\theta},\mathbf{y})\log L(\theta|\mathbf{x},\mathbf{y})dx - \int h(x|\tilde{\theta},\mathbf{y})\log L(\theta,\mathbf{y}|\mathbf{x})dx\\
-&= \int h(x|\tilde{\theta},\mathbf{y})\log L(\theta|\mathbf{x},\mathbf{y})dx - \int h(x|\tilde{\theta},\mathbf{y})\log h(\mathbf{x}|\mathbf{y},\theta)dx\\
-&= \E\left[\log L(\theta|\mathbf{X},\mathbf{y})\big|\tilde{\theta},\mathbf{y}\right] - \E\left[\log h(\mathbf{X}|\mathbf{y},\theta)\big|\tilde{\theta},\mathbf{y}\right]
+\log L(\theta|\mathbf{y}) &= \log \int L(\theta|\mathbf{x},\mathbf{y})dx\\
+&= \log \int k(x)\frac{L(\theta|\mathbf{x},\mathbf{y})}{k(x)}dx\\
+&\geq \int k(x)\log\frac{L(\theta|\mathbf{x},\mathbf{y})}{k(x)}dx\\
+&= \int k(x)\log L(\theta|\mathbf{x},\mathbf{y})dx - \int k(x)\log k(x)dx\\
+&= \E_{k(\mathbf{x})}[\log L(\theta|\mathbf{x},\mathbf{y})]- \E_{k(\mathbf{x})}[\log k(\mathbf{x})]
 \end{align*}
-
-We can interpret this representation of the likelihood as a decomposition. That is the likelihood of the incomplete data can be written as the complete data likelihood with some reduction due to the stochasticity of the hidden variables in $\mathbf{X}$. Using these forms we see that 
+From this we see that we can bound the incomplete data likelihood by the complete data likelihood minus some term\footnote{Technically, this term is the \textit{entropy} of the missing data distribution $k(\mathbf{x})$} to account for the variability in our estimates of $\mathbf{X}$. But recall that Jensen's Inequality gives equality when the argument is constant with respect to $\E_{k(\mathbf{x})}(\cdot)$. Therefore we see that we can make this inequality an equality for $k(\mathbf{x})\propto L(\theta|\mathbf{x}, \mathbf{y}) = f(\mathbf{x},\mathbf{y}|\theta)$. We now construct a distribution for the missing data $\mathbf{x}$ that has this property.
+$$k(\mathbf{x}):= \frac{f(\mathbf{x},\mathbf{y}|\theta)}{\int f(\mathbf{x},\mathbf{y}|\theta)dx} = \frac{f(\mathbf{x},\mathbf{y}|\theta)}{g(\mathbf{y}|\theta)} = h(\mathbf{x}|\theta, \mathbf{y})$$ 
+which is the conditional distribution of the missing data on the observed data. By construction the quantity $\frac{L(\theta|\mathbf{x},\mathbf{y})}{h(\mathbf{x}|\mathbf{y},\theta)} = g(\mathbf{y}|\mathbf{x},\theta)$ is constant with respect to $\mathbf{x}$. Therefore, we see that Jensen's Inequality gives us equality. Using this notation we have that 
 \begin{align}
 \log L(\theta|\mathbf{y}) = \E\left[\log L(\theta|\mathbf{y},\mathbf{X})\big|\mathbf{y},\tilde{\theta}\right] - \E\left[\log h(\mathbf{X}|\theta,\mathbf{y})\big| \mathbf{y},\tilde{\theta}\right]
 \end{align}
-Therefore, we see that maximum likelihood estimation is equivalent to maximizing this difference in expectation. As we will see in the next section, it is actually sufficient to maximize $\E\left[\log L(\theta|\mathbf{y},\mathbf{X})\big|\mathbf{y},\tilde{\theta}\right]$ and disregard the second term in equation $(1)$ to ensure that $L(\theta^{(r+1)}|\mathbf{y})\geq L(\theta^{(r}|\mathbf{y})$. With this piece of information, we can write the algorithm as follows.
+We can interpret this representation of the likelihood as a decomposition. That is the likelihood of the incomplete data can be written as the complete data likelihood with some reduction due to the stochasticity of the hidden variables in $\mathbf{X}$. Therefore, we see that maximum likelihood estimation is equivalent to maximizing this difference in expectation. As we will see in the next section, it is actually sufficient to maximize $\E\left[\log L(\theta|\mathbf{y},\mathbf{X})\big|\mathbf{y},\tilde{\theta}\right]$ and disregard the second term in equation $(1)$ to ensure that $L(\theta^{(r+1)}|\mathbf{y})\geq L(\theta^{(r}|\mathbf{y})$. With this piece of information, we can write the algorithm as follows.
 \begin{enumerate}
 \item Initialize $\theta^{(0)}$ to some randomly selected value. 
 \item Until convergence
@@ -82,7 +76,7 @@ Therefore, we see that maximum likelihood estimation is equivalent to maximizing
 \end{enumerate}
 Having defined the machinery driving the EM algorithm, we now turn to the monotonicity of the likelihood function evaluated at $\theta^{(r)}$ and the convergence guarantees that follow. 
 
-\subsection{Monotonicity \& Convergence}
+\subsection{Monotonicity of the EM Estimates}
 
 When analyzing the EM algorithm a natural first question is what is the behavior of the likelihood when evaluated at the constructed sequence $\{\theta^{(r)}\}_{r=0}^{\infty}$? As we will see, in the limit we have $\lim_{r\to\infty}\theta^{(r)} = \hat{\theta}_{MLE}$ but understanding the behavior of $L(\theta^{(r)}|\mathbf{y})$ will also prove useful. Our next result shows exactly how this sequence behaves which helps imply the convergence of the EM algorithm.
 
@@ -134,10 +128,21 @@ L(\theta^{(r)}|\mathbf{y}) &=  \E\left[\log L(\theta^{(r)}|\mathbf{y},\mathbf{X}
 
 \section{Comparison to Other Methods}
 
-\subsection{Variational Bayes and  Kullback-Leibler Divergence}
-
 \subsection{Entropy Interpretation}
+The EM algorithm iteratively uses the connection between the complete data likelihood and the incomplete data likelihood to find optimal estimates of $\theta$. Upon investigation of the way in which these likelihoods are related, we see there is a rich, information theoretic interpretation of the EM algorithm. Following a similar decomposition as in (1), we can write the incomplete data log-likelihood as follows.
+\begin{align*}
+\log L(\theta|\mathbf{y}) &= \log \int L(\theta|\mathbf{x},\mathbf{y})dx\\
+&= \log \int h(\mathbf{x}|\theta,\mathbf{y})\frac{L(\theta|\mathbf{x},\mathbf{y})}{h(\mathbf{x}|\theta,\mathbf{y})}dx\\
+&= \int h(\mathbf{x}|\theta,\mathbf{y})\log\frac{L(\theta|\mathbf{x},\mathbf{y})}{h(\mathbf{x}|\theta,\mathbf{y})}dx\\
+&= \int h(\mathbf{x}|\theta,\mathbf{y})\log\frac{L(\theta,\mathbf{y}|\mathbf{x})L(\theta|\mathbf{y})}{h(\mathbf{x}|\theta,\mathbf{y})}dx\\
+&=\int h(\mathbf{x}|\theta,\mathbf{y})\log L(\theta|\mathbf{y})dx -  \int h(\mathbf{x}|\theta,\mathbf{y})\log\frac{h(\mathbf{x}|\theta,\mathbf{y})}{L(\theta,\mathbf{y}|\mathbf{x})}dx\\
+&= \log L(\theta|\mathbf{y}) - KL[h(\mathbf{x}|\theta,\mathbf{y})||L(\theta,\mathbf{y}|\mathbf{x})]
+\end{align*}
+This of course implies that $KL[h(\mathbf{x}|\theta,\mathbf{y})||L(\theta,\mathbf{y}|\mathbf{x})] = 0$. Here we see that we can formulate the maximization of the incomplete data likelihood $\log L(\theta|\mathbf{y})$
+by minimizing the $KL$ divergence. Recall that this is simply the 
+\subsection{Variational Bayes}
 
+%----------------------------------------------------------------------------------------
 \section{Applications}
 \subsection{Exponential Family}
 
@@ -153,20 +158,12 @@ Z_i &\overset{iid}{\sim} \text{Bern}(p)\\
 X_i|Z_i = 1 &\sim f(x)\\
 X_i|Z_i = 0 &\sim g(x)\\
 \end{align*} 
-Before we address the implementation of the EM algorithm, we will derive some distributions which will be helpful later on. First we consider the complete data likelihood. 
+Before we address the implementation of the EM algorithm, we will derive some distributions which will be helpful later on. Namely, we derive the full data distribution and the corresponding latent data distribution.
 \begin{align*}
-h(\mathbf{X},\mathbf{Z}|p) &= h(\mathbf{X}|\mathbf{Z},p)h(\mathbf{Z}|p)\\
-&= \prod_{i=1}^{n}h(X_i|Z_i,p)\prod_{i=1}^{n}h(Z_i|p)\\
-&= \prod_{i=1}^{n}f(x_i)^{z_i}g(x_i)^{1-z_i}\prod_{i=1}^{n}p^{z_i}(1-p)^{1-z_i}\\
-&= \prod_{i=1}^{n}[pf(x_i)]^{z_i}[(1-p)g(x_i)]^{1-z_i}
+h(\mathbf{X},\mathbf{Z}|p) &= h(\mathbf{X}|\mathbf{Z},p)h(\mathbf{Z}|p) = \prod_{i=1}^{n}f(x_i)^{z_i}g(x_i)^{1-z_i}\prod_{i=1}^{n}p^{z_i}(1-p)^{1-z_i}= \prod_{i=1}^{n}[pf(x_i)]^{z_i}[(1-p)g(x_i)]^{1-z_i}\\
+h(\mathbf{Z}|\mathbf{X},p) &= \frac{h(\mathbf{X}, \mathbf{Z}|p)}{h(\mathbf{X}|p)} = \frac{\prod_{i=1}^{n}[pf(x_i)]^{z_i}[(1-p)g(x_i)]^{1-z_i}}{\prod_{i=1}^{n}h(X_i|p)} = \prod_{i=1}^{n}\frac{[pf(x_i)]^{z_i}[(1-p)g(x_i)]^{1-z_i}}{pf(x_i) + (1-p)g(x_i)}\\
 \end{align*}
-Using this we can derive the latent data distribution as follows.
-\begin{align*}
-h(\mathbf{Z}|\mathbf{X},p) &= \frac{h(\mathbf{X}, \mathbf{Z}|p)}{h(\mathbf{X}|p)}\\
-&= \frac{\prod_{i=1}^{n}[pf(x_i)]^{z_i}[(1-p)g(x_i)]^{1-z_i}}{\prod_{i=1}^{n}h(X_i|p)}\\
-&= \prod_{i=1}^{n}\frac{[pf(x_i)]^{z_i}[(1-p)g(x_i)]^{1-z_i}}{pf(x_i) + (1-p)g(x_i)}\\
-\end{align*}
-Now we calculate the expected complete-data log likelihood (the \textbf{E} step) which we will show the sequence of estimates of $p$ given by the EM algorithm. 
+Notice from this derivation we also see that $Z_i|\mathbf{x},p$ is a binomial random variable with parameter $pf(x)/[pf(x)+(1-p)g(x)]$ Now we calculate the expected complete-data log likelihood (the \textbf{E} step) which we will show the sequence of estimates of $p$ given by the EM algorithm. 
 \begin{align*}
 \E[\log L(p|\mathbf{Z},\mathbf{X})|\mathbf{X}, \tilde{p}] &= \E\left(\log\prod_{i=1}^{n}[pf(x_i)]^{z_i}[(1-p)g(x_i)]^{1-z_i})\Big|\tilde{p},\mathbf{X}\right)\\
 &= \E\left[\sum_{i=1}^{n}\log\left([pf(x_i)]^{z_i}[(1-p)g(x_i)]^{1-z_i})\right)\Big|\tilde{p},\mathbf{X}\right]\\
@@ -176,8 +173,21 @@ Now we calculate the expected complete-data log likelihood (the \textbf{E} step)
 \end{align*}
 Now, recall we look to maximize this quantity with respect to the parameter $p$, so any term that does not contain $p$ we can remove from consideration. Therefore maximizing the above is equivalent to maximizing the following
 \begin{align}
-\E[\log L(p|\mathbf{X},\mathbf{Z})|\tilde{p},\mathbf{X}]\propto \log(1-p)\sum_{i = 1}^{n} P(z_i = 0|\mathbf{X},\tilde{p})z_i + \log(p)\sum_{i = 1}^{n}P(z_i = 1|\mathbf{X},\tilde{p}) 
+\E[\log L(p|\mathbf{X},\mathbf{Z})|\tilde{p},\mathbf{X}]\propto \log(1-p)\sum_{i = 1}^{n} P(z_i = 0|\mathbf{X},\tilde{p}) + \log(p)\sum_{i = 1}^{n}P(z_i = 1|\mathbf{X},\tilde{p}) 
 \end{align}
+Now maximizing (2) (the \textbf{M} step) with respect to $p$, we see 
+\begin{align*}
+\frac{\partial}{\partial p} \log(1-p)\sum_{i = 1}^{n} P(z_i = 0|\mathbf{X},\tilde{p}) + \log(p)\sum_{i = 1}^{n}P(z_i = 1|\mathbf{X},\tilde{p}) &= 0 \\
+ -\frac{1}{1-p}\sum_{i = 1}^{n} P(z_i = 0|\mathbf{X},\tilde{p}) + \frac{1}{p}\sum_{i = 1}^{n} P(z_i = 1|\mathbf{X},\tilde{p})&= 0\\
+ (1-p)\sum_{i = 1}^{n} P(z_i = 1|\mathbf{X},\tilde{p})&= p\sum_{i = 1}^{n} P(z_i = 0|\mathbf{X},\tilde{p})\\
+ \sum_{i = 1}^{n} P(z_i = 1|\mathbf{X},\tilde{p})&= p\left(\sum_{i = 1}^{n} P(z_i = 0|\mathbf{X},\tilde{p}) + P(z_i =1|\mathbf{X},\tilde{p})\right)\\
+ \sum_{i = 1}^{n} P(z_i = 1|\mathbf{X},\tilde{p})&= p\left(\sum_{i = 1}^{n} P(z_i = 0|\mathbf{X},\tilde{p}) + \sum_{i = 1}^{n} P(z_i =1|\mathbf{X},\tilde{p})\right)\\
+ \hat{p} &= \frac{1}{n}\sum_{i = 1}^{n} P(z_i = 1|\mathbf{X},\tilde{p})\\
+ \hat{p} &= \frac{1}{n}\sum_{i = 1}^{n} \frac{\tilde{p}f(x_i)}{\tilde{p}f(x_i) + (1-\tilde{p})g(x_i)}\\
+\end{align*}
+Now, letting $\tilde{p} = p^{(r)}$, we see that the sequence of estimates given by the EM algorithm can be written as $$p^{(r+1)} = \frac{1}{n}\sum_{i=1}^n \frac{p^{(r)}f(x_i)}{p^{(r)}f(x_i) + (1-p^{(r)})g(x_i)}$$
+
+\subsection{Hidden Markov Model}
 
 \section{Data Example}
 

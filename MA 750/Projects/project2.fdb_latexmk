@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1511891718 "project2.tex" "project2.pdf" "project2" 1511891718
+["pdflatex"] 1511891718 "project2.tex" "project2.pdf" "project2" 1512257826
   "/usr/local/texlive/2017/texmf-dist/fonts/map/fontname/texfonts.map" 1480098670 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1480098698 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -70,6 +70,6 @@
   "project2.aux" 1511891718 8 a94a2480d3289e625eea47cd1b285758 ""
   "project2.tex" 1511891718 12098 0dc73fe51eeb9986fb521c55e5d546f1 ""
   (generated)
-  "project2.log"
   "project2.pdf"
   "project2.aux"
+  "project2.log"
