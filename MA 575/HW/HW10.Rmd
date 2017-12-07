@@ -1,0 +1,57 @@
+---
+title: "MA 575 HW 10"
+subtitle: "Dicussion Section 2: Monday 9:05"
+author: "Benjamin Draves"
+date: "December 5"
+output: pdf_document
+#output: html_document
+fontsize: 11pt
+geometry: margin=1in
+---
+
+### Exercise 10.1
+
+First we fit the random intercept model then fit the random slope/intercept model on the pig dataset. 
+
+```{r}
+#Read in data
+pigs = read.csv(url("http://www.stat.tamu.edu/~sheather/book/docs/datasets/pigweights.csv"), header =TRUE)
+library(nlme)
+
+#fit random intercept model 
+ri_model = lme(weight~ weeknumber, data = pigs, random = ~1|pigid, method = "REML") 
+summary(ri_model)
+
+#fit random intercept and slope 
+ris_model = lme(weight ~ weeknumber, random=list(pigid = pdDiag(~ weeknumber)), data = pigs, method = "REML")
+summary(ris_model)
+```
+
+#### (a)
+From the output above, we see that the random intercept and slode model has $AIC = 1751.029$ and $logLik = -870.5147$ wich the random intercept model has $AIC = 2041.797$ and $logLik = -1016.898$. Therefor we see the random intercept model has higher AIC and lower log likelihood. This would suggest the second model is a better fit for the data. 
+
+#### (b)
+
+While the $AIC$ and log-likelihood suggest the random intercept and slope is a better fit to the data, the standard error for _weeknumber_ is lower in the random intercept model than in the random slope and intercept model. This makes sense - as we assign more groupings to the data, the data to estimate each group slope reduces in power, so the overall estimate of the fixed effect is reduced. 
+
+
+### Exercise 10.2 
+
+Suppose we have the random slopes model given by $$y_{ij} = \beta_0 + \beta+1 t_{ij} + e^{*}_{ij}$$ For $e^{*}_{ij} = b_{0i} + b_{1i}t_{ij} + e_{ij}$ where $e_{ij}\overset{iid}{\sim}N(0,\sigma_e^2)$ are independent of $(b_{0i},b_{1i})^{T}\overset{iid}{\sim}N(0, D)$ for the covariance matrix, $$D = \begin{bmatrix}\sigma_0^2 & \sigma^2_{01}\\\sigma^2_{01} & \sigma^2_{1}\end{bmatrix}$$ Suppose that $j\neq j'$ then to calculate the correlation we first find the covariance below. 
+\begin{align*}
+Cov(e_{ij}^{*},e_{ij'}^{*}) &= Cov(b_{0i} + b_{1i}t_{ij} + e_{ij},b_{0i} + b_{1i}t_{ij'} + e_{ij'})\\
+&= Cov(b_{0i},b_{0i}) + t_{ij'}Cov(b_{0i},b_{1i}) + Cov(b_{0i},e_{ij'}) + t_{ij}Cov(b_{1i},b_{0i}) + t_{ij}t_{ij'}Cov(b_{1i},b_{1i})\\
+&+ t_{ij}Cov(b_{1i},e_{ij'}) + Cov(e_{ij},b_{0i}) + t_{ij'}Cov(e_{ij},b_{1i}) +Cov(e_{ij},e_{ij'})\\
+&= \sigma^2_0 + t_{ij'}\sigma_{01}^2 + t_{ij}\sigma^2_{01}+t_{ij}t_{ij'}\sigma^2_1\\
+&= \sigma^2_0 + \sigma^2_{01}(t_{ij'} + t_{ij})+t_{ij}t_{ij'}\sigma^2_1\\
+\end{align*}
+
+Using this same form for $j=j'$ we see that $Cov(e_{ij}^{*},e_{ij'}^{*}) = Var(e_{ij}^{*})$. 
+
+\begin{align*}
+Var(e_{ij}) &= t_{ij}^2\sigma^2_1 + 2t_{ij}\sigma^2_{01}+(\sigma^2_0 + \sigma^2_{e})\\
+\end{align*}
+Using this we can write the correlation structure as 
+
+$$Corr(e_{ij}^{*},e_{ij'}^{*})=\frac{\sigma^2_0 + \sigma^2_{01}(t_{ij'} + t_{ij})+t_{ij}t_{ij'}\sigma^2_1}{\sqrt{t_{ij}^2\sigma^2_1 + 2t_{ij}\sigma^2_{01}+(\sigma^2_0 + \sigma^2_{e})}\sqrt{t_{ij'}^2\sigma^2_1 + 2t_{ij'}\sigma^2_{01}+(\sigma^2_0 + \sigma^2_{e})}}$$
+

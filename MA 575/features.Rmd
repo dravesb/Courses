@@ -1,0 +1,54 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+fires = read.csv("~/Desktop/forestfires.csv")
+head(fires)
+#look at response 
+hist(fires$ISI)
+
+#identify outlier 
+fires[which.max(fires$ISI),]
+
+#23 - DC incredibly low, all other covariates seem normal. Expect DC to be a strong predictor
+
+#remove outlier 
+fires = fires[-23,]
+
+#
+table(fires$Y,fires$X)
+table(fires$ISI)
+
+table(fires$month)
+
+plot(jitter(fires$X, fires$Y,factor=1))
+
+#Check significant weekly bins 
+weekendnames = c("mon","fri", "sat","sun")
+weekdaynames =c("tue","wed","thu")
+
+weekday = numeric(nrow(fires))
+weekday[which(fires$day %in% weekendnames)] = 1
+
+lm1 = lm(fires$ISI ~ weekday)
+
+weekendnames = c("fri", "sat","sun")
+weekdaynames =c("tue","wed","thu","mon")
+
+weekday = numeric(nrow(fires))
+weekday[which(fires$day %in% weekendnames)] = 1
+
+lm2 = lm(fires$ISI ~ weekday)
+
+#Check significant summer
+summer = c("aug","jul", "jun","sep")
+winter =c("jan","feb","mar","apr","may","oct","nov","dec")
+
+sum = numeric(nrow(fires))
+sum[which(fires$month %in% summer)] = 1
+
+lm1 = lm(fires$ISI ~ sum)
+
+```
+

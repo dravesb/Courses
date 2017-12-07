@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  3 DEC 2017 14:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  3 DEC 2017 21:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -843,8 +843,8 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
- [4]
-Overfull \hbox (7.27296pt too wide) in paragraph at lines 165--167
+ [4] [5]
+Overfull \hbox (7.27296pt too wide) in paragraph at lines 174--176
 \OT1/cmr/m/n/10 Notice from this deriva-tion we also see that $\OML/cmm/m/it/10
  Z[]\OMS/cmsy/m/n/10 j\OT1/cmr/bx/n/10 x\OML/cmm/m/it/10 ; p$ \OT1/cmr/m/n/10 i
 s a bi-no-mial ran-dom vari-able with pa-ram-e-ter $\OML/cmm/m/it/10 pf\OT1/cmr
@@ -853,11 +853,11 @@ s a bi-no-mial ran-dom vari-able with pa-ram-e-ter $\OML/cmm/m/it/10 pf\OT1/cmr
  []
 
 
-Overfull \hbox (0.5785pt too wide) in paragraph at lines 173--173
+Overfull \hbox (0.5785pt too wide) in paragraph at lines 182--182
 [] 
  []
 
-[5] [6] (./EM.aux)
+[6] [7] (./EM.aux)
 Package logreq Info: Writing requests to 'EM.run.xml'.
 \openout1 = `EM.run.xml'.
 
@@ -865,7 +865,7 @@ Package logreq Info: Writing requests to 'EM.run.xml'.
 Here is how much of TeX's memory you used:
  9504 strings out of 492995
  155696 string characters out of 6132704
- 601539 words of memory out of 5000000
+ 599539 words of memory out of 5000000
  12928 multiletter control sequences out of 15000+600000
  14048 words of font info for 53 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -891,10 +891,10 @@ f-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2017/texmf
 ist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2017/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmti8.pfb></usr/local/texlive/2017/texmf-dist
 /fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on EM.pdf (6 pages, 227541 bytes).
+Output written on EM.pdf (7 pages, 235109 bytes).
 PDF statistics:
- 107 PDF objects out of 1000 (max. 8388607)
- 77 compressed objects within 1 object stream
+ 112 PDF objects out of 1000 (max. 8388607)
+ 81 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

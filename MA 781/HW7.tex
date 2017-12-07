@@ -1,0 +1,275 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 781: HW6}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+%Sets the margins
+
+%\textwidth = 7 in
+%\textheight = 9.5 in
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+
+\begin{enumerate}
+\item 
+	\begin{enumerate}
+		\item Suppose $X\sim N(\theta,\sigma^2)$ then $\theta \sim N(\mu, \tau^2)$. Then $\overline{X}\sim N(\theta,\frac{\sigma^2}{n})$. From here we see the joint distribution is given by $$f(\overline{x},\theta) = f(\overline{x}|\theta)\pi(\theta) = \frac{1}{\sqrt{2\pi\sigma^2/n}}exp\Big\{-\frac{(\overline{x}-\theta)^2}{2\sigma^2/n}\Big\}\frac{1}{\sqrt{2\pi\tau^2}}exp\Big\{-\frac{(\theta-\mu)^2}{2\tau^2}\Big\}$$
+
+		\item We know that the marginal of a jointly normal distribution is normal, so we need only find the mean and variance.
+		\begin{align*}
+		\E(\overline{X}) &= \E[\E(\overline{X}|\theta)] = \E[\theta] = \mu\\
+		Var(\overline{X}) &= Var[\E(\overline{X})] + \E[Var(\overline{X})] = Var[\theta] + \E[\sigma^2/n] = \tau^2 + \sigma^2/n
+		\end{align*}
+		Therefore, the marginal distribution is given by $N(\mu, \tau^2 + \sigma^2/n)$. 
+
+		\item To derive the posterior distribution we use $\pi(\theta|\overline{X}) = \frac{f(\overline{X}|\theta)\pi(\theta)}{m(\overline{X})}$
+		\begin{align*}
+		\pi(\theta|\overline{X}) &= \frac{\frac{1}{\sqrt{2\pi\sigma^2/n}}exp\Big\{-\frac{(\overline{x}-\theta)^2}{2\sigma^2/n}\Big\}\frac{1}{\sqrt{2\pi\tau^2}}exp\Big\{-\frac{(\theta-\mu)^2}{2\tau^2}\Big\}}{\frac{1}{\sqrt{2\pi (\tau^2 + \sigma^2/n)}} exp\Big\{-\frac{(\overline{x}-\mu)^2}{2(\tau^2 + \sigma^2/n)}\Big\}}\\
+		&= \frac{1}{\sqrt{2\pi\frac{\tau^2\sigma^2/n}{\tau^2 + \sigma^2/n}}}\exp\Big\{-\frac{(\overline{x}-\theta)^2}{2\sigma^2/n} -\frac{(\theta-\mu)^2}{2\tau^2}+\frac{(\overline{x}-\mu)^2}{2(\sigma^2/n +\tau^2)}\Big\}
+		\end{align*}
+		$$=\frac{1}{\sqrt{2\pi\frac{\tau^2\sigma^2/n}{\tau^2 + \sigma^2/n}}}\exp\Big\{\frac{-(\overline{x}-\theta)^2\tau^2(\sigma^2/n + \tau^2) + -(\theta-\mu)^2\sigma^2/n(\sigma^2/n + \tau^2) + (\overline{x}-\mu)^2\sigma^2/n\tau^2}{2\sigma^2/n\tau^2(\sigma^2/n + \tau^2)}\Big\}$$
+		We first focus on the numerator of the exponent term. After expanding, we get the following nine terms. 
+		\begin{align*}
+			&-\overline{x}^2(\tau^2)^2(\sigma^2/n + \tau^2) + 2\overline{x}\theta\tau^2(\sigma^2/n + \tau^2)-\theta^2\tau^2(\sigma^2/n + \tau^2)\\
+			& -\theta^2(\sigma^2/n)(\sigma^2/n + \tau^2) + 2\theta\mu(\sigma^2/n)(\sigma^2/n + \tau^2)-\mu(\sigma^2/n)(\sigma^2/n + \tau^2)\\
+			&+\overline{x}^2(\sigma^2/n)\tau^2 - 2\overline{x}\mu(\sigma^2/n)\tau^2 + \mu^2(\sigma^2)\tau^2\\
+			&= -(\overline{x}\tau^2 + \mu\sigma^2/n)^2 -(\sigma^2/n + \tau^2)^2\theta^2 + (\sigma^2/n +\tau^2)(2\overline{x}\theta\tau^2 + 2\theta\mu\sigma^2/n)\\
+			&= -\Big(\theta(\sigma^2/n + \tau^2) - (\overline{x}\tau^2+\mu\sigma^2/n)\Big)^2
+		\end{align*}
+		Now dividing by $(\sigma^2/n + \tau^2)^2$ we see that we have 
+		\begin{align*}
+		\pi(\theta|\overline{X}) = \frac{1}{\sqrt{2\pi\frac{\tau^2\sigma^2/n}{\sigma^2/n + \tau^2}}}exp\Big\{-\frac{(\theta - \frac{\tau^2}{(\sigma^2/n + \tau^2)}\overline{x} - \frac{\sigma^2/n}{(\sigma^2/n + \tau^2)}\mu)}{2\frac{\tau^2\sigma^2/n}{\sigma^2/n + \tau^2}}\Big\}
+		\end{align*}
+		Which we recognize as a $N(\frac{\tau^2}{(\sigma^2/n + \tau^2)}\overline{x} - \frac{\sigma^2/n}{(\sigma^2/n + \tau^2)}\mu, \frac{\tau^2\sigma^2/n}{\sigma^2/n + \tau^2})$
+
+	\end{enumerate}	
+
+\item 
+
+	\begin{enumerate}
+		\item Let $X_1, \ldots, X_n \sim Pois(\lambda)$ and $\lambda \sim Gamma(\alpha,\beta)$. Then we have
+		\begin{align*}
+		f(X_1, \ldots, X_n|\lambda) &= \prod_{i=1}^{n}\frac{e^{-\lambda}\lambda^{x_i}}{x_i!} = \frac{e^{-n\lambda}\lambda^{\sum x_i}}{x_1!x_2!\ldots x_n!}\\
+		\pi(\theta) &= \frac{1}{\Gamma(\alpha)\beta^\alpha}\lambda^{\alpha -1}e^{-\lambda/\beta}
+		\end{align*}
+		Therefore, we have 
+		\begin{align*}
+		\pi(\lambda|X_1, \ldots, X_n) &\propto \lambda^{\alpha + \sum x_i - 1}e^{-(n + 1/\beta)\lambda} 
+		\end{align*}
+		which we recognize as a Gamma$(\alpha + \sum x_i, \beta/(n\beta + 1))$. 
+	
+		\item The posterior mean and variance is given by the mean and variance of the gamma density. $$\E(\lambda|X_1, \ldots, X_n) = (\alpha + \sum x_i)(\frac{\beta}{n\beta +1})\hspace{2em}Var(\lambda|X_1, \ldots, X_n)=(\alpha + \sum x_i)\left(\frac{\beta}{n\beta +1}\right)^2$$
+
+	\end{enumerate}
+
+\item Suppose we have $X_1, \ldots, X_n\sim N(\theta, \sigma^2)$ with $\theta\sim \frac{1}{2a}e^{-|\theta|/a}$. Then we have 
+\begin{align*}
+\pi(\theta|X_1, X_2, \ldots, X_n) &\propto f(x_1, \ldots, x_n|\theta)\pi(\theta)\\
+&\propto e^{-\frac{1}{2}\sum(x_i -\theta)^2}e^{-\frac{|\theta|}{2}}\\
+&= \exp\Big\{-\frac{1}{2}\left(n\theta^2 - 2\theta\sum x_i + 2\frac{|\theta|}{a}\right)\Big\}
+\end{align*}
+To find the appropriate normalizing constant we split the problem into two parts.
+\begin{align*}
+&C_1 := \int_{0}^{\infty}\exp\Big\{-\frac{1}{2}\left(n\theta^2 - 2\theta\sum x_i + 2\frac{\theta}{a}\right)\Big\}d\theta\\
+&C_2 := \int_{-\infty}^{0}\exp\Big\{-\frac{1}{2}\left(n\theta^2 - 2\theta\sum x_i - 2\frac{\theta}{a}\right)\Big\}d\theta
+\end{align*}
+Then to calculate the posterior mean we write
+\begin{align*}
+\E(\theta|\underline{X}) &= \frac{\int_{-\infty}^{\infty}(C_1+C_2)\theta\exp\Big\{-\frac{1}{2}\left(n\theta^2 - 2\theta\sum x_i + 2\frac{|\theta|}{a}\right)\Big\}d\theta}{\int_{-\infty}^{\infty}\exp\Big\{-\frac{1}{2}\left(n\theta^2 - 2\theta\sum x_i + 2\frac{|\theta|}{a}\right)\Big\}d\theta}\\
+\end{align*}
+
+\item 
+	\begin{enumerate}
+		\item Let $f(x|\theta) = \frac{1}{2\theta}I_{(-\theta,\theta)}(x)$. Then calculating the joint density we have $$f(\underline{x}|\theta) = \left(\frac{1}{2\theta}\right)^n\prod_{i=1}^n I_{(-\theta, \theta)}(x_i) = \left(\frac{1}{2\theta}\right)^n\prod_{i=1}^n I_{[0,\theta)}(|x_i|) = \left(\frac{1}{2\theta}\right)^nI_{[0,\theta)}\max_i\{|x_i|\} $$ Therefore $T = \max_{i}\{|x_i|\}$ is a sufficient statistic. All we must now show is that is complete and that there exists $\phi(\cdot)$ such that $\phi(T)$ is unbiased. Now notice that $T$ is the maximum order statistic of $|x_1|, \ldots,|x_n|$. So $T\sim nt^{n-1}/\theta^n$ Let $g(\cdot)$ be an arbitrary function and consider the following 
+		\begin{align*}
+			\E(g(T)) = \int_{0}^{\theta}g(t)\frac{nt^{n-1}}{\theta^n}dt &\equiv 0\\
+			\frac{n}{\theta}g(\theta) - \int_{0}^{\theta}n^2\frac{t^{n-1}}{\theta^{n-1}}g(t)dt &= 0\\
+			 \frac{n}{\theta}g(\theta) - n\theta\E(g(T)) &= 0\\
+			 g(\theta) &= 0 
+		\end{align*}
+		Since $g(t)=0$ is uniformly zero, $T$ is complete sufficient statistic. From here, we need to find our function $\phi(\cdot)$. $$\E(T) = \int_{0}^{\theta}n\frac{t^n}{\theta^n}dt = \frac{n}{\theta^n}\int_0^{\theta}t^ndt = \frac{n}{\theta^n}\frac{1}{n+1}t^{n+1}\Big|_{0}^{\theta} = \frac{n}{n+1}\theta$$ Therefore, if we define $\phi(t) = \frac{n+1}{n}t$ we see that $\phi(T)$ is unbiased. Therefore, $\phi(T)$ is a UMVUE. Therefore, the function $\tau(\theta) = 1/\theta$ is a function that has a UMVUE.   
+	\end{enumerate}
+
+
+\item 
+	\begin{enumerate}
+
+	\item Consider $f(x|\theta) = \theta x^{\theta - 1}$. Then $L(\theta|X_1,\ldots, X_n) = \prod_{i=1}^n \theta x^{\theta-1}$ and $l(\theta|X_1, \ldots, X_n) = n\log\theta + (\theta -1)\sum\log(x_i)$. Differentiating with respect to $\theta$ we see that $$\frac{\partial}{\partial\theta}l(\theta|X_1, \ldots, X_n) = \frac{n}{\theta} + \sum X_i = n\Big[\frac{1}{n}\sum -\log x_i - \frac{1}{\theta}\Big]$$ Now recall from previous homeworks we've shown $-\log(X_i)\sim Exp(1/\theta)$ and $\sum -\log(X_i)\sim Gamma(n,1/\theta)$. We see that $\frac{1}{n}\sum-\log(X_i)$ is unbiased for $1/\theta$. Therefore, by Corollary 7.3.15, $\frac{1}{n}\sum -\log(X_i)$ attains the CRLB and is a UMVUE.
+	\item Suppose $f(x|\theta) = \frac{\log\theta}{\theta -1}\theta^x$. Then by the same process as above, we have $L(\theta|X_1, \ldots, X_n) = \left(\frac{\log\theta}{\theta - 1}\right)^n\theta^{\sum x_i}$ and 
+	$l(\theta|X_1,\ldots, X_n) = n\log\log\theta - n\log(\theta - 1) +\sum x_i\log\theta$. Therefore, we have $$\frac{\partial}{\partial\theta}l(\theta|X_1, \ldots, X_n) = \frac{n}{\theta\log\theta}-\frac{n}{\theta-1} + \frac{\sum x_i}{\theta} = \frac{n}{\theta}\Big[\overline{x} - \left(\frac{\theta}{\theta-1}-\frac{1}{\log\theta}\right)\Big]$$ Since $\overline{x}$ is unbiased for the mean, we can again use the Attainment Theorem if the mean of $f$ is given by $\frac{\theta}{\theta-1}-\frac{1}{\log\theta}$. We now calculate the mean of $f$. 
+
+	\begin{align*}
+	\E(X) &= \int_0^1 x\frac{\log(\theta)}{\theta-1}\theta^xdx\\
+	&= \frac{\log(\theta)}{\theta-1}\Big[\frac{x\theta^{x}}{\log\theta}\big|_{0}^1 - \int_0^1\frac{\theta^x}{\log\theta}dx\Big]\\
+	&= \frac{\log(\theta)}{\theta-1}\Big[\frac{\theta}{\log\theta} - \frac{\theta}{\log^2\theta} + \frac{1}{\log^2\theta}\Big]\\
+	&= \frac{1}{\theta - 1}\Big[\theta - \frac{\theta - 1}{\log\theta}\Big]\\
+	&= \frac{\theta}{\theta-1} - \frac{1}{\log\theta}
+	\end{align*}
+	Therefore, the function $\tau(\theta) = \frac{\theta}{\theta - 1} - \frac{1}{\log\theta}$ has a UMVUE. 
+	\end{enumerate}	
+
+
+\item We will use the iid case for the CRLB. First we calculate the Fisher information. 
+\begin{align*}
+I(\theta) &= \E\Big[\left(\frac{\partial}{\partial\theta}\log f(x|\theta)\right)^2\Big]\\
+&= \E\Big[\left(\frac{\partial}{\partial p}(x\log p + (1-x)\log(1-p))\right)^2\Big]\\
+&= \E\Big[\left(\frac{x}{p}- \frac{1-x}{1-p}\right)^2\Big]\\
+&= \E\Big[\left(\frac{x}{p}+ \frac{x-1}{1-p}\right)^2\Big]\\
+&= \E\Big[\left(\frac{x-p}{p(1-p)}\right)^2\Big]\\
+&= Var\Big[\frac{x-p}{p(1-p)}\Big] + \left[\E\Big(\frac{x-p}{p(1-p)}\Big)\right]^2\\
+&= \frac{1}{p(1-p)}
+\end{align*}
+Moreover, note that $\E(\overline{x}) = p$ so $\left(\frac{\partial}{\partial p} p\right)^2 = 1$. Therefore we see the CRBL is given by $\frac{1}{n/[p(1-p)]} = \frac{p(1-p)}{n}$. But note in our case $$Var(\overline{x}) = \frac{1}{n^2}\sum_{i=1}^nVar(X_i) = \frac{1}{n^2}\sum_{i=1}^np(1-p) = \frac{p(1-p)}{n}$$ 
+Hence $\overline{x}$ is a UMVUE of $p$
+
+\item Again using the iid version of the CRLB, we calculate Fisher's information for a single point. 
+\begin{align*}
+I(\theta) &= \E\Big[\left(\frac{\partial}{\partial\theta}\log f(x|\theta)\right)^2\Big]\\
+&= \E\Big[\left(\frac{\partial}{\partial p}\left\{-\frac{1}{2}\log2\pi + \frac{(x-\theta)^2}{2}\right\}\right)^2\Big]\\
+&= \E\Big[-(x-\theta)^2\Big]\\
+&= Var(x-\theta) + \Big[\E(x - \theta)\Big]^2\\
+&= 1 
+\end{align*}
+Now, we also have $\E(\overline{X}^2 - \frac{1}{n}) = \theta^2$ so we have $\left(\frac{\partial}{\partial \theta} \theta^2\right)^2 = 4\theta^2$. Therefore, the CRLB is given by $\frac{4\theta^2}{n}$. Now we will show that the variance of this UMVUE does not attain the CRLB. 
+\begin{align*}
+Var(\overline{x}-\frac{1}{n}) &= \E(\overline{X}^4) - [\E(\overline{X})]^2\\
+&= \E[\overline{X}^3(\overline{X} - \theta + \theta)] - [1/n+\theta^2]^2\\
+&= \E[\overline{X}^3(\overline{X} - \theta)] + \theta\E(\overline{X}^3) - [1/n+\theta^2]^2\\
+&= \frac{3}{n}\E(\overline{X}^2) + \theta\E[\overline{X}^2(\overline{X} - \theta + \theta)]- [1/n+\theta^2]^2\\
+&= \frac{3}{n}[\theta^2 + 1/n] + \theta\E[\overline{X}^2(\overline{X} - \theta)] + \theta^2\E[\overline{X}^2]- [1/n+\theta^2]^2\\
+&= \frac{3}{n}[\theta^2 + 1/n] + \theta/n\E[2\overline{X}] + \theta\E[\overline{X}^2]- [1/n+\theta^2]^2\\
+&= \frac{3}{n}[1/n + \theta^2] + 2\theta^2/n + \theta^2(\theta^2 + 1/n) - (1/n +\theta^2)^2\\
+&= \frac{4\theta^2 + 2/n}{n} > \frac{4\theta^2}{n}
+\end{align*}
+
+\item Recall that the statistic $T = \frac{(n-1)S^2}{\sigma^2}\sim\chi^2_{n-1}$. Now, we consider $T^{p/2}$. (Our hope is to build an unbiased estimate of $\sigma^p$ through our knowledge of $T$). First note that 
+\begin{align*}
+\E[T^{p/2}] &= \int_{0}^{\infty}\frac{t^{p/2}}{2^{(n-1)/2}\Gamma(\frac{n-1}{2})}t^{(n-1)/2 -1}e^{-t/2}dt\\
+&= \frac{1}{2^{(n-1)/2}\Gamma(\frac{n-1}{2})}\int_{0}^{\infty}t^{(p+n-1)/2 -1}e^{-t/2}dt\\
+&= \frac{2^{(p+ n-1)/2 - 1}}{2^{(n-1)/2}\Gamma(\frac{n-1}{2})}\int_{0}^{\infty}\frac{t^{(p+n-1)/2 -1}e^{-t/2}}{2^{(p+ n-1)/2 - 1}}dt\\
+&= \frac{2^{(p+ n-1)/2 - 1}}{2^{(n-1)/2}\Gamma(\frac{n-1}{2})}\int_{0}^{\infty}(t/2)^{(p+n-1)/2 -1}e^{-t/2}dt\\
+\end{align*}
+Notice that we recognize this as the Gamma density with $\alpha = (p+n-1)/2$ and $\beta = 1$. Therefore, we have $$C:= \E[T^{p/2}] = \frac{2^{p/-1}\Gamma((p+n-1)/2)}{(n-1)/2}$$
+Therefore, for we see that $\E[T^{p/2}/C] = 1$ and moreover, $$\E\Big[\left(\frac{(n-1)S^2}{C^{2/p}}\right)^{p/2}\Big] = \sigma^p$$ Therefore, since $S^2$ is a complete sufficient and for $\phi(t) = \left(\frac{(n-1)t}{C^{2/p}}\right)^{p/2}$, $\phi(S^2)$ is unbiased for $\sigma^p$. Therefore, $\phi(S^2)$ is a UMVUE for each $\sigma^p$. 
+
+
+
+\item 
+	\begin{enumerate}
+		\item Recall that for the quadratic loss function $R(\theta, \delta) = MSE(\delta)$. So for $\delta(x) = a\overline{X} + b$ we have $$R(\theta, \delta(x)) = MSE(\delta(x)) = Var(a\overline{X} + b) + [\E[a\overline{X} + b] - \theta]^2 = a^2\frac{\sigma^2}{n} + [b - (1-a)\theta]^2$$
+		\item Let $\eta = \frac{\sigma^2}{n\tau^2 + \sigma^2}$ then we note that $$1 - \eta = 1 - \frac{\sigma^2}{n\tau^2 + \sigma^2} = \frac{n\tau^2 + \sigma^2 - \sigma^2}{n\tau^2 + \sigma^2} = \frac{\tau^2}{\tau^2 + \sigma^2/n}$$ So, for the Bayes Estimator $\delta^{\pi}:= \E[\theta|\underline{x}]$. As we've seen in a previous exercise, the posterior mean is given by $$\delta^{\pi} = \frac{\tau^2}{\tau^2 + \sigma^2/n}\overline{x} + \frac{\sigma^2/n}{\tau^2 + \sigma^2/n}\mu$$
+		Then using the fact that using quadratic risk is just MSE, we see that 
+		\begin{align*}
+			R(\theta,\delta^{\pi}) &= Var(\delta^{\pi}) + [\E[\delta^{\pi}] -\theta]^2\\
+			&= \left(\frac{\tau^2}{\tau^2 + \sigma^2/n}\right)^2\sigma^2/n + \Big[\frac{\tau^2}{\tau^2+\sigma^2/n}\theta + \frac{\sigma^2/n}{\tau^2+\sigma^2/n}\mu - \theta\Big]^2\\
+			&= (1-\eta)^2\sigma^2/n + \Big[\frac{\sigma^2/n\mu - \sigma^2/n\theta}{\tau^2+\sigma^2/n}\Big]^2\\
+			&= (1-\eta)^2\sigma^2/n + \Big[\frac{\sigma^2/n(\mu -\theta)}{\tau^2+\sigma^2/n}\Big]^2\\
+			&= (1-\eta)^2\sigma^2/n + [\eta(\mu - \theta)]^2
+		\end{align*}
+
+		\item We now calculate the Bayes Risk. 
+		\begin{align*}
+		B(\pi,\delta^{\pi}) &= \int R(\theta , \delta^{\pi})\pi(\theta)d\theta\\
+		&= (1-\eta)^2\sigma^n + \eta^2\int (\mu -\theta)^2\pi(\theta)d\theta\\
+		&= (1-\eta)^2\sigma^n + \eta^2\E[(\mu-\theta)^2]\\
+		&= (1-\eta)^2\sigma^n + \eta^2\Big[Var(\theta) + (\E[\theta]-\mu))^2\Big]\\
+		&= (1-\eta)^2\sigma^n + \eta^2Var(\theta)\\
+		&= (1-\eta)^2\sigma^n + \eta^2\tau^2\\
+		&= (\frac{\tau^2}{\tau^2+\sigma^2/n})^2\sigma^2/n + \eta^2\tau^2\\
+		&= \tau^2\Big[\frac{n\tau^2\sigma^2}{(n\tau^2+\sigma^2)^2} + \eta^2\Big]\\
+		&= \tau^2\Big[\frac{n\tau^2\sigma^2 + \sigma^4}{(n\tau^2+\sigma^2)^2}\Big]\\
+		&= \tau^2\sigma^2\Big[\frac{n\tau^2 + \sigma^2}{(n\tau^2+\sigma^2)^2}\Big]\\
+		&= \tau^2\frac{\sigma^2}{n\tau^2 + \sigma^2}\\
+		&= \tau^2\eta^2
+		\end{align*}
+
+	\end{enumerate}
+
+	\item 
+	\begin{enumerate}
+		\item $\E[\overline{X}^2] = Var(\overline{X}) + (\E[\overline{X}])^2 = \frac{\theta(1-\theta)}{n} + \theta^2\neq \theta^2$
+		\item Let $T_n = \left(\sum_{i=1}^{n}X_i/n\right)^2$ and $T_{n}^{(j)} = \left(\sum_{i\neq j}^{n}X_i/(n-1)\right)^2$ Then we have $$JK(T_n) = nT_n  - \frac{n-1}{n}\sum_{j=1}^{n}\left(\sum_{i\neq j}^{n}\frac{X_i}{n-1}\right)^2$$
+		\item 
+		\begin{align*}
+		\E[JK(T_n)] &= n\E[T_n]-\frac{n-1}{n}\sum_{j=1}^{n}\E[T_n^{(j)}]\\
+		&= n\E\left[\left(\sum_{i=1}^{n}\frac{x_i}{n}\right)^2\right] - \frac{n-1}{n}\sum_{j=1}^{n}\E\left[\left(\sum_{i\neq j}^{n}\frac{x_i}{n-1}\right)^2\right]\\
+		&=\theta(1-\theta) +n\theta^2 - \frac{1}{n(n-1)}\sum_{j=1}^{n}(n-1)\theta(1-\theta)+ [(n-1)\theta]^2\\
+		&= \theta(1-\theta) +n\theta^2 -\theta(1-\theta) + (n-1)\theta^2\\
+		&= \theta^2
+		\end{align*}
+		\item Recall that a Bernoulli distributions is an exponential family with CSS $\sum x_i$. $JK(T_n)$ is a function of $\sum x_i$ that is unbiased for $\theta^2$. Therefore, $JK(T_n)$ is a UMVUE. 
+	\end{enumerate}
+
+\end{enumerate}	
+\end{document} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

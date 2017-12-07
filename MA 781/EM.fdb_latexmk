@@ -1,10 +1,10 @@
 # Fdb version 3
-["biber EM"] 1512174808 "EM.bcf" "EM.bbl" "EM" 1512329834
-  "EM.bcf" 1512329834 94529 e6a973986b8df79a0a547d7b2608fed5 ""
+["biber EM"] 1512174808 "EM.bcf" "EM.bbl" "EM" 1512352890
+  "EM.bcf" 1512352889 94529 e6a973986b8df79a0a547d7b2608fed5 ""
   (generated)
   "EM.bbl"
   "EM.blg"
-["pdflatex"] 1512329833 "EM.tex" "EM.pdf" "EM" 1512329834
+["pdflatex"] 1512352889 "EM.tex" "EM.pdf" "EM" 1512352890
   "/usr/local/texlive/2017/texmf-dist/fonts/map/fontname/texfonts.map" 1480098670 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1480098698 1004 54797486969f23fa377b128694d548df ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1480098698 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -116,13 +116,13 @@
   "/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1495593472 2350277 a699055bee05bf8a40b0504752487295 ""
   "/usr/local/texlive/2017/texmf-var/web2c/pdftex/pdflatex.fmt" 1495593487 4129592 0e6cfee100d68e6d96b92c0258f2ff73 ""
   "/usr/local/texlive/2017/texmf.cnf" 1495593465 577 2b71d4d888f9e5560b2e99985915a9fa ""
-  "EM.aux" 1512329834 2202 29f9baccd78ec95e76d8fccd291c65b3 ""
+  "EM.aux" 1512352889 2239 45cdd787ac86683d51355dd057745a03 ""
   "EM.bbl" 1512174809 466 87c763802318ca007e475d2fb9c40fb5 "biber EM"
-  "EM.run.xml" 1512329834 2291 deb70406b1e70823e4707107913bff85 ""
-  "EM.tex" 1512324964 17240 3452ae1e77a3f5142ba813cf8bfdf252 ""
+  "EM.run.xml" 1512352889 2291 deb70406b1e70823e4707107913bff85 ""
+  "EM.tex" 1512352889 20411 8c78ac37803a27797df0bc793c95e786 ""
   (generated)
-  "EM.bcf"
   "EM.run.xml"
-  "EM.aux"
   "EM.log"
+  "EM.bcf"
+  "EM.aux"
   "EM.pdf"
