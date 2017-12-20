@@ -1,0 +1,272 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{bbm}
+
+\usepackage[backend=biber]{biblatex}
+\addbibresource{ref.bib}
+
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\usepackage[margin=.5in]{geometry}
+\parskip = 0.1in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+\newcommand{\x}{{\textbf{x}}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{MA 781: Final Notes}
+\author{
+  Benjamin Draves
+}
+
+\begin{document}
+
+\maketitle
+%\tableofcontents
+\section{Preliminaries}%---------------------------------------------------------------------- 
+\begin{itemize}
+\item \underline{\textbf{Definition}}: A family of densities is called an \underline{exponential family} if we can write it as $$f(x,\theta) = h(x)c(\theta)\exp\left(\sum_{i=1}^{k}w_i(\theta)t_i(x)\right)$$
+\item \underline{\textbf{Definition}}: The family of densities $$\frac{1}{\sigma}f(\frac{x-\mu}{\sigma})$$ is called a \underline{location-scale family}. The $X\sim \frac{1}{\sigma}f(\frac{x-\mu}{\sigma})$ iff there exists $Z\sim f(z)$ such that $X = \sigma Z + \mu$ 
+\item Some common inequalities
+\begin{enumerate}
+\item (Markov Inequality) $P(X\geq a)\leq \frac{\E(X)}{a}$
+\item (Generalized Markov Inequality) For an increasing function $g(\cdot)$ then $P(X\geq a)\leq \frac{1}{g(a)}\E[g(x)]$
+\item (Chebyshev) $P(|X-E[X]|\geq a)\leq \frac{1}{a^2}Var(x)$
+\item (Jensen) If $g(\cdot)$ is convex $\E[g(x)]\geq g[\E(X)]$. If $g(\cdot)$ is concave then $\E[g(x)]\leq g[\E(X)]$
+\end{enumerate}
+\end{itemize}
+
+
+\section{Properties of a Random Sample}%---------------------------------------------------------------------- 
+
+\subsection{Order Statistics}
+\begin{itemize}
+\item Let $Y_i = X_{(i)}$ for $i = 1,2, \ldots, n$. Then we say $Y_i$ is the \underline{$i$th order statistic}. 
+\item Some useful distributions are given by 
+\begin{enumerate}
+\item $g(\textbf{y}) = n!\prod_{i=1}^nf_X(y_i)$
+\item $G_1(y) = 1 - [1 - F_X(y)]^n$ \hspace{1em}\&\hspace{1em} $G_n(y) = [F_X(y)]^n$
+\item $g_1(y) = n[1 - F_X(y)]^{n-1}f_x(y)$ \hspace{1em}\&\hspace{1em} $G_n(y) = n[F_X(y)]^{n-1}f_x(y)$
+\end{enumerate}
+\end{itemize}
+
+\subsection{Convergence Topics}
+\begin{itemize}
+\item \underline{\textbf{Theorem}}: (\textbf{Continuous Mapping}) If $X_n \to X$ in any mode and $g(\cdot)$ is continuous then $g(X_n)\to g(X)$ in the same mode. 
+\item \underline{\textbf{Definition}}: Suppose that $F_n(x)\to F(x)$. That is $X_n\overset{D}{\longrightarrow}X$ then we say that $X_n$ has \underline{limiting distribution} $F(x)$
+\item \underline{\textbf{Definition}}: $X_n$ has \underline{asymptotic distribution} $(\mu, \sigma^2)$ denoted $X_n \sim AN(\mu, \sigma^2)$ iff $$\frac{X_n - \mu}{\sigma^2}\overset{D}{\longrightarrow}Z$$
+\item\underline{\textbf{Theorem}}: (\textbf{CLT}) Let $\x$ be a random sample from $X\sim f$. Then for $Z_n := \frac{S_n - \E(S_n)}{\sqrt{Var(S_n)}}\overset{D}{\longrightarrow}Z$
+\item \underline{\textbf{Theorem}}: (\textbf{Delta Method 1}) If $X_n \sim AN(\mu, \sigma^2)$ and $g(\cdot)$ is differentiable with $g'(\mu)\neq 0$ then $$g(X_n)\sim AN(g(\mu), [g'(\mu)]^2\sigma^2)$$
+\item \underline{\textbf{Theorem}}: (\textbf{Delta Method 2}) If $X_n \sim AN(\mu, \sigma^2)$ and $g(\cdot)$ is differentiable with $g'(\mu)= 0$ and $g''(\mu)\neq 0$ then $$\sqrt{n}[g(X_n) - g(\mu)]\overset{D}{\longrightarrow}\frac{g''(\mu)\sigma^2}{2}\chi^2(1)$$
+\item \underline{\textbf{Theorem}}: (\textbf{Variance Stabilizing Transformation}) By the Delta method one can write $$\sqrt{n}(g(\overline{x}) - g(\mu))\overset{D}{\longrightarrow} N(0,[g'(\mu)]^2\sigma^2)$$ Our goal, \textit{to stabilize the variance}, we look to find a function $g(\cdot)$ such that $[g'(\mu)]^2\sigma^2 = k^2$ where $k$ is a constant. Then by solving this ODE, we can find $g$ such that variance is stabilized. 
+\end{itemize}
+
+
+\section{Principles of Data Reduction}%---------------------------------------------------------------------- 
+
+\subsection{The Sufficiency Principle}
+
+\begin{itemize}
+\item The entire idea around sufficiency is to attain a more simple form of a sample. With large samples, we want a simple summary that still maintains all of the information inherent in a sample $\x$. 
+\item Motivating question: Is there a function of our data (a \textit{statistic}) $T(\x)$ with $T:\mathcal{X}\to\R$ such that the information in $\x$ is equivalent to the information in $T(\x)$. That is $T(\x)$ is sufficient. 
+\item If $p<n$, we achieve \textit{data reduction}. That is our statistic simplifies our inference by considering $T(\x)$ instead of $\x$. 
+\item \underline{The Sufficiency Principle}: If $T(\x)$ is a sufficient statistic for a parameter $\theta$ then any inference about $\theta$ should depend on $\x$ only through $T(\x)$. 
+\end{itemize}
+
+\subsection{Sufficient Statistics}
+
+\begin{itemize}
+\item \underline{\textbf{Definition}}: A statistic is called a \underline{sufficient statistic} for $\theta$ iff the conditional distribution of $\x|T(\x) = t$ does not depend on $\theta$. That is $$P(X_1\leq x_1, \ldots, X_n\leq x_n|T(\x) = t)$$ is free from $\theta$. 
+\item \underline{\textbf{Theorem}}: (\textbf{Neyman - Fisher}) $T(\x)$ is a sufficient statistic iff $f(\x, \theta) = g(T(\x),\theta)h(\x)$ for all possible $\x$ and $\theta$. 
+\item \underline{\textbf{Theorem}}: (\textbf{Neyman - Fisher}) Let $q(T(\x),\theta)$ be the distribution of a statistic $T(\x)$. $T(\x)$ is a sufficient statistic iff $$\frac{f(\x,\theta)}{q(T(\x),\theta)}$$ is free from $\theta$.
+\item Sufficient statistics need not be unique (order statistics and full sample for example)
+\item Any $1-1$ function of a sufficient statistic is also a sufficient statistic. 
+\item \underline{\textbf{Theorem}}: Let $\x$ be a sample from an exponential family. Then $$T = (T_1, \ldots, T_k) = \left(\sum_{i=1}^{n}t_1(x_i),\ldots,\sum_{i=1}^{n}t_k(x_i)\right)$$ is a sufficient statistic for $\theta = (\theta_1, \ldots, \theta_p)$. 
+\item \underline{\textbf{Theorem}}: (\textbf{N-S Conditions for SS}) For each $\theta_1 \neq \theta_2$ then $$\frac{f(\x, \theta_1)}{f(\x,\theta_2)} = \frac{g(T(\x),\theta_1)}{g(T(\x),\theta_2)} = r(T(\x))$$ is $\theta$ free. 
+\item \underline{\textbf{Theorem}}:  Let $\theta_1 \neq \theta_2$ and $\x_1$ and $\x_2$ be two samples with $T(\x_1) = T(\x_2)$. If $$\frac{f(\x_1,\theta_1)}{f(\x_1,\theta_2)}\neq\frac{f(\x_2,\theta_1)}{f(\x_2,\theta_2)}$$ then $T(\x)$ is \textbf{not} a sufficient statistic. 
+\end{itemize}
+
+\subsection{Minimal Sufficient Statistics}
+
+\begin{itemize}
+\item \underline{\textbf{Definition}}: $T(\x)$ is called a \underline{minimal sufficient statistic} if for any other sufficient statistic $S(\x)$ then there exists $\phi_S(\cdot)$ such that $$T(\x) = \phi_S(S(\x))$$
+\item MSS provide the greatest data reduction (in a sense they are necessary statistics). 
+\item \underline{\textbf{Theorem}}: (\textbf{Lehman - Scheffe}) Suppose we have two samples $\x_1$,$\x_2$. Then if we have: $$\frac{f(\x_1, \theta)}{f(\x_2,\theta)} \hspace{1em}\text{free from $\theta$ iff}\hspace{1em} T(\x_1) = T(\x_2)$$ then $T(\x)$ is a minimal sufficient statistic for $\theta$. 
+\end{itemize}
+
+\subsection{Ancillary Statistics}
+\begin{itemize}
+\item \underline{\textbf{Definition}}: A statistic $A(\x)$ is called an \underline{ancillary statistic} iff the distribution of $A(\x)$ is free from $\theta$. 
+\item Basically, the statistic contains no information about the parameter in question. 
+\item \underline{\textbf{Definition}}: A statistic $A(\x)$ is \underline{first order ancillary} iff $\E[A(\x)]$ is free from $\theta$. 
+\item \underline{\textbf{Theorem}}: If a statistic is location and scale invariant, i.e. $$T(aX_1 + b, \ldots, aX_n + b) = T(X_1, \ldots, X_n)$$ and $\x\sim f$ where $f$ is a location scale model then $T(\x)$ is an AS. 
+\end{itemize}
+
+\subsection{Complete Sufficient Statistics}
+\begin{itemize}
+\item Ideally, a sufficient statistic and an ancillary statistic should be independent. Unfortunately they aren't.  
+\item One useful example: Consider $Unif(\theta, \theta+1)$. Then $(X_{(1)},X_{(n)})$ is MSS and $T(\x) := (X_{(n)}-X_{(1)}, \frac{X_{(n)}-X_{(1)}}{2})$ is MSS. But $A(\x):=X_{(n)}-X_{(1)}$ is AS so $T(\x)\not\perp A(\x)$
+\item Motivation: Are there sufficient statistics that are independent to ancillary statistics? If so, what additional properties do we require? 
+\item \underline{\textbf{Definition}}: A family of distributions $\mathcal{F}$ is \underline{complete} iff for any measurable function $g(\cdot)$ with $\E(g(x)) = 0$ for all $\theta \in \Theta$ then $P(g(x) = 0) = 1$. 
+\item \underline{\textbf{Definition}}: A statistic $T(\x)$ is \underline{complete} iff $\mathcal{F}_{T} = \{f_{T}(\x,\theta)\}$ is complete. 
+\item Any $1-1$ function of a CSS is also complete. 
+\item \underline{\textbf{Theorem}}: (\textbf{CSS for Exponential Families}) Suppose $\x\sim f$ where $f$ is an exponential family. Then $$T(\x) = \left(\sum_{i=1}^{n}t_1(x_i),\ldots,\sum_{i=1}^{n}t_k(x_i)\right)$$ is a CSS provided that $(w_1(\theta),\ldots, w_k(\theta))$ contains an open set in $\R^k$. 
+\item \underline{\textbf{Theorem}}: (\textbf{Basu}) If $T(\x)$ is CSS and $A(\x)$ is AS then $T(\x)\perp A(\x)$
+\item \underline{\textbf{Theorem}}: (\textbf{Wackerly}) If $T(\x)$ is CSS then $T(\x)$ is MSS.  
+\end{itemize}
+
+\section{Point Estimation}%---------------------------------------------------------------------- 
+
+\subsection{Methods for Finding Estimators}
+\subsubsection{Substitution Method}
+\begin{itemize}
+\item Motivation: Suppose we have some distribution $F$ and we want to estimate a parameter based on $F$ (e.g. $\mu$, $\sigma^2$,$\xi_p$). If we can find a good estimator $\hat{F}$, then we simply plug-in $\hat{F}$ into our functional to provide an estimate
+\item Questions that arise: Can we find a good estimator of $F$? Can every parameter of interest be written as $\theta(F)$?
+%\item \underline{\textbf{Definition}}: We say $T(\cdot)$ is a \underline{location functional} iff for $Y = aX+ b$ then $$T(F_Y) = aT(F_X) + b$$
+\item One possible estimator of $F$ is given by the \textit{empirical distribution function} defined as $$\hat{F}(x) = \begin{cases}0 & x<X_{(1)}\\ k/n & X_{(k)}<x<X_{(k+1)}\\ 1 & X_{(n)}<x\end{cases}$$
+\item \underline{\textbf{Theorem}}: $n\hat{F}(x)\sim Binom (n, F(x))$
+\item $\hat{F}$ is consistent and strongly consistent for $F$ 
+\item \underline{\textbf{Theorem}}: $\hat{F}\sim AN(F(x),\frac{1}{n}F(x)(1-F(x)))$
+\item \underline{\textbf{Theorem}}: (\textbf{Continuity Property of Plug-in Estimator}) Let $h(\cdot)$ be continuous and $g(\cdot)$ is Borel. Then $$h\left(\sum_{i=1}^n g(x_i)\right) \overset{a.s.}{\longrightarrow} h\left(\int_{\R}g(x)dF(x)\right)$$
+\end{itemize}
+
+\subsubsection{Method of Moments}
+\begin{itemize}
+\item \underline{\textbf{Definition}}: The \underline{population moments} of a parametric distribution $F$ are given by $$\mu_k := \E(X^k) = \int x^kdF(x)$$
+\item \underline{\textbf{Definition}}: The \underline{sample moments} are given by $$m_k := \frac{1}{n}\sum_{i=1}^{n}x_i^k$$
+\item \underline{\textbf{Definition}}: Suppose we have a parameter $\theta = (\theta_1, \ldots, \theta_p)$. Then the \underline{method of moment estimators} are given by the solutions to the system of equations given by $\{m_k = \mu_k\}_{k=1}^{t}$ for $t\geq p$. 
+\end{itemize}
+
+\subsubsection{Maximum Likelihood}
+\begin{itemize}
+\item In the likelihood setting, we consider the joint density $f(\x)$ parameterized by $\theta$ as a two dimensional function $f(\x,\theta)$. The density measures the probability density of the sample, so \textit{given the data} we want to maximize the probability density as a function of $\theta$.
+\item We define a function $\mathcal{L}(\theta|\x) := f(\x,\theta)$ and we look to \textit{maximize the likelihood}.
+\item \underline{\textbf{Definition}}: The \underline{maximum likelihood estimate} is given by $$\hat{\theta}_{MLE} = \underset{\theta\in\Theta}{\arg\max}L(\theta|\x)$$
+\item We can find these through calculus methods (check second derivatives!) or through direct arguments
+\item \underline{\textbf{Theorem}}: (\textbf{Invariance Principle of MLE}) If $\hat{\theta}_{MLE}$ is MLE for $\theta$ then for any measurable function $g(\cdot)$, we have $$\widehat{g(\theta)}_{MLE} = g(\hat{\theta}_{MLE})$$
+\item MLE needs not be unique - we can have uncountably many. Consider the example Unif$(\theta - 1/2, \theta + 1/2)$.
+\item If the MLE is unique then $\hat{\theta}_{MLE} = \phi(T(\x))$ for any sufficient statistic $T(\x)$. 
+\end{itemize}
+
+\subsubsection{Minimization (M) Estimators}
+\begin{itemize}
+\item Motivation: In MLE we look to maximize $\mathcal{L}(\theta|\x)$ or $\ell(\theta|\x) := \log(\mathcal{L}(\theta|\x))$. Which is equivalent to minimizing $-\ell(\theta|\x)$. Why only $\log(\cdot)$? Are there other functions that provide nice properties? 
+\item \underline{\textbf{Definition}}: Suppose we have a nonparametric family $\mathcal{F}$ and we have this function $\psi(x,t)$. Then the \underline{M estimator} is given by $\hat{T} = T(\hat{F})$; the solution to $$\int \psi(x,T(\hat{F}))d\hat{F}(x) = \sum_{i=1}^n\psi(x_i, T(\hat{F})) = 0$$
+\item MLE is a special case of M estimators with $\psi(x,\theta) = -\frac{\partial}{\partial\theta}\log f(x,\theta)$. 
+\item Least squares estimation is given by $\psi(x,\theta) = (x - \theta)^2$
+\item \underline{\textbf{Definition}}: The \underline{minimum distance estimator} for $\theta$ and distance function $\mathbf{d}$ is given by $$\hat{\theta}_{MDE} = \underset{\theta\in \Theta}{\arg\min}\hspace{.2em}\mathbf{d}(F(\x,\theta),\hat{F}(\x))$$
+\item One popular choice of distance measures is given by the Kullback-Leibler Divergence $$KL(f||g) = \int_{\mathcal{X}} g(x)\log\left(\frac{g(x)}{f(x)}\right)dx$$
+\item Maximizing the likelihood is equivalent to minimizing the KL divergence 
+\end{itemize}
+\subsubsection{Bayes Estimators \& Minimax Estimators}
+\begin{itemize}
+	\item In the Bayesian framework, we assume that $\theta$ is a random variable with distribution $\pi(\theta)$.
+	\item \underline{\textbf{Definition}}: We say $\theta$ has \underline{prior distribution} $\pi(\theta)$, $f(\x|\theta)$ is the \underline{conditional likelihood}, with \underline{marginal distribution} $f(\x)$, and \underline{posterior distribution} is written as $\pi(\theta|\x)$. 
+	\item Through Bayes Theorem we have the relation $$\pi(\theta|\x) = \frac{f(\x|\theta)\pi(\theta)}{f(\x)}$$
+	\item \underline{\textbf{Definition}}: Let $\mathcal{F}$ be a collection of parametric distributions and $\Pi$ be a family of prior distributions. Then $\Pi$ is a \underline{conjugate family} for $\mathcal{F}$ iff $\pi(\x|\theta)\in \Pi$. 
+	\item \underline{\textbf{Definition}}: Let $\ell$ be a loss function and $\hat{\theta}$ be a point estimator of $\theta$. Then the \underline{classical risk} is defined as $$R(\hat{\theta},\theta) = \E[\ell(\hat{\theta},\theta)] = \int_{\mathcal{X}} \ell(\hat{\theta}, \theta)f(\x,\theta)d\x$$
+	\item \underline{\textbf{Definition}}: The \underline{Bayes Risk} for an estimator $\delta$, loss function $\ell$, and prior $\pi$ is given by $$R(\pi,\delta):= \int_{\Theta} R(\delta, \theta)\pi(\theta)d\theta = \int_{\mathcal{X}}f(\x)\left\{\int_{\Theta}\pi(\theta|\x)\ell(\theta, \hat{\theta})d\theta\right\}d\x$$
+	\item \underline{\textbf{Definition}}: The \underline{Bayes Estimator} $\delta_*$ is given by $$\delta_* = \underset{\delta}{\arg\min}R(\pi, \delta)$$
+	\item \underline{\textbf{Theorem}}: Using quadratic loss, then the Bayes estimator is given by the posterior mean $$\delta_* = E(\theta|\x)$$
+	\item \underline{\textbf{Definition}}: A \underline{minimax estimator} is one that satisfies $$\hat{\delta}_{MM} := \underset{\delta}{\min}\underset{\theta\in\Theta}{\max}R(\delta,\theta)$$
+	\item \underline{\textbf{Theorem}}: Suppose there Bayes estimator $\delta_*$ such that $R(\theta, \delta_*)$ is free from $\theta$. Then $\hat{\delta}_{MM} = \delta_*$. 
+	\item \underline{\textbf{Theorem}}: Let $\{\delta_*^k\}_{k=1}^{\infty}$ be a sequence of Bayes estimators with Bayes risk $\{R(\pi_k,\delta_*^k)\}_{k=1}^{\infty}$. If $$\lim_{n\to\infty}R(\pi_k, \delta_*^k) = r^*<\infty$$ and there exists $\delta$ such that $\sup_{\theta}R(\theta, \delta)\leq r^{*}$ then $\delta$ is minimax. 
+	\item \underline{\textbf{Theorem}}: (\textbf{Lehman}) If $\delta_*$ is an unbiased Bayes estimator then necessarily $$\E\Big[(\delta_* - \theta)^2\Big]\equiv 0 $$
+\end{itemize}
+
+\subsection{Methods for Evaluating Estimators}
+\begin{itemize}
+\item The best risk estimator is given by $$\hat{\theta} := \underset{\theta\in\Theta}{\arg\min}R(\hat{\theta},\theta)$$
+\item In general, this problem has no solution. So we reduce the problem into two subproblems (1) Reduce $\Theta$ to the class of unbiased estimators (2) Reduce some function of the risk
+\item We already solved (2) using Bayes \& minimax. Here we focus on (1). 
+\end{itemize}
+\subsubsection{Fisher Efficiency}
+\begin{itemize}
+\item If we work with quadratic loss, with $\hat{\theta}$ unbiased then $$R(\theta, \hat{\theta}) = MSE(\hat{\theta}) = Var(\hat{\theta}) + [Bias(\hat{\theta})]^2 = Var(\hat{\theta})$$ so we simply want to minimize variance
+\item \underline{\textbf{Definition}}: We can directly compare estimators by considering \underline{relative efficiency} which is give by $$eff(\hat{\theta}_1,\hat{\theta}_2) := \frac{Var(\hat{\theta}_1)}{Var(\hat{\theta}_2)}$$
+\item \underline{\textbf{Definition}}: $\hat{\theta}$ is a \underline{uniform minimum variance unbiased estimator} (UMVUE) if $\hat{\theta}$ is unbiased and for any other estimator $\hat{\theta}'$ we have $Var(\hat{\theta})\leq Var(\hat{\theta}')$ for all $\theta\in\Theta$. 
+\item \underline{\textbf{Definition}}: The \underline{Fisher Information} is given by $$I_n(\theta):= \E\Big[\frac{\partial}{\partial\theta}\log f(\x,\theta)\Big]^2$$
+\item \underline{\textbf{Theorem}}: (\textbf{Cramer-Rao}) Let $\hat{\theta}$ be a statistic. Under the following regularity conditions \begin{enumerate}
+\item $\mathcal{X}$ does not depend on $\theta$
+\item $\frac{\partial}{\partial\theta}f(\x,\theta)$ exists and is finite
+\item For $h(\x)$ with $\E[h(\x)]<\infty$ then $\frac{\partial}{\partial\theta}\int h(\x)f(\x,\theta)dx = \int h(\x)\frac{\partial}{\partial\theta}f(\x,\theta)dx$
+\end{enumerate}
+we have $$Var(\hat{\theta})\geq \frac{\left(\frac{\partial}{\partial\theta}\E[\hat{\theta}]\right)^2}{I_n(\theta)}$$
+\item Notice that if $\E(\hat{\theta}) = \theta$ then $Var(\hat{\theta})\geq 1/I_n(\theta)$
+\item If $\x$ are iid then $I_n(\theta) = nI_1(\theta)$.
+\item \underline{\textbf{Lemma}}: The fisher information can also be written as $$I_n(\theta) = -\E\Big[\frac{\partial^2}{\partial\theta^2}\log f(\x,\theta)\Big]$$
+\item \underline{\textbf{Corollary}}: If $\x$ are iid and $\hat{\theta}$ is unbiased then the CRLB is attained iff $$a(\theta)[\hat{\theta} - \theta] = \frac{\partial}{\partial\theta}\log f(\x,\theta)$$
+\item \underline{\textbf{Definition}}: The \underline{Fisher Efficiency} of $\hat{\theta}$ is given by $$eff(\hat{\theta}) = \frac{CRLB}{Var(\hat{\theta})}$$ and we say a statistic is \underline{efficient} iff $eff(\hat{\theta}) = 1$. 
+\item With this, we see the UMVUE $\Longleftrightarrow$ Unbiased + Fisher Efficient 
+\end{itemize}
+
+
+\subsubsection{Sufficiency Approaches}
+\begin{itemize}
+\item Oftentimes the CRLB is not sufficient in evaluating estimators. First it is not defined for several models and simply gives a lower bound. Instead we turn to sufficiency based methods to find UMVUE's. 
+\item \underline{\textbf{Theorem}}: (\textbf{Rao-Blackwell}) Let $W$ be an unbiased estimator of $\theta$ and let $T(\x)$ be a sufficient statistic. Then $\phi(T):= \E[W|T]$ is a UMVUE for $\theta$. 
+\item ``Unbiased conditioned on SS is UMVUE''
+\item \underline{\textbf{Theorem}}: (\textbf{Lehman-Scheffe}) Let $T(\x)$ be a complete sufficient statistic. Let $\phi(T)$ be a statistic relying only on $T(\x)$. Then $\phi(T)$ is UMVUE for $\E[\phi(T)]$. 
+\item If $\E[\phi(T)] = \theta$ then ``unbiased function of CSS is UMUVE''
+\item \underline{\textbf{Theorem}}: (\textbf{Necessary-Sufficient Conditions}) Let $\mathcal{U}$ be the class of unbiased estimators, $\mathcal{U}_0\subseteq \mathcal{U}$ be the the class of unbiased estimators for zero, and $\mathcal{U}_0(T)\subseteq\mathcal{U}_0$ be the class of unbiased estimators of zero that can be written as $h(T)$. Then we have 
+\begin{enumerate}
+\item $W\in\mathcal{U}$ is UMUVE iff $Cov(W,X) = 0$ for all $X\in\mathcal{U}_0$
+\item $W = \phi(T)$ for sufficient statistic $T$ is UMUVE iff $Cov(W,Y) = 0$ for all $Y\in\mathcal{U}_0(T)$
+\end{enumerate}
+\end{itemize}
+
+\section{Asymptotic Evaluations}%---------------------------------------------------------------------- 
+\begin{itemize}
+\item While we have a notion of asymptotic evaluations for means and distributions, to compare estimators in this sense we wish to have some formal notion of asymptotic variance. 
+\item \underline{\textbf{Definition}}: For a sequence of estimators $\{T_n\}_{n=1}^{\infty}$, the \underline{asymptotic variance} is given by $$\sigma^2(\theta) := \lim_{n\to\infty}k_nVar(T_n) <\infty$$
+\item \underline{\textbf{Definition}}: A sequence of estimators $\{T_n\}_{n=1}^{\infty}$, is called \underline{asymptotically normal with limiting variance $\sigma^2(\theta)$} iff 
+\begin{enumerate}
+	\item $\lim_{n}nVar(T_n) = \sigma^2(\theta)$
+	\item $\sqrt{n}(T_n - \theta)\overset{D}{\longrightarrow} V\sim N(0,\sigma^2(\theta))$
+\end{enumerate}
+\item \underline{\textbf{Definition}}: Let $T_2\sim AN(\theta, \sigma^2_1(\theta)/n)$ and $T_2\sim AN(\theta, \sigma^2_2(\theta)/n)$. Then the \underline{asymptotic relative efficiency} is given by $$ARE(T_2, T_2):= \frac{\sigma^2_2(\theta)}{\sigma^2_1(\theta)}$$
+\item \underline{\textbf{Definition}}: An estimator $T$ is called \underline{asymptotically efficient} iff $T\sim AN(\theta, \sigma^2(\theta)/n)$ where $\sigma^2(\theta) = 1/I_1(\theta)$
+\item The Fisher program was an attempt to show that MLE estimates are also asymptotically efficient. This would show that in a sense MLE are the best estimators under Fisher's framework. Unforntunately this is not the case in general. 
+\item \underline{\textbf{Theorem}}: Under the following regularity conditions, MLE's are asympotitically efficient. 
+\begin{enumerate}
+\item Indentifiability 
+\item All estimators in the sequence have a common support
+\item Differentiable density with respect to $\theta$
+\item $\Theta$ contains an open set
+\item $f(\x,\theta)$ is three times differentiable
+\item $|\partial^3/\partial\theta^3\log f(x,\theta)|\leq M(x)$ with $\E|M(x)|<\infty$
+\end{enumerate}
+\item Under 1 - 4 MLE is consistent. Under 1 - 6 MLE is asymptotically efficient. 
+\item \underline{\textbf{Theorem}}: If $\{\hat{\theta}_k\}_{k=1}^{\infty}$ is asymptotically normal then $\{\hat{\theta}_k\}_{k=1}^{\infty}$ is consistent. 
+\item \underline{\textbf{Definition}}: If there exists a statistic $M$ for $\theta$ such that $M\sim AN(\mu, \sigma^2(\theta))$ (note $\mu\neq\theta$) and we have $\sigma^2(\theta)\leq CRLB$ and there exists $\theta'$ such that $\sigma^2(\theta')<CRLB$ then we say $M$ is \underline{super efficient}. 
+\end{itemize}
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
