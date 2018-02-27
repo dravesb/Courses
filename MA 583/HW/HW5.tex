@@ -1,0 +1,220 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+\usepackage{wrapfig}
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage{blkarray}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 583: HW5, \today, Discussion A4}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\text{Var}}}
+\newcommand{\prob}{{\mathbb{P}}}
+\newcommand{\ind}{{\mathbf{1}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+
+\begin{description}
+\item[Problem 3.9.6] Let $\phi(s) = as^2 + bs + c$ for $a,b,c>0$ and $0<s<1$ be a probability generating function. Moreover, let $\phi(1) = a+b+c = 1$. First note that $\frac{d\phi(s)}{ds}\Big\vert_{s = 1} = 2a + b$. Recall that to have $u_{\infty}<1$ we require $\frac{d\phi(s)}{ds}\Big\vert_{s = 1} = 2a + b>1$. But notice that $2a+b = a + (1-c) = (a - c) + 1$. Therefore, to have $u_{\infty}<1$ we require $a>c$. Using this we look to find the smallest solution to the equation $u = \phi(u)$. Note that this corresponds to the equation 
+\begin{align*}
+au^2 + (b-1)u + c &= 0\\
+au^2 - (a+c)u + c &= 0
+\end{align*}
+Now using the quadratic formula, we see that the roots of this form are given by 
+\begin{align*}
+u &= \frac{(a+c)\pm \sqrt{(a+c)^2 - 4(ac)}}{2a}\\
+&= \frac{(a+c)\pm \sqrt{(a-c)^2}}{2a}\\
+&= \frac{(a+c)\pm (a-c)}{2a}\\
+&= 1, \frac{c}{a}
+\end{align*}
+As discussed above, for $u_{\infty}<1$, $a>c$ so $\frac{c}{a}<1$. As we were seeking the smallest solution to the above equation, we conclude $u_{\infty} = \frac{c}{a}$ for $a>c$. 
+\item[Problem 3.9.7] 
+Recall from HW4, we showed that 
+\[\prob(\xi = k) = 
+\begin{cases}
+1/4 & k = 0\\
+1/2 & k = 1\\
+(1/2)^{k+1} & k \geq 2\\
+\end{cases}
+\]
+Now let $0<s<1$. Then we can define the probability generating function as follows
+\begin{align*}
+\phi_{\xi}(s) &= \E[s^{\xi}] = \sum_{k = 0}^{\infty}\prob(\xi = k)s^{k} = \frac{1}{4} + \frac{s}{2} +\sum_{k = 2}^{\infty}(1/2)^{k+1}s^k\\
+&= \frac{1}{4} + \frac{s}{2} + \frac{s^2}{8}\sum_{n=0}^{\infty}\left(\frac{s}{2}\right)^n = \frac{1}{4} + \frac{s}{2} + \frac{s^2}{8}\frac{2}{2 - s}\\
+&= \frac{1}{4} + \frac{s}{2} + \frac{s^2}{4(2-s)}
+\end{align*}
+We now can find the mean directly as follows. First, let $N \sim \text{Geom}(1/2)$. Then we can calulate the mean as follows 
+\begin{align*}
+\E[\xi] &= \sum_{k = 0}^{\infty}k\prob(\xi = k) = \frac{1}{2} + \sum_{k = 2}^{\infty}k(1/2)^{k+1} = \frac{1}{2} + \frac{1}{2}\sum_{k=2}^{\infty}k(1/2)^{k}\\
+&=\frac{1}{2} + \frac{1}{8}\sum_{n=0}^{\infty}(n+2)(1/2)^{n} =\frac{1}{2} + \frac{1}{8}\sum_{n=0}^{\infty}n(1/2)^{n} + \frac{1}{4}\sum_{n=0}^{\infty}(1/2)^{n}\\
+&=\frac{1}{2} + \frac{1}{8}\E[N] + \frac{1}{4}\frac{1}{1 -1/2} = \frac{1}{2} + \frac{1}{4} + \frac{1}{2} = \frac{5}{4}
+\end{align*}
+Now using the probability generating function derived above we have 
+\begin{align*}
+\E[\xi] &= \frac{d\phi(s)}{ds}\Big\vert_{s = 1} = \frac{1}{2} + \frac{4s(2-s) + 2s^2}{8(2-s)^2}\Big\vert_{s = 1} = \frac{1}{2} + \frac{3}{4} = \frac{5}{4}
+\end{align*}
+
+
+\item[Exercise 4.1.3] Here, we look to find the vector $\pi$ that satisifies $\pi P = \pi$ or identically $(P^T - I)\pi = 0$. That is, we look to find a basis for the kernel of $P^{T}-I$ or the eigenvector of $P^T$ corresponding to $\lambda = 1$. To solve this problem, we will put the augmented matrix $\Big[P^T - I\Big\vert 0\Big]$ into reduced echelon form via guassian elimination. 
+
+
+\begin{align*}
+\Big[P^T - I\Big\vert 0\Big] &= 
+\begin{bmatrix}
+-9/10 & 2/10 & 3/10 & 0\\
+1/10 & -8/10 & 3/10 & 0\\
+8/10 & 6/10 & -6/10 & 0\\
+\end{bmatrix}
+\rightarrow
+\begin{bmatrix}
+1 & -2/9 & -1/3 & 0\\
+0 & -7/9 & 1/3 & 0\\
+0 & 7/9 & -1/3 & 0\\
+\end{bmatrix}\\
+&\rightarrow \begin{bmatrix}
+1 & -2/9 & -1/3 & 0\\
+0 & 1 & -3/7 & 0\\
+0 & 7/9 & -1/3 & 0\\
+\end{bmatrix}
+\rightarrow \begin{bmatrix}
+1 & 0 & -3/7 & 0\\
+0 & 1 & -3/7 & 0\\
+0 & 0 & 0 & 0\\
+\end{bmatrix}
+\end{align*}
+From this, we see that $\pi_0 = \pi_1 = \frac{3}{7}\pi_2$. This along with the fact that $\pi_0 + \pi_1 + \pi_2 = 1$, we find that $\pi = (3/13, 3/13, 7/13)$. Hence, we expect to the chain to spend $3/13$ of the total time in state $1$. 
+\item[Exercise 4.1.4] We first find the limiting distribution. Following the same procedure as above we have the following 
+\begin{align*}
+\Big[P^T - I\Big\vert 0\Big] &= 
+\begin{bmatrix}
+-7/10 & 5/10 & 5/10 & 0\\
+2/10 & -9/10 & 2/10 & 0\\
+5/10 & 4/10 & -7/10 & 0\\
+\end{bmatrix}
+\rightarrow\dots\rightarrow
+\begin{bmatrix}
+1 & 0 & -55/53 & 0\\
+0 & 1 & -24/53 & 0\\
+0 & 0 & 0 & 0\\
+\end{bmatrix}\\
+\end{align*}
+Hence, $\pi_0 = \frac{55}{53}\pi_2$ and $\pi_1 = \frac{24}{53}\pi_2$. Using this with $\pi_0 + \pi_1 + \pi_2 = 1$ we arrive at our limiting distribution $\pi = (55/132, 24/132, 53/132)$. Then to find the long run cost per period associated with the costs $c = (2,5,3)$ we have $$\langle \pi, c\rangle = 2.94697 \approx \$ 2.95$$ 
+\item[Exercise 4.1.10]
+Again, we look to find the limiting distribution of this Markov Chain. Proceding as above, we have 
+\begin{align*}
+\Big[P^T - I\Big\vert 0\Big] &= 
+\begin{bmatrix}
+-5/10 & 2/10 & 1/10 & 0\\
+4/10 & -5/10 & 2/10 & 0\\
+1/10 & 3/10 & -3/10 & 0\\
+\end{bmatrix}
+\rightarrow\dots\rightarrow
+\begin{bmatrix}
+1 & 0 & -9/17 & 0\\
+0 & 1 & -14/17 & 0\\
+0 & 0 & 0 & 0\\
+\end{bmatrix}\\
+\end{align*}
+Hence $\pi_{Early}= \frac{9}{17}\pi_{Late}$ and $\pi_{On-Time}= \frac{14}{17}\pi_{Late}$. This with the fact that $\pi_{Early} + \pi_{On-Time} + \pi_{Late} = 1$ we arrive at our limiting distribution as $\pi = (9/40, 14/40, 17/40)$. Hence, in the long run, we expect the bus to be late $\pi_{Late} = 17/40$ amount of the time. 
+\item[Problem 4.1.5] We first will need to set up the transition probability matrix. We define the ordering as $(A,B,C,D)$ and assuming random movement, we can define the following  
+\[ \mathbf{P} = 
+\begin{bmatrix}
+0 & 1/2 & 0 & 1/2\\
+1/3 & 0 & 1/3 & 1/3\\
+0 & 1 & 0 & 0\\
+1/2 & 1/2 & 0 & 0\\
+\end{bmatrix}
+\]
+With this, we now look to find the limiting distribution of this Markov Chain. Following the same procedure as above, we have 
+\begin{align*}
+\Big[P^T - I\Big\vert 0\Big] &= 
+\begin{bmatrix}
+-1 & 1/3 & 0 & 1/2 & 0 \\
+1/2 & -1 & 1/3 & 1/2 &0\\
+0 & 1/3 & -1 & 0 &0\\
+1/2 & 1/3 & 0 & -1 &0\\
+\end{bmatrix}
+\rightarrow\dots\rightarrow
+\begin{bmatrix}
+1 & 0 & 0 & -1 & 0 \\
+0 & 1 & 0 & -3/2 &0\\
+0 & 0 & 1 & -1/2 &0\\
+0 & 0 & 0 & 0 &0\\
+\end{bmatrix}
+\end{align*}
+Hence we see that $\pi_A = \pi_D$, $\pi_B = \frac{3}{2}\pi_D$, and $\pi_C = \frac{1}{2}\pi_D$. This with $\pi_A + \pi_B + \pi_C + \pi_D =1$ we arrive at our limiting distribution as $\pi = (1/4, 3/8, 1/8, 1/4)$. Therefore, the long run probability of find the train in town $D$ is $\pi_D = \frac{1}{4}$.  
+\item[Problem 4.1.6]
+\begin{enumerate}[(a)]
+\item $$\lim_{n\to\infty}\prob(X_{n+1} = j|X_0 = i) = \lim_{n\to\infty}\mathbf{P}^{(n+1)}_{ij}\overset{def}{=}\pi_{j}$$
+\item $$\lim_{n\to\infty}\prob(X_{n+1} = j, X_{n} = k|X_0 = i) = \lim_{n\to\infty}\mathbf{P}^{(n)}_{ik}\mathbf{P}_{kj} = \mathbf{P}_{kj}\lim_{n\to\infty}\mathbf{P}^{(n)}_{ik}= \mathbf{P}_{jk}\pi_k$$
+\item $$\lim_{n\to\infty}\prob(X_{n} = j, X_{n-1} = k|X_0 = i) = \lim_{n\to\infty}\mathbf{P}^{(n-1)}_{ik}\mathbf{P}_{kj} = \mathbf{P}_{kj}\lim_{n\to\infty}\mathbf{P}^{(n-1)}_{ik}= \mathbf{P}_{jk}\pi_k$$
+\end{enumerate}
+\item[Problem 4.2.3]
+\begin{enumerate}[(a)]
+\item Using an identical procedure as above, we see 
+\begin{align*}
+\Big[P^T - I\Big\vert 0\Big] &= 
+\begin{bmatrix}
+-8/10 & 5/10 & 2/10 & 1/10 & 0\\
+2/10 & -8/10 & 3/10 & 2/10 & 0\\
+4/10 & 2/10 & -6/10 & 4/10 & 0\\
+2/10 & 1/10 & 1/10 & -7/10 & 0\\
+\end{bmatrix}
+\rightarrow\dots\rightarrow
+\begin{bmatrix}
+1 & 0 & 0 & -13/8 & 0\\
+0 & 1 & 0 & -3/2 & 0\\
+0 & 0 & 1 & -9/4 & 0\\
+0 & 0 & 0 & 0 & 0\\
+\end{bmatrix}
+\end{align*}
+Hence we see that $\pi_0 = \frac{13}{8}\pi_3$, $\pi_1 = \frac{3}{2}\pi_3$, and $\pi_2 = \frac{9}{4}\pi_3$. This with $\pi_0 + \pi_1 + \pi_2 + \pi_3 =1$ we arrive at our limiting distribution as $\pi = (13/51, 12/51, 18/51, 8/51)$.
+
+\item Categorizing states 2 and 3 as out of control states, the expected time in an out of control state is given by $\pi_2 + \pi_3 = \frac{26}{51}$
+\item In the long run, the expected transition from an in control state to an out of control state requires two elements. (i) The chain must be in an in control state in the long run and (ii) the chain must transition to an out of control state. With this in mind we can write this quantity as follows. 
+\begin{align*}
+(P_{02} + P_{03})\pi_{0} + (P_{12} + P_{13})\pi_{1} = (6/10)(13/51) + (3/10)(12/51) = \frac{114}{510}\approx 0.2235
+\end{align*}
+\end{enumerate}
+\end{description}	
+\end{document} 
+
+

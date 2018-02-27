@@ -1,0 +1,127 @@
+---
+title: "MA 576 HW 3"
+author: "Benjamin Draves"
+#output: pdf_document
+output: html_document
+fontsize: 11pt
+geometry: margin=1in
+---
+
+###4
+
+```{r}
+#load necessary packages 
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(gridExtra)
+
+#read in data 
+planes = read.table("~/Desktop/Courses/MA 576/data/aviation.txt", header = T)
+
+#define logistic function
+logit = function(p) log(p/(1-p))
+
+#Make proportions/tables
+planes.yr = planes %>% 
+            group_by(Year) %>% 
+            summarise(N.Pilots = sum(Numbers), N.Deaths = sum(Deaths))%>%
+            mutate(prop.deaths = N.Deaths/N.Pilots, 
+                   logit.prop.deaths = logit(prop.deaths))
+        
+planes.ag = planes %>% 
+            group_by(Age) %>% 
+            summarise(N.Pilots = sum(Numbers), N.Deaths = sum(Deaths))%>%
+            mutate(prop.deaths = N.Deaths/N.Pilots, 
+                   logit.prop.deaths = logit(prop.deaths))
+
+#visualize death % by year
+p1 <- ggplot(planes.yr, aes(x = Year, y = prop.deaths, size = N.Pilots)) +            geom_point(shape = 21) + 
+      labs(y = "Proportion of Deaths")+
+      theme_bw()
+p2 <- ggplot(planes.yr, aes(x = Year, y = logit.prop.deaths, size = N.Pilots)) +            geom_point(shape = 21) + 
+      labs(y = "Logit(Proportion of Deaths)")+
+      theme_bw()
+
+#visualize death % by age
+p3 <- ggplot(planes.ag, aes(x = Age, y = prop.deaths, size = N.Pilots)) +            geom_point(shape = 21) + 
+      labs(y = "Proportion of Deaths")+
+      theme_bw()
+p4 <- ggplot(planes.ag, aes(x = Age, y = logit.prop.deaths, size = N.Pilots)) +                         geom_point(shape = 21) + 
+      labs(y = "Logit(Proportion of Deaths)")+
+      theme_bw()
+
+grid.arrange(p1, p2, p3, p4, nrow=2, ncol = 2)
+
+#visualize the effect of age and year simultaneously 
+planes$prop.deaths = planes$Deaths/planes$Numbers
+planes$logit.prop.deaths = logit(planes$prop.death)
+
+p5 = ggplot(planes, aes(x = Year, y = prop.deaths,color = Age, size = Numbers)) +
+    geom_point()+
+    labs(y = "Proportion of Deaths")
+p6 = ggplot(planes, aes(x = Year, y = logit.prop.deaths,
+                        color = Age,size = Numbers)) +
+    geom_point()+
+    labs(y = "Logit(Proportion of Deaths)")
+grid.arrange(p5,p6, nrow = 2)
+
+
+```
+
+#### b 
+
+
+```{r}
+m0 = glm(prop.deaths ~1, data = planes, family = binomial, weights = Numbers)
+m1 = glm(prop.deaths ~ Age + as.factor(Year), data = planes, 
+         family = binomial, weights = Numbers)
+summary(m1)
+```
+
+#### (c)
+
+```{r}
+m2 = glm(prop.deaths ~ Age, data = planes, 
+         family = binomial, weights = Numbers)
+summary(m2)
+```
+```{r}
+anova(m0, m2, m1, test='Chisq')
+```
+
+#### (d)
+```{r}
+m3 = glm(prop.deaths ~as.numeric(Age), data = planes, 
+         family = binomial, weights = Numbers)
+summary(m3)
+```
+#### (e)
+```{r}
+dev.res = resid(m3,type='pearson')
+pear.res = resid(m3,type='deviance')
+
+Residuals = data.frame(Age = planes$Age, Year = planes$Year, 
+                       Deviance.Residuals = dev.res, 
+                       Pearson.Residuals = pear.res)
+res = Residuals %>% gather("Type", "Residual.Value", 3:4)
+
+p7 = ggplot(res, aes(x = Year, y = Residual.Value, shape = Type)) + 
+  geom_point()+
+  labs(y = "Residual Value", title = "Residual vs Year")+
+  geom_line(aes(y = 1), linetype = 2)+
+  geom_line(aes(y = -1), linetype = 2)+
+  theme_bw()
+p8 = ggplot(res, aes(x = Year, y = Residual.Value, shape = Type)) + 
+  geom_point()+
+  labs(y = "Residual Value", title = "Residual vs Age")+
+  geom_line(aes(y = 1), linetype = 2)+
+  geom_line(aes(y = -1), linetype = 2)+
+  theme_bw()
+
+
+grid.arrange(p7,p8, nrow = 2)
+```
+
+
+

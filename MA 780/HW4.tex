@@ -1,0 +1,106 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 780: HW4, \today}
+\rhead{Benjamin Draves}
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\nsum}{{\sum_{i=1}^n}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\text{Var}}}
+\newcommand{\prob}{{\mathbb{P}}}
+\newcommand{\ind}{{\mathbf{1}}}
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+\begin{enumerate}
+\item Suppose we have a sequence of independent random variables $\{F_n, n\geq 1\}$ that converges in the Kolmogorov metric to a random variable $F$. That is $$\sup_{h\in H_{Kol}}|\E[h(F_n)] - \E[h(F)]| \to 0$$ This then implies 
+$$\sup_{z\in\R}|\prob(F_n\leq z) - \prob(F\leq z)| \to 0$$ Now, let $C(F)$ be the set of points where $F$ is continuous. As $C(F)\subseteq\R$ we can then write $$\sup_{z\in C(F)}|\prob(F_n\leq z) - \prob(F\leq z)|\leq \sup_{z\in\R}|\prob(F_n\leq z) - \prob(F\leq z)| \to 0$$ But notice that the left most quantity is just the definition of convergence in distribution. Having shown this quantity converges to zero, we conclude $F_N\overset{D}{\to} F$ as desired. 
+
+To see why Kolmogorov convergence is strictly stronger than convergence in distribution, consider the constant sequence $F_n = \frac{1}{n}$ and $F = 0$. Clearly, $F_n\overset{D}{\to} F$. That is, for $\e, \delta>0$ there exists an $N$ such that $\prob(|n^{-1}-0|>\delta)<\e$ for all $n\geq N$. Hence $F_n\overset{P}{\to}F$ and $F_n\overset{D}{\to}F$. Now, consider the following.
+\begin{align*}
+d_{Kol}(F_n, F) &= \sup_{z\in R}|\prob(F_n\leq z) - \prob(F\leq z)|\\
+&= \sup_{z\in R}|\prob(n^{-1}\leq z) - \prob(0\leq z)|\\
+&= 1\\
+\end{align*}
+That is the Kolmorogov distance between these two distributions is 1 for all $n$. Taking $z = \frac{1}{n+1}$, say, we see that $\prob(F_n<z) = 0$ and $\prob(F<z) = 1$. Hence this sequence converges in distribution by not in the Kolmorogov metric. 
+
+
+\item Suppose that $N$ is a random variable and let $h:\R\to\R$ be a differentiable function with $\E[h'(N)]<\infty$ and $\E[Nh(N)]<\infty$. Then we look to show that $N\sim N(0,1)$ iff $\E[h'(N)] - \E[Nh(N)] = 0$. 
+
+($\Longrightarrow$) Suppose that $N\sim N(0,1)$ and let $\gamma(x) = \frac{1}{\sqrt{2\pi}}e^{-x^2/x}$ be the standard normal density. Then by using the Gaussian integration by parts formula gives $$\E[h'(N)] = \int_{-\infty}^{\infty}h'(N)\gamma(dN) \overset{GIP}{=} \int_{-\infty}^{\infty} nh(n)\gamma(dn) = \E[Nh(N)]$$ From here it follows that $$\E[h'(N)] - \E[Nh(N)] = 0$$
+
+($\Longleftarrow$) Suppose that $\E[h'(N)] - \E[Nh(N)] = 0$ and take $h(x) = \frac{1}{t}e^{tx}$ (we can do this as $h(x)$ is differentiable for all $x\in\R$). Then the above gives $\E[e^{tN}] = \frac{1}{t}\E[Ne^{tN}]$ we can rewrite as $$t\E[e^{tN}] = \E[\frac{d}{dt}e^{tN}] = \frac{d}{dt}\E[e^{tN}]$$ Notice that we can interchange the differentiation with the expectation due to the assumption that $\E[Nh(N)]<\infty$ and use of the dominated convergence theorem. Let $M_N(t) = \E[e^{tN}]$ be the moment generating function of $N$. Then our form reduces to the first order differential equation $$0 = M_N'(t) - tM_N(t)$$ This general separable ODE has a solution of the form $M_N(t) = e^{x^2/2 + c}$. But recall that we also have an initial condition of $M_N(0) = \E[e^{0}] = 1$. So $M_n(0) = 1 = e^c$ which corresponds to $c = 0$. Hence $M_N(t) = e^{t^2/2}$ which is just the moment generating function of the standard normal. As the normal is characterized by its moments, we have shown that $N\sim N(0,1)$. 
+
+\item 
+\begin{enumerate}
+\item Let $N\sim N(0,1)$ and let $h:\R\to\R$ be a Borel function with $h(N)\in L^1(\Omega)$. We look to solve the first order ordinary differential equation given by $$f'(x) - xf(x) = h(x)-\E(h(N))$$
+First, we define the integrating factor $u(x) = \exp\Big\{\int -xdx\Big\} = e^{-x^2/2}$. By defining this quantity in this way, we have that $$\frac{d}{dx}u(x)f(x) = \frac{d}{dx}e^{-x^2/2}f(x) = e^{-x^2/2}[f'(x)-xf(x)]$$
+Applying this in our situation 
+\begin{align*}
+f'(x) - xf(x) &= h(x)-\E(h(N))\\
+e^{-x^2/2}[f'(x) - xf(x)] &= e^{-x^2/2}[h(x)-\E(h(N))]\\
+\frac{d}{dx}e^{-x^2/2}f(x) &= e^{-x^2/2}[h(x)-\E(h(N))]\\
+\int_{\infty}^{x}\frac{d}{dx}e^{-y^2/2}f(y)dy &= \int_{-\infty}^{x}e^{-y^2/2}[h(y)-\E(h(N))]dy + c\\
+\end{align*}
+Now, by the fundamental theorem of calculus we have 
+\begin{align*}
+\int_{\infty}^{x}\frac{d}{dx}e^{-y^2/2}f(y)dy &= \int_{-\infty}^{x}e^{-y^2/2}[h(y)-\E(h(N))]dy + c\\
+e^{-x^2/2}f(x) &= c + \int_{-\infty}^{x}[h(y)-\E(h(N))]e^{-y^2/2}dy\\
+f(x) &= ce^{x^2/2} + e^{x^2/2}\int_{-\infty}^{x}[h(y)-\E(h(N))]e^{-y^2/2}dy\\
+\end{align*}
+\item Define the following solution corresponding to $c = 0$ $$f_h(x) = e^{x^2/2}\int_{-\infty}^{x}[h(y ) - \E(h(N))]e^{-y^2/2}dy$$ We first show it satisfies the statement. We start with the case for $x\to-\infty$
+\begin{align*}
+\lim_{x\to -\infty} e^{-x^2/2}f_h(x) = \lim_{x\to-\infty}\int_{-\infty}^{x}[h(y ) - \E(h(N))]e^{-y^2/2}dy = 0 \\
+\end{align*}
+Now we consider the case for $x\to\infty$. 
+\begin{align*}
+\lim_{x\to \infty} e^{-x^2/2}f_h(x) &= \lim_{x\to\infty}\int_{-\infty}^{x}[h(y) - \E(h(N))]e^{-y^2/2}dy\\
+&= \int_{-\infty}^{\infty}[h(y) - \E(h(N))]e^{-y^2/2}dy\\
+&= \int_{-\infty}^{\infty}h(y)e^{-y^2/2}dy -  \E(h(N))\int_{-\infty}^{\infty}e^{-y^2/2}dy\\
+&= \int_{-\infty}^{\infty}h(y)e^{-y^2/2}dy -  \left(\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}h(y)e^{-y^2/2}dy\right)\left(\int_{-\infty}^{\infty}e^{-y^2/2}dy\right)\\
+&= \int_{-\infty}^{\infty}h(y)e^{-y^2/2}dy\left(1 - \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}e^{-y^2/2}dy\right)\\
+&= \int_{-\infty}^{\infty}h(y)e^{-y^2/2}dy\left(1 - 1\right)\\
+&= 0 
+\end{align*}
+To see why that this is the unique solution with this property, notice that for a general solution to this equation that $$e^{-x^2/2}f(x) = c + \int_{-\infty}^x [h(y) - \E(h(N))]e^{-y^2/2}dy$$ Using the result we just proved above $$\lim_{x\to\pm\infty} c + \int_{-\infty}^x [h(y) - \E(h(N))]e^{-y^2/2}dy = c$$ Therefore, for this limit to be $0$ corresponds to the solution with $c = 0$. That is $f_h(x)$ is the unique solution that has this property. 
+\end{enumerate}
+
+\end{enumerate}	
+\end{document} 
+
+

@@ -1,0 +1,118 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 782: HW1, \today}
+\rhead{Benjamin Draves}
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\nsum}{{\sum_{i=1}^n}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\text{Var}}}
+\newcommand{\prob}{{\mathbb{P}}}
+\newcommand{\ind}{{\mathbf{1}}}
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+\begin{enumerate}
+\item (6.3)
+\begin{enumerate}
+	\item First let $T_1$ and $T_2$ be UMP tests for corresponding to $\alpha_1$ and $\alpha_2$ respectively. Then for the sake of contradiction, assume that $c(\alpha_1)<c(\alpha_2)$. By Neyman-Person our two tests are given by the following 
+	\[T_1 = \begin{cases}
+	1 & f_1(x) > c(\alpha_1)f_0(x)\\
+	\gamma_1 & f_1(x) = c(\alpha_1)f_0(x)\\
+	0 & f_1(x) < c(\alpha_1)f_0(x)\\
+	\end{cases}\hspace{2em}
+	T_2 = \begin{cases}
+	1 & f_1(x) > c(\alpha_2)f_0(x)\\
+	\gamma_1 & f_1(x) = c(\alpha_2)f_0(x)\\
+	0 & f_1(x) < c(\alpha_2)f_0(x)\\
+	\end{cases}
+	\]
+	Define $LR(x) = \frac{f_1(x)}{f_0(x)}$. We now argue by cases
+	\begin{itemize}
+		\item $LR(x)<c(\alpha_1)$: In this case $T_1(x) = 0$ and $T_2(x)=$ so $T_1(x)\geq T_2(x)$
+		\item $LR(x)=c(\alpha_1)$: In this case $T_1(x) = \gamma_1$ and $T_2(x)=0$ so $T_1(x)\geq T_2(x)$
+		\item $c(\alpha_1)<LR(x)<c(\alpha_2)$: In this case $T_1(x) = 1$ and $T_2(x)=0$ so $T_1(x)\geq T_2(x)$
+		\item $LR(x)=c(\alpha_2)$: In this case $T_1(x) = 1$ and $T_2(x)=\gamma_2$ so $T_1(x)\geq T_2(x)$
+		\item $c(\alpha_2)<LR(x)$: In this case $T_1(x) = 1$ and $T_2(x)=1$ so $T_1(x)\geq T_2(x)$
+	\end{itemize}
+	In any case we note that $T_1(x)\geq T_2(x)$. Hence $\E_0(T_1) \geq \E_0(T_2)$ but recall this, by definition, is just the type I error corresponding to $\alpha_i$. That is we see that $\E_0(T_1) = \alpha_1 \geq \alpha_2=\E_0(T_2)$. But recall $\alpha_1<\alpha_2$ so we have a contradtiction. Therefore, we conclude that $c(\alpha_1)\geq c(\alpha_2)$
+	\item We look to show that $1 - \E_1(T_1)\geq1 - \E_1(T_2)$. Hence, it suffies to show that $\E_1[T_1]\leq \E_1[T_2]$. Well recall that $\E_1[T_*]$ is maximized at $T_* = T_2$ where $T_*$ are all tests such that $\E_0[T_*]\leq \alpha_2$. But $\E_0[T_1] = \alpha_1 <\alpha_2$. Hence $\E_1[T_1]\leq \E_1[T_2]$ by definition of UMP. 
+\end{enumerate}	
+\item (6.4) Let $T_*$ be UMP for size $\alpha$ with power $\beta<1$ for testing $H_0$ vs $H_1$. Define $T_{**} = 1 - T_*$. We look to show that this test is UMP for testing $H_1$ vs $H_0$ with size $1-\beta$. We must show two things (i) $T_{**}$ is of size $\beta$ and (ii) for any test $\tilde{T}_{**}$ with $\E_1(\tilde{T}_{**})\leq \beta$ we have that $\E_0[\tilde{T}_{**}]\leq \E_0[T_{**}]$. 
+
+\begin{enumerate}[(i)]
+\item First note that $\E_1[T_{**}] = 1-\E_1[T_{*}]$. Note this is just the power of $T_*$ when $H_1$ is true which we defined to be $\beta$. Hence  $\E_1[T_{**}] = 1-\E_1[T_{*}] = 1-\beta$. Hence $T_{**}$ is of size $1-\beta$.
+\item Let $\tilde{T}_{**}$ be a test with $\E_1[\tilde{T}_{**}]\leq 1 - \beta$. Then there exists a test $\tilde{T}_{*}$ of $H_0$ vs $H_1$ with $\tilde{\alpha} = \E_0[\tilde{T}_{*}]\geq \alpha$ such that we can write $\tilde{T}_{**} = 1- \tilde{T}_{*}$.  Using this we see that $$\E_0[T_{**}] = 1 - \E_0[T_*] = 1 - \alpha \geq 1 - \tilde{\alpha} = 1 - \E_0[\tilde{T}_{*}] = \E_0[\tilde{T}_{**}]$$ 
+\end{enumerate}
+Hence $T_{**}$, being of the form in the Neyman-Pearson Lemma, is UMP for $H_1$ vs $H_0$. 
+\item (6.7) Suppose that $\phi_*\in\mathcal{T}_0$ is given by equation $(6.9)$. We derive a useful result for later in the proof. 
+\begin{align*}
+\int(\phi_* - \phi)\sum_{i=1}^mc_if_id\nu&= \int\sum_{i=1}^{m}c_if_i\phi_*d\nu - \int\sum_{i=1}^{m}c_if_i\phi d\nu\\
+&= \sum_{i=1}^mc_i\left\{\int \phi_*f_id\nu - \int\phi f_id\nu\right\}\\
+&=\sum_{i=1}^mc_i \left\{0-0\right\}\\
+&= 0
+\end{align*}
+Where the thrid line justified by the definition of $\mathcal{T}_0$. Now, define the following quantity 
+$$g(x)h(x) = (\phi_* - \phi)(f_{m+1} - \sum_{i=1}^m c_if_i)$$ Now notice by defintion of $\phi_*$ if $h(x)>0$ then $g(x)>0$ and $g(x)h(x)\geq 0$. Moroever, if $h(x)<0$, then $g(x)<0$ as $\phi_* = 0$ and $0\leq\phi\leq 1$. In either cases we have that $$(\phi_* - \phi)(f_{m+1} - \sum_{i=1}^m c_if_i)\geq 0$$ Using this, we can write 
+\begin{align*}
+(\phi_* - \phi)(f_{m+1} - \sum_{i=1}^m c_if_i)&\geq 0\\
+(\phi_* - \phi)f_{m+1}&\geq (\phi_* - \phi)\sum_{i=1}^m c_if_i\\
+\int (\phi_* - \phi)f_{m+1}d\nu&\geq \int(\phi_* - \phi)\sum_{i=1}^m c_if_id\nu\\
+\int \phi_*f_{m+1}d\nu - \int \phi f_{m+1}d\nu&\geq 0\\
+\int \phi_*f_{m+1}d\nu  &\geq \int \phi f_{m+1}d\nu\\
+\end{align*}
+Hence, $\phi_*$ maximizes this quantity over all possible $\phi\in\mathcal{T}_0$.
+
+Now, consider $\phi\in\mathcal{T}$. Then, by the same argument as above, we have that 
+\begin{align*}
+\int(\phi_* - \phi)f_{m+1}d\nu &\geq \int(\phi_* - \phi)\sum_{i = 1}^m c_if_id\nu\\
+\int(\phi_* - \phi)f_{m+1}d\nu &\geq \sum_{i = 1}^m c_i\left\{\int\phi_*f_id\nu - \int\phi f_id\nu\right\}\\
+\int(\phi_* - \phi)f_{m+1}d\nu &\geq \sum_{i = 1}^m c_i\left\{t_i - \int\phi f_id\nu\right\}\\
+\end{align*}
+Recall, by definition of $\mathcal{T}$ that $s_i:=\int\phi f_id\nu\leq t_i$. Therefore, along with the assumption that $c_i\geq 0$ we have 
+$$\sum_{i = 1}^m c_i\left\{t_i - \int\phi f_id\nu\right\}\geq \sum_{i = 1}^m c_i\left\{t_i - s_i\right\}\geq 0$$ Thus 
+\begin{align*}
+\int(\phi_* - \phi)f_{m+1}d\nu &\geq 0\\
+\int\phi_*f_{m+1}d\nu &\geq \int\phi_*f_{m+1}d\nu\\
+\end{align*}
+Therefore, if $c_i\geq 0$ for all $i$ then $\phi_*$ maximizes this quantity over all $\phi\in\mathcal{T}$. 
+
+\end{enumerate}	
+\end{document} 
+
+

@@ -1,0 +1,105 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 576: HW2, \today}
+\rhead{Benjamin Draves}
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+\newcommand{\prob}{{\mathbb{P}}}
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+\begin{enumerate}
+\item This distribution is not in the exponential family. We notice here that the support $\theta<y<\infty$ is dependent on the parameter of the distribution $\theta$. Therefore, regardless of how we can write the density, this distribution is not in the exponential family. 
+
+\item 
+\begin{enumerate}
+\item Let $Y\sim\text{Geom}(p)$. Then we can write its density as 
+\begin{align*}
+\prob(Y = k) = (1-p)^kp = \exp\Big\{k\log(1 - p) + \log(p)\Big\}
+\end{align*}
+Let $a(\phi) = 1$, $c(y,\phi) = 0$, $\theta = \log(1-p)$, and lastly $b(\theta) = -\log\left(1-\exp(\theta)\right)$. 
+\item 
+\begin{align*}
+\mu &= \frac{d}{dt}b(t)\Big|_{t = \theta} = \frac{\exp(t)}{1-\exp(t)}\Big|_{t = \theta} = \frac{1-p}{1 - 1 + p} = \frac{1-p}{p}\\
+V &= a(\phi)\frac{d^2}{dt^2}b(t)\Big|_{t = \theta} = \frac{d}{dt}\frac{\exp(t)}{1-\exp(t)}\Big|_{t = \theta} = \frac{(1-\exp(t))\exp(t) + \exp(t)^2}{(1-\exp(t))^2}\Big|_{t = \theta}\\
+&= \frac{p(1-p) + (1-p)^2}{p^2} = \frac{p -p^2 + 1 -2p +p^2}{p^2} = \frac{1 - p}{p^2} = \frac{\mu}{p}
+\end{align*}
+\item The canonical link function is given by the function $g(\mu) = \theta$. Identically, it is the inverse of $\frac{d}{dt}b(t) = \frac{\exp(t)}{1-\exp(t)}$ which is satisfied by the function $g(t) = \log\left(\frac{t}{1+t}\right)$. To check this choice, notice that $$g(\mu) = g\left(\frac{1-p}{p}\right) = \log\left(\frac{1-p}{p}/1 + \frac{1-p}{p}\right) = \log\left(\frac{1-p}{p}/\frac{1}{p}\right) = \log(1-p) = \theta$$
+\item Here we compare a proposed model to the saturated model where $\tilde{\theta}_i = \log\left(\frac{y_i}{1+y_i}\right)$ and $\hat{\theta}_i = \log\left(\frac{\hat{\mu}_i}{1 + \hat{\mu}_i}\right)$
+\begin{align*}
+D(y_i, \hat{\mu}_i) &= 2\sum_{i=1}^n \left[y_i(\tilde{\theta}_i - \hat{\theta}_i) - (b(\tilde{\theta}_i)-b(\hat{\theta}_i))\right]\\
+&= 2\sum_{i=1}^n \left[y_i\log\left(\frac{y_i(1-\hat{\mu}_i)}{\hat{\mu}_i(1-y_i)}\right) - \log\left(\frac{1+y_i}{1-\hat{\mu}_i}\right)\right]\\
+\end{align*}
+\end{enumerate}
+
+\item 
+
+\begin{enumerate}
+\item Suppose that $Y \sim f(y|\mu) = \left(\frac{\lambda}{2\pi y^3}\right)^{1/2}\exp\left\{\frac{-\lambda(y-\mu)^2}{2\mu^2 y}\right\}$ where $\lambda$ is known. Notice that we can write this distribution in canonical form as follows. 
+\begin{align*}
+f(y|\mu) &= \exp\left\{\frac{1}{2}\log(\lambda)-\frac{1}{2}\log(2\pi y^3) - \frac{\lambda(y-\mu)^2}{2\mu^2 y}\right\}\\
+&= \exp\left\{\frac{1}{2}\log(\lambda)-\frac{1}{2}\log(2\pi y^3) - \frac{\lambda(y^2-2\mu y + \mu^2)}{2\mu^2 y}\right\}\\
+&=\exp\left\{\frac{1}{2}\log(\lambda)-\frac{1}{2}\log(2\pi y^3) - \frac{\lambda y}{2\mu^2} + \frac{\lambda}{\mu} - \frac{\lambda}{2y}\right\}\\
+&= \ \exp\left\{\frac{y/\mu^2 - 2/\mu}{-2/\lambda} -\frac{\lambda}{2y} + \frac{1}{2}\log(\lambda) - \frac{1}{2}\log(2\pi y^3)\right\}\\
+\end{align*}
+Now setting $a(\phi) = a(\lambda) = -2/\lambda$, $\theta = 1/\mu^2$, $b(\theta) = 2\sqrt{\theta}$, and lasty $c(y,\lambda) = -\frac{\lambda}{2y} + \frac{1}{2}\log(\lambda) - \frac{1}{2}\log(2\pi y^3)$ we see that this in the exponential family. 
+
+\item 
+\begin{align*}
+\E(Y) &= \frac{d}{dt}b(t)\Big|_{t=\theta} = \frac{1}{\sqrt{\theta}} = \frac{1}{\sqrt{1/\mu^2}} = \mu\\
+V &= a(\lambda)\frac{d^2}{dt^2}b(t)\Big|_{t=\theta} = \frac{-2}{\lambda}\left(\frac{-1}{2}\theta^{-3/2}\right) = \frac{1}{\lambda(\sqrt{\theta})^3} = \frac{\mu^3}{\lambda}
+\end{align*}
+\item The canonical link is given by the function that satisfies $g(\mu) = \theta = 1/\mu^2$. Therefore the link function is given by $g(t) = \frac{1}{t^2}$ 
+
+\item Here we compare a proposed model to the saturated model where $\tilde{\theta}_i = \frac{1}{y_i^2}$ and $\hat{\theta}_i = \frac{1}{\hat{\mu}_i^2}$. 
+\begin{align*}
+D(y_i, \hat{\mu}_i) &= 2\sum_{i=1}^n \left[y_i(\tilde{\theta}_i - \hat{\theta}_i) - (b(\tilde{\theta}_i)-b(\hat{\theta}_i))\right]\\
+&= 2\sum_{i=1}^n \left[y_i(\frac{1}{y_i^2} - \frac{1}{\hat{\mu}_i^2}) - (\frac{2}{y_i} - \frac{2}{\hat{\mu}_i})\right]\\
+&= 2\sum_{i=1}^n\left[\frac{2}{\hat{\mu}_i} - \frac{y_i}{\hat{\mu}_i^2} - \frac{1}{y_i}\right]
+\end{align*}
+\end{enumerate}
+
+
+\end{enumerate}
+
+\end{document} 
+
+

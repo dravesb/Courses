@@ -1,0 +1,138 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 576: HW1, \today}
+\rhead{Benjamin Draves}
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\mathbb{V}}}
+\newcommand{\prob}{{\mathbb{P}}}
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+\begin{enumerate}
+\item 
+\begin{enumerate}
+
+\item Let $Y = X\beta + \e$ where $\e\sim MVN(\mathbf{0}, \sigma^2I)$. This means that $Y|X\sim MVN(X\beta,\sigma^2I)$. From here we see that 
+\begin{align*}
+\mathcal{L}(\beta) &= \det(2\pi\sigma^2I)^{-1/2}\exp\big\{-\frac{1}{2}(Y-X\beta)^{T}(\sigma^2I)^{-1}(Y-X\beta)\big\}\\
+&= \det(2\pi\sigma^2I)^{-1/2}\exp\big\{-\frac{1}{2\sigma^2}(Y-X\beta)^{T}(Y-X\beta)\big\}
+\end{align*}
+Moreover, we can write the log-likelihood as follows 
+\begin{align*}
+\log\mathcal{L}(\beta) &= -\frac{1}{2}\log(\det(2\pi\sigma^2I)) - \frac{1}{2\sigma^2}(Y-X\beta)^{T}(Y-X\beta)\\
+&= -\frac{1}{2}\log(\det(2\pi\sigma^2I)) - \frac{1}{2\sigma^2}\left[Y^TY - Y^TX\beta - \beta^TX^TY + \beta^TX^TX\beta\right]
+\end{align*}
+Differentiating with respect to $\beta$ we get 
+\begin{align*}
+\frac{d}{d\beta}\log\mathcal{L}(\beta) &= -\frac{1}{2\sigma^2}\left[-2Y^TY + 2\beta^TX^TX\right]\\
+&= \frac{1}{\sigma^2}\left[Y^TX - \beta^TX^TX\right]
+\end{align*}
+Having calculated this quantity, we can now calculate its inner product.
+\begin{align*}
+\left(\frac{d}{d\beta}\log\mathcal{L}(\beta)\right)^T\left(\frac{d}{d\beta}\log\mathcal{L}(\beta)\right) & = \left(\frac{1}{\sigma^2}\left[Y^TX - \beta^TX^TX\right]\right)^T\left(\frac{1}{\sigma^2}\left[Y^TX - \beta^TX^TX\right]\right)\\
+&= \frac{1}{\sigma^4}\left(X^TY - X^TX\beta\right)\left(Y^TX - \beta^TX^TX\right)\\
+&= \frac{1}{\sigma^4}\big(X^TYY^TX - X^TY\beta^TX^TX\\& - X^TX\beta Y^TX + X^TX\beta\beta^TX^TX\big)
+\end{align*}
+We are now ready to compute the Fisher information matrix. 
+\begin{align*}
+\mathcal{I}(\beta) &= \E\Big[\frac{1}{\sigma^4}\big(X^TYY^TX - X^TY\beta^TX^TX - X^TX\beta Y^TX + X^TX\beta\beta^TX^TX\big)\Big]\\
+& = \frac{1}{\sigma^4}\Big\{\E[X^TYY^TX] - \E[X^TY\beta^TX^TX] - \E[X^TX\beta Y^TX] + \E[X^TX\beta\beta^TX^TX]\Big\}\\
+&= \frac{1}{\sigma^4}\Big\{\E[(X^TY)(X^TY)^T] -  X^T\E(Y)\beta^TX^TX- X^TX\beta\E[Y^T]X + X^TX\beta\beta^TX^TX\Big\}\\
+&= \frac{1}{\sigma^4}\Big\{\E[(X^TY)(X^TY)^T] -  X^TX\beta\beta^TX^TX- X^TX\beta\beta^TX^TX + X^TX\beta\beta^TX^TX\Big\}\\
+&= \frac{1}{\sigma^4}\Big\{\V[X^TY] + \E[X^TY]\E[X^TY]^T - X^TX\beta\beta^TX^TX\Big\}\\
+&= \frac{1}{\sigma^4}\Big\{X^T\V[Y]X + (X^TX\beta)(X^TX\beta)^T - \beta^TX^TXX^TX\beta\Big\}\\
+&= \frac{1}{\sigma^4}\Big\{\sigma^2X^TX + X^TX\beta\beta^TX^X - \beta^TX^TXX^TX\beta\Big\}\\
+&= \frac{1}{\sigma^2}X^TX
+\end{align*}
+
+\item Under the Fisher regularities, we can calculate the Fisher information matrix in the following way. 
+\begin{align*}
+\mathcal{I}(\beta) &= -\E\left[\frac{d^2\log\mathcal{L}(\beta)}{d\beta d\beta^T}\right]\\
+&= -\E\left[\frac{d}{d\beta^T}\left(\frac{1}{\sigma^2}\left[Y^TX - \beta^TX^TX\right]\right)\right]\\
+&= -\E\left[-\frac{1}{\sigma^2}X^{T}X\right]\\
+&= \frac{1}{\sigma^2}X^{T}X\\
+\end{align*}
+
+\item From (a) and (b), we can establish the Cramer-Roa Lower Bound for the variance of an unbiased estimator of $\beta$ as $$[\mathcal{I}(\beta)]^{-1} = \left[\frac{1}{\sigma^2}X^TX\right]^{-1} = \sigma^2(X^TX)^{-1}$$ Now, from the standard linear model, we arrive at the estimator $\hat{\beta} = (X^TX)^{-1}X^TY$. Here, we see that $$\E[\hat{\beta}|X] = (X^TX)^{-1}X^T\E[Y|X] = (X^TX)^{-1}X^TX\beta = \beta$$ which shows that this estimator $\hat{\beta}$ is unbiased for $\beta$. Moreover, we can calculate the variance in a similar way 
+\begin{align*}
+\V(\hat{\beta}|X) &= \V\big[(X^TX)^{-1}X^TY|X\big]\\
+&= (X^TX)^{-1}X^T\V\big[Y|X\big]X(X^TX)^{-1}\\
+&= \sigma^2(X^TX)^{-1}X^TX(X^TX)^{-1}\\
+&= \sigma^2(X^TX)^{-1}\\
+\end{align*}
+Hence we see that $\hat{\beta}$ is an unbiased estimator that attains the Cramer-Roa lower bound and is therefore a UMVUE. 
+\end{enumerate}
+
+\item 
+\begin{enumerate}
+
+\item Suppose that $Y = X\beta + \e$ where the vector of errors is given by $\e\sim MVN(0, \Sigma)$ where $\Sigma = \text{diag}(\sigma^2_1, \sigma^2_2, \ldots, \sigma^2_n)$. As in problem one, we see that $Y|X\sim MVN(X\beta, \Sigma)$. From here we can write the likelihood as follows. 
+\begin{align*}
+\mathcal{L}(\beta) &= \det(2\pi\Sigma)^{-1/2}\exp\Big\{-\frac{1}{2}(Y - X\beta)^{T}\Sigma^{-1}(Y-X\beta)\Big\}
+\end{align*}
+where $\Sigma^{-1} = \text{diag}(1/\sigma_1^2,1/\sigma_2^2,\ldots,1/\sigma_n^2)$. 
+
+
+\item Using the likelihood above, we can compute the log-likelihood as follows. 
+\begin{align*}
+\log\mathcal{L}(\beta) &= -1/2\log[\det(2\pi\Sigma)]-1/2(Y - X\beta)^{T}\Sigma^{-1}(Y-X\beta)\\
+ &= -1/2\log[\det(2\pi\Sigma)]-1/2\Big\{Y^T\Sigma^{-1}Y - Y^T\Sigma^{-1}X\beta - \beta^TX^T\Sigma^{-1}Y + \beta^TX^T\Sigma^{-1}X\beta\Big\}\\
+\end{align*}
+Now differentiating with respect to $\beta^T$ we get 
+\begin{align*}
+\frac{d}{d\beta^T}\log\mathcal{L}(\beta) &= -\frac{1}{2}\Big\{-2X^T\Sigma^{-1}Y + 2X^T\Sigma^{-1}X\beta\Big\}\\
+\end{align*}
+Setting equal to zero and solving for $\hat{\beta}$ we get the following. 
+\begin{align*}
+-\frac{1}{2}\Big\{-2X^T\Sigma^{-1}Y + 2X^T\Sigma^{-1}X\hat{\beta}\Big\}&= 0\\
+X^T\Sigma^{-1}Y -X^T\Sigma^{-1}X\hat{\beta}&= 0\\
+X^T\Sigma^{-1}X\hat{\beta}&= X^T\Sigma^{-1}Y\\
+\hat{\beta} &= (X^T\Sigma^{-1}X)^{-1}X^T\Sigma^{-1}Y
+\end{align*}
+Here we assumed that $X^T\Sigma^{-1}X$ is invertible (which occurs when $X$ is full rank) and repeatedly used the fact that $\Sigma$ was symmetric. This shows that that $\hat{\beta}$ is the same estimate found from using the weighted squared error loss function. 
+
+
+\end{enumerate}	
+
+\end{enumerate}	
+\end{document} 
+
+

@@ -1,0 +1,124 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 780: HW3, \today}
+\rhead{Benjamin Draves}
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\nsum}{{\sum_{i=1}^n}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\text{Var}}}
+\newcommand{\prob}{{\mathbb{P}}}
+\newcommand{\ind}{{\mathbf{1}}}
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+\begin{enumerate}
+\item We begin with stating the theorem we are trying to prove. Let $\{X_n, n\geq 1\}$ be a sequence of independent random variables with $\E(X_k) = \mu_k$ and $\V(X_k) = \sigma^2_k<\infty$. Define $s_n^2 = \nsum\sigma_k^2$ and for some $\delta>0$ define the following quantity
+ $$L_3(n) := \frac{1}{s_n^{2+\delta}}\nsum \E[|X_i - \mu_i|^{2+\delta}]$$ The Lyapunov condition is satisfied if $\lim_{n\to\infty}L_3(n) = 0$. We will call this condition $L_3$. The Lyapunov CLT states that if $L_3$ holds then $$\frac{1}{s_n}\nsum \left(X_i -\mu_i\right)\overset{D}{\longrightarrow}N(0,1)$$
+Recall by the Lindeberg CLT, we showed that $L_2\iff L_1 + CLT$. Therefore it suffices to show that $L_3 \implies L_2$. Consider the following 
+\begin{align*}
+L_2(n) &= \frac{1}{s_n^2}\nsum\E[|X_i - \mu_i|^2\ind_{|X_i - \mu_i|>\e s_n}] \\
+&= \frac{1}{s_n^2}\nsum\E[|X_i - \mu_i|^{2+\delta}|X_i - \mu_i|^{-\delta}\ind_{|X_i - \mu_i|>\e s_n}] \\
+&\leq \frac{1}{s_n^2}\nsum(\e s_n)^{-\delta}\E[|X_i - \mu_i|^{2+\delta}\ind_{|X_i - \mu_i|>\e s_n}] \\
+&\leq \frac{1}{\e^{\delta}}\frac{1}{s_n^{2 + \delta}}\nsum\E[|X_i - \mu_i|^{2+\delta}] \\
+&= \frac{1}{\e^{\delta}}L_3(n)
+\end{align*}
+Thus, $$\underset{n\to\infty}{\lim\sup} L_2(n)\leq \frac{1}{\e^\delta}L_3(n)$$
+Therefore, if $L_3(n)\underset{n\to\infty}{\longrightarrow}0$ then $L_2(n)\underset{n\to\infty}{\longrightarrow}0$ and by the Lindeberg CLT $$\frac{1}{s_n}\nsum \left(X_i -\mu_i\right)\overset{D}{\longrightarrow}N(0,1)$$
+
+\item Using Boole's inequality we can write the following 
+\begin{align*}
+&\prob\left[\underset{1\leq k\leq n}{\max}|X_k - \mu_k|\geq \e s_n\right] = \prob\left[\bigcup_{k = 1}^n\{|X_k - \mu_k|\geq \e s_n\}\right]\\
+&\leq \sum_{k=1}^{n}\prob\left[|X_k - \mu_k|\geq \e s_n\right] = \sum_{k=1}^{n}\E\left[\ind_{|X_k - \mu_k|\geq \e s_n}\right]\\
+\end{align*} 
+Now, in this expectation we have $$|X_k-\mu_k|>\e s_n\implies(X_k-\mu_k)^2>\e^2 s_n^2\implies \frac{|X_k-\mu_k|}{\e^2 s_n^2}>1$$ Using this fact we see that we can write 
+\begin{align*}
+\sum_{k=1}^{n}\E\left[\ind_{|X_k - \mu_k|\geq \e s_n}\right]\leq \sum_{k=1}^{n}\E\left[\frac{|X_k-\mu_k|}{\e^2 s_n^2}\ind_{|X_k - \mu_k|\geq \e s_n}\right] = \frac{1}{\e^2}L_2(n)
+\end{align*}
+Hence, $$\underset{n\to\infty}{\lim\sup}\prob\left[\underset{1\leq k\leq n}{\max}|X_k - \mu_k|\geq \e s_n\right]\leq \frac{1}{\e^2}\underset{n\to\infty}{\lim\sup}L_2(n)$$ Therefore, under the Lindeberg conditions, $L_2(n)\underset{n\to\infty}{\longrightarrow} 0$ and we see that $$\prob\left[\underset{1\leq k\leq n}{\max}|X_k - \mu_k|\geq \e s_n\right]\underset{n\to\infty}{\longrightarrow}0$$ This shows that no single variable's variance can dominate $s_n$ under the Lindeberg conditions.
+
+\item 
+\begin{enumerate}
+\item Suppose $X\sim f$ where $f(x) = |x|^{-3}\ind_{(\infty,-1]\cup[1,\infty)}(x)$. Using the second order Taylor approximation, and the fact that $f$ is symmetric we can write the following 
+\begin{align*}
+\phi(t) &= \E[e^{itX}] = \E[1 + itX + \frac{(itX)^2}{2} + \mathcal{O}(t^2)] = 1 + \frac{(itX)^2}{2} + \mathcal{O}(t^2)\\
+&= 1 - t^2\left(\frac{\E(X^2)}{2} + \mathcal{O}(1)\right)
+\end{align*}
+Now notice that 
+\begin{align*}
+\E(X^2) &= \int_{(\infty,-1]\cup[1,\infty)} \frac{x^2}{|x|^3}dx = 2\int_{1}^{\infty}\frac{x^2}{x^3}dx = 2\lim_{t\to 0}\int_{1}^{1/t}\frac{1}{x}dx = 2\lim_{t\to0}\log\left(\frac{1}{|t|}\right)
+\end{align*}
+Using this representation we see 
+\begin{align*}
+\phi(t) &= 1 - t^2\left(\frac{1}{2}*2\log(\frac{1}{|t|}) +\mathcal{O}(1)\right)\hspace{1em}\text{as $t\to0$}\\
+&= 1 - t^2\left(\log\frac{1}{|t|} +\mathcal{O}(1)\right)\hspace{1em}\text{as $t\to0$}
+\end{align*}
+
+\item To show the result, we will show that $\phi_{S_n/\sqrt{n\log(n)}}(t)\longrightarrow e^{-t^2/2}$ for all $t\in\R$. First consider the following, 
+\begin{align*}
+\phi_{S_n/\sqrt{n\log(n)}}(t) &= \E\left[\exp\left\{\frac{it}{\sqrt{n\log(n)}}\sum_{k=1}^nX_k \right\}\right] \overset{ind.}{=} \prod_{k= 1}^n \E\left[\exp\left\{\frac{it}{\sqrt{n\log(n)}}X_k\right\}\right]\\
+&= \prod_{k=1}^n\phi_{X_k}\left(\frac{t}{\sqrt{n\log(n)}}\right) \overset{i.d.}{=} \left[\phi_{X_1}\left(\frac{t}{\sqrt{n\log(n)}}\right)\right]^n 
+\end{align*}
+Using the expression from part $(a)$ above, we can continue to write 
+\begin{align*}
+\phi_{S_n/\sqrt{n\log(n)}}(t) &= \left[1 - \frac{t^2}{n\log(n)}\left(\log\frac{\sqrt{n\log(n)}}{|t|} + \mathcal{O}(1)\right)\right]^n\\
+&= \left[1 - \frac{1}{n}\times\frac{t^2\log(\sqrt{n\log(n)}/|t|)}{\log(n)} + \frac{\mathcal{O}(t^2)}{n\log(n)}\right]^n
+\end{align*}
+Therefore, in the limit we see that 
+\begin{align*}
+\lim_{n\to\infty}\phi_{S_n/\sqrt{n\log(n)}}(t) &= \lim_{n\to\infty}\left[1 - \frac{t^2}{n}\times\frac{\log(\sqrt{n\log(n)}/|t|)}{\log(n)}\right]^n\\
+\end{align*}
+Now, recall that if $c_n\to c$ then $(1 + \frac{c_n}{n})^n \to e^{c}$. Therefore, it suffices to show that $$\frac{\log(\sqrt{n\log(n)}/|t|)}{\log(n)} \longrightarrow 1/2$$
+Seeing that the numerator and denominator go to infinity as $n\to\infty$ we use L'Hopital's Rule to write 
+\begin{align*}
+\lim_{n\to\infty}\frac{\log(\sqrt{n\log(n)}/|t|)}{\log(n)} &\overset{L'H}{=}\lim_{n\to\infty}\frac{\frac{|t|}{\sqrt{n\log(n)}}\frac{1}{2|t|}(n\log(n))^{-1/2}[\log(n) + 1]}{1/n}\\
+&= \lim_{n\to\infty} \frac{1}{2\log(n)}[\log(n)+1]\\
+&= \lim_{n\to\infty} \frac{1}{2} + \frac{1}{2\log(n)}\\
+&= \frac{1}{2}
+\end{align*}
+Thus, we conclude $\lim_{n\to\infty}\phi_{S_n/\sqrt{n\log(n)}}(t) = e^{-t^2/2}$ and as $n\to\infty$
+\begin{align*}
+\frac{S_n}{\sqrt{n\log(n)}}\overset{D}{\longrightarrow} N(0,1)
+\end{align*}
+
+
+\end{enumerate}
+\end{enumerate}	
+\end{document} 
+
+

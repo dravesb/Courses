@@ -1,0 +1,143 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 780: HW1, \today}
+\rhead{Benjamin Draves}
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\nsum}{{\sum_{i=1}^n}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\text{Var}}}
+\newcommand{\prob}{{\mathbb{P}}}
+\newcommand{\ind}{{\mathbf{1}}}
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+\begin{enumerate}
+\item Let $\{X_n\}_{n=1}^{\infty}$ be a sequence of iid random variables with $\E(|X_1|^r)<\infty$ for some $1<r<2$. Let $S_n = \nsum X_i$ and without loss of generality assume $\E(X_1) = 0$. We look to show $$\frac{S_n}{n^{1/r}}\overset{P}{\longrightarrow}0$$ First, let $\e>0$ and define $c = n^{1/r}\e^{3/(2-r)}$. Next define $Y_{k,n} = X_k\ind_{\{|X_k|<c\}}$ for $k = 1, 2,\ldots, n$ and $n\geq 1$. Then we can define, $S_n' = \sum_{k = 1}^{n}Y_{k,n}$. Now, using the truncated Chebyshev inequality, we have 
+\begin{align*}
+\prob(|S_n - \E(S_n')|\geq n^{1/r}\e) & \leq \frac{n\V(Y_{1,n})}{(n^{1/r}\e)^2} + n\prob(|X_1|> c)\\
+&\leq \frac{n\E[(Y_{1,n})^2]}{(n^{1/r}\e)^2} + n\prob(|X_1|> c)\\
+&\leq \frac{n\E[(X_1\ind_{\{|X_1|<c\}})^2]}{(n^{1/r}\e)^2} + n\prob(|X_1|> c)\\
+&\leq \frac{nc}{(n^{1/r}\e)^2}\E[|X_1|\ind_{\{|X_1|<c\}}]+ n\prob(|X_1|> c)\\
+&= \frac{nc}{(n^{1/r}\e)^2}\E[|X_1|^r|X_1|^{1-r}\ind_{\{|X_1|<c\}}]+ n\prob(|X_1|> c)\\
+&\leq \frac{nc^{2-r}}{(n^{1/r}\e)^2}\E[|X_1|^r\ind_{\{|X_1|<c\}}]+ n\prob(|X_1|> c)\\
+&\leq \frac{n^{2/r}\e^{3}}{n^{2/r}\e^2}\E[|X_1|^r]+ n\prob(|X_1|> c)\\
+&=\e\E[|X_1|^r] + n\prob(|X_1|>c)
+\end{align*}
+Focusing on the second term in this expression, we note that 
+\begin{align*}
+nP(|X_1|>c) &= nP(|X_1|^r\geq n\e^{3r/(2-r)}) = \frac{\e^{3r/(2-r)}}{\e^{3r/(2-r)}}nP(|X_1|^r\geq n\e^{3r/(2-r)})\\
+&= \frac{1}{\e^{3r/(2-r)}}\int_{n\e^{3r/(2-r)}}^{\infty}n\e^{3r/(2-r)}dF_{|X_1|^r}(x)\\
+&\leq \frac{1}{\e^{3r/(2-r)}}\int_{n\e^{3r/(2-r)}}^{\infty}xdF_{|X_1|^r}(x)\\
+\end{align*} 
+We recognize this as the tail of the convergent integral $\E(|X_1|^r)<\infty$. Hence, 
+$$n\prob[|X_1|> c] \underset{n\to\infty}{\longrightarrow}0$$ Using this result, we have that $$\underset{n\to\infty}{\lim\sup}\prob(|S_n - \E(S_n')|\geq n^{1/r}\e)\leq \e\E[|X_1|^r]$$
+As $\e>0$ was arbitrary, this implies that $$\frac{S_n - \E(S_n')}{n^{1/r}}\overset{P}{\longrightarrow} 0$$
+It suffices to show that $\frac{\E[S_n']}{n^{1/r}}\longrightarrow 0$. Notice that since the $Y_{k,n}$ independent across the $k$ index, we can write the following 
+\begin{align*}
+|\E(S_n')| & = |n\E\Big(X_1\ind_{|X_1|\leq c}\Big)| = |-n\E\Big(X_1\ind_{|X_1|>c}\Big)|\\
+&\leq n\E\Big(|X_1|\ind_{|X_1|>c}\Big) = n\E\Big(|X_1|^r|X_1|^{1-r}\ind_{|X_1|>c}\Big)
+\end{align*}
+Now, notice that $1-r<0$, so with $|X_1|>c$ we have $|X_1|^{1-r}<c^{1-r}$. Thus, 
+\begin{align*}
+n\E\Big(|X_1|^r|X_1|^{1-r}\ind_{|X_1|>c}\Big) \leq nc^{1-r}\E\Big(|X_1|^r\ind_{|X_1|>c}\Big) = n^{1/r}\e^{3\frac{1-r}{2-r}}\E\Big(|X_1|^r\ind_{|X_1|>c}\Big)
+\end{align*}
+Seeing that $\E(|X_1|^r)<\infty$, then $\E\Big(|X_1|^r\ind_{|X_1|>c}\Big)\to 0$ as $n\to\infty$. This shows that $$\frac{|\E(S_n')|}{n^{1/r}}\leq \e^{3\frac{1-r}{2-r}}\E\Big(|X_1|^r\ind_{|X_1|>c}\Big)\underset{n\to\infty}{\longrightarrow} 0$$
+
+Finally, we conclude that $$\frac{S_n}{n^{1/r}}\overset{P}{\longrightarrow} 0$$
+
+\item 
+\begin{enumerate}
+\item First assume that $\E(|X_1|^r)<\infty$ and let $\e>0$. First note that $\frac{1}{\e^r}\E(|X_1|^r)<\infty$. Now consider the following quantity. 
+\begin{align*}
+\E(|X_1|^r) &= \int_{0}^{\infty}xdF_{|X_1|^r} = \sum_{k = 1}^{\infty}\int_{(k-1)\e^r}^{k\e^r}xdF_{|X_1|^r}\\
+&\geq \sum_{k=1}^{\infty}(k-1)\e^r\int_{(k-1)\e^r}^{k\e^r}dF_{|X_1|^r} = \sum_{k=1}^{\infty}(k-1)\e^r\prob[(k-1)\e^r< |X_1|^r< k\e^{r}]\\
+&= \e^r\sum_{k=1}^{\infty}\sum_{n=1}^{k-1}\prob[(k-1)^{1/r}\e< |X_1|< k^{1/r}\e]\\
+&= \e^r\sum_{n=1}^{\infty}\sum_{k=n+1}^{\infty}\prob[(k-1)^{1/r}\e< |X_1|< k^{1/r}\e]\\
+&= \e^r\sum_{n=1}^{\infty}\prob[|X_1|>n^{1/r}\e]\\
+\end{align*}
+Hence $$\sum_{n=1}^{\infty}\prob[|X_1|>n^{1/r}\e] \leq \frac{1}{\e^r}\E[|X_1|^r]<\infty$$ 
+Conversely, assume that $\sum_{n=1}^{\infty}\prob[|X_1|>n^{1/r}\e]<\infty$. Following the same technique as above, this time bounding from above, we have 
+\begin{align*}
+\E(|X_1|^r) &= \int_{0}^{\infty}xdF_{|X_1|^r} = \sum_{k = 1}^{\infty}\int_{(k-1)\e^r}^{k\e^r}xdF_{|X_1|^r}\\
+&\leq \sum_{k=1}^{\infty}k\e^r\int_{(k-1)\e^r}^{k\e^r}dF_{|X_1|^r} = \e^r\sum_{k=1}^{\infty}k\prob[(k-1)\e^r< |X_1|^r< k\e^{r}]\\
+&= \e^r\sum_{k=1}^{\infty}\sum_{n=1}^{k}\prob[(k-1)^{1/r}\e< |X_1|< k^{1/r}\e]\\
+&= \e^r\sum_{n=1}^{\infty}\sum_{k=n}^{\infty}\prob[(k-1)^{1/r}\e< |X_1|< k^{1/r}\e]\\
+&= \e^r\sum_{n=1}^{\infty}\prob[|X_1|>(n-1)^{1/r}\e]\\
+&= \e^r\sum_{m=1}^{\infty}\prob[|X_1|>m^{1/r}\e] + \e^r<\infty\\
+\end{align*}
+
+\item Consider the following reformulation of the definition of almost sure convergence. 
+\begin{align*}
+&\prob\{w:\lim_{n\to\infty}\frac{|X_n(\omega)|}{n^{1/r}} = 0\} = 1\\ 
+&\iff\prob\{w:\lim_{n\to\infty}|X_n(\omega)|\leq n^{1/r}\e\} = 1\\
+&\iff \prob\{\omega:\exists \text{$N$ s.t. $\forall n>N$, $|X_n(\omega)|\leq n^{1/r}\e$}\} = 1\\
+&\iff \prob\Big(\underset{n\to\infty}{\lim\inf}\{\omega: |X_n(\omega)|\leq n^{1/r}\e\}\Big) = 1\\
+&\iff \prob\Big(\underset{n\to\infty}{\lim\sup}\{\omega: |X_n(\omega)|> n^{1/r}\e\}\Big) = 0\\
+&\iff \prob\{\omega: |X_n(\omega)|> n^{1/r}\e,\hspace{.1em}i.o\} = 0\\
+\end{align*}
+Since each of these statements are equivalent, the statement is proved. 
+
+\item It suffices to show one statement in (a) implies a statement in (b) and one statement in (b) implies one statement in (a). First note that $\sum_{n=1}^{\infty}\prob(\frac{|X_n|}{n^{1/r}}>\e)<\infty$ is the hypothesis in Borel Cantelli I. Hence, by taking this assumption, we see that $\prob[\frac{|X_n|}{n^{1/r}}>\e,\hspace{.1em}\text{i.o}] = 0$. That is (a) $\Longrightarrow$ (b). 
+ 
+Now, recall by Borel Cantelli II, if $\{A_n\}$ are independent events then $$\sum_{n = 1}^{\infty}\prob(A_n)=\infty\Longrightarrow\prob(A_n, i.o) = 1$$ Hence the contrapositive, and use of the zero-one law, can be written as $$\prob(A_n, i.o) = 0\Longrightarrow\sum_{n = 1}^{\infty}\prob(A_n)<\infty$$ In our case, seeing the $X_n$ are independent, $$\prob(|X_n|>n^{1/r}\e\hspace{0.2em}\text{i.o}) = 0\Longrightarrow \sum_{n = 1}^{\infty}\prob(|X_n|>n^{1/r}\e)<\infty$$ Therefore (b) $\Longrightarrow$ (a) and these four statements are equivalent. 
+
+\end{enumerate}
+
+\item 
+\begin{enumerate}
+\item Suppose that $\sum_{i=1}^{\infty}\V(X_n)<\infty$. Define $Y_n = X_n - \E[X_n]$ and $S_n = \nsum Y_i$. For $\sum_{n=1}^{\infty}Y_n$ to converge in $L^2$ is equivalent to showing that $S_n$ is Cauchy in $L^2$. Let $n,m\in\N$ with $n<m$. Then we wish to consider the quantity $$\E[|S_n - S_m|^2] = \E\left[\sum_{i = n + 1}^{m}Y_i\right]^2$$ 
+Now recall that $\E(Y_i) = \E(X_i) - E(X_i) = 0$. So $\E[(S_n - S_m)^2] = \V(S_n - S_m)$. From here, we have $$\E[|S_n - S_m|^2] = \V\left(\sum_{i = n+1}^m Y_i\right) = \sum_{i = n+1}^m\V(X_i)$$ where the last step was due to independence and the fact that $\V(Y_i) = \V(X_i - \E(X_i)) = \V(X_i)$. Letting $m\to \infty$ we have $$\lim_{m\to\infty}\E[|S_n - S_m|^2] = \sum_{i = n+1}^{\infty}\V(X_i)$$ Now, by assumption, the $\V(X_i)$ are summable, so by letting $n\to\infty$ we recognize the above as the tail of a convergence series and hence $$\lim_{n,m\to\infty}\E[|S_n - S_m|^2] = 0$$
+
+Now, suppose that $\sum_{i=1}^{\infty}(X_i - \E(X_i))$ converges in $L^2$. This means the sequence $\{S_n, n\geq 1\}$ is $L^2$ convergent. That is $$\lim_{n\to\infty}\E[|S_n|^2] = C<\infty$$ Recall, however, that $\E(S_n) = 0$ so $$\E[|S_n|^2] = \V(S_n) = \V\left[\sum_{i=1}^{n}(X_i-\E(X_i))\right] = \sum_{i=1}^{n}\V(X_i)$$ Now letting $n\to\infty$, we have $$\lim_{n\to\infty}\sum_{i=1}^{n}\V(X_i) = \sum_{i=1}^{\infty}\V(X_i)= \lim_{n\to\infty}\E[|S_n|^2] < \infty$$ 
+
+\item Let $\V(X_n) = \sigma^2<\infty$ and define the sequence of iid random variables, $Z_n$, by $Z_n = a_nX_n$. Notice that $\E(Z_n) = 0$ and $\V(Z_n)= \sigma^2a_n^2$. Applying the result from (a) to the sequence $Z_n$ we have
+\begin{align*}
+\sum_{n=1}^{\infty}\V(Z_n)<\infty &\iff \sum_{n=1}^{\infty}(Z_n - \E(Z_n))\hspace{1em}\text{converges in }L^2\\
+\sum_{n=1}^{\infty}\sigma^2a_n<\infty &\iff \sum_{n=1}^{\infty}a_nX_n \hspace{1em}\text{converges in }L^2\\
+\sum_{n=1}^{\infty}a_n<\infty &\iff \sum_{n=1}^{\infty}a_nX_n \hspace{1em}\text{converges in }L^2\\
+\end{align*}
+
+\end{enumerate}
+
+
+
+\end{enumerate}	
+\end{document} 
+
+

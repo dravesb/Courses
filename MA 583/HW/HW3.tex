@@ -1,0 +1,196 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+\usepackage{wrapfig}
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage{blkarray}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 583: HW3, \today, Discussion A4}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\text{Var}}}
+\newcommand{\prob}{{\mathbb{P}}}
+\newcommand{\ind}{{\mathbf{1}}}
+
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+
+\begin{description}
+\item[Exercise 3.3.2] Let $Y_n$ be the number of balls in urn $A$ at time $n$. Now, we have three cases; (1) $Y_{n+1} = Y_n + 1$ when the ball is selected from $B$ and urn $A$ is selected (2) $Y_{n+1} = Y_{n} - 1$ when the ball is selected from $A$ and urn $B$ is selected, and finally (3) $Y_{n+1} = Y_n$ when the ball is selected from $A$ and urn $A$ is selected \textit{or} the ball is selected from $B$ and urn $B$ is chosen. Choosing a ball from $A$ at time $n$ has probability $Y_n/N$ and choosing a ball from $B$ at time $N$ happens with probability $1 - Y_n/N$. Using this, with the fact that the choice of ball and urn is independent we have 
+
+\[ \mathbf{P}_{ij} = \begin{cases}
+(1 - i/N)p & j = i+1\\
+(i/N)p + (1-i/N)q & j = i\\
+(i/N)q & j = i-1\\
+0 & |i-j|\geq 2\\
+\end{cases}
+\]
+\item[Exercise 3.4.3] 
+\begin{enumerate}[(a)]
+
+\item Define $T = \min\{n: T\in \{0,3\}\}$ and let $u_i = \prob[X_T = 0|X_0 = i]$. Our goal is to then find $u_1$. Trivially, $u_0 = 1$ and $u_3 = 0$. Moreover, using the law of total probability 
+$$u_1 = \prob[X_T|X_0 = 1] = \sum_{j= 0}^3 \prob[X_T|X_1 = j]P_{1j} = \sum_{j= 0}^3 u_jP_{1j} = P_{10} + P_{11}u_1 + P_{12}u_2$$
+$$u_2 = \prob[X_T|X_0 = 2] = \sum_{j= 0}^3 \prob[X_T|X_1 = j]P_{2j} = \sum_{j= 0}^3 u_jP_{2j} = P_{20} + P_{21}u_1 + P_{22}u_2$$
+Solving the second equation for $u_2$, we see that $$u_2 = \frac{P_{20} + P_{21}u_1}{1 - P_{22}}$$
+Now using the first equation to solve for $u_1$, we have 
+\begin{align*}
+u_1 &= P_{10} + P_{11}u_1 + \frac{P_{20} + P_{21}u_1}{1 - P_{22}}\\
+u_1\Big(1 - P_{11} - \frac{P_{12}P_{21}}{1-P_{22}}\Big) &= P_{10} + \frac{P_{12}P_{20}}{1-P_{22}}\\
+u_1 &= \frac{P_{10}(1-P_{22})+P_{12}P_{20}}{(1-P_{11})(1-P_{22}) - P_{12}P_{21}}
+\end{align*}
+Finally, using the values from the transition matrix, we have $u_1\approx 0.3809524$
+
+\item Let $v_i = \E[T|X_0=i]$. Seeing that our chain starts in state $1$, we seek to find $v_1$. First note, trivially, that $v_0 = v_3 = 0$. Focusing on the two transient states, we have 
+$$v_1 = \E[T|X_0 = 1] = \sum_{j = 0}^{3}\E[T+1|X_1 = j]P_{1j} = 1 + \sum_{j = 0}^3 v_jP_{1j} = 1+P_{11}v_1 + P_{12}v_2$$
+$$v_2 = \E[T|X_0 = 2] = \sum_{j = 0}^{3}\E[T+1|X_1 = j]P_{2j} = 1 + \sum_{j = 0}^3 v_jP_{2j} = 1+P_{21}v_1 + P_{22}v_2$$
+Solving the second equation for $v_2$, we get 
+$$v_2 = \frac{1 + P_{21}v_1}{1-P_{22}}$$ Plugging this into the first equation we see 
+\begin{align*}
+v_1 &= 1 + P_{11}v_1 + \frac{1}{1-P_{22}} + \frac{P_{21}}{1-P_{22}}v_1\\
+v_1\Big(1 - P_{11} - \frac{P_{21}}{1-P_{22}}\Big) &= 1 + \frac{1}{1-P_{22}}\\
+v_1 &= \frac{(1-P_{22}) + P_{12}}{(1-P_{22})(1-P_{11})-P_{12}P_{21}}
+\end{align*}
+Finally, using the quantities from the transition probability matrix, we have $v_1 \approx 3.33$. 
+\end{enumerate}
+\item[Exercise 3.4.7] Let $\delta_{i}(X_n) = \ind_{\{X_{n} = i\}}$ and define $T := \min\{n: X_T\in\{0,3\}\}$. Then the value $W_{ik} = \E\left[\sum_{t = 0}^{T-1}\delta_{i}(X_n)|X_0 = k\right]$ is the expected time we visit state $i$ given we start in state $k$. Our goal is to find $W_{11}$ and $W_{21}$. First note that $W_{i0} = W_{i3} = 0$ for $i = 1,2$. Now, by first step analysis we have that 
+\begin{align*}
+W_{11} &= \E\left[\sum_{t = 0}^{T-1}\delta_{1}(X_n)|X_0 = 1\right] = 1 + \E\left[\sum_{t = 1}^{T-1}\delta_{1}(X_n)|X_0 = 1\right]\\
+&= 1 + \sum_{j = 0}^3\E\left[\sum_{t = 1}^{T-1}\delta_{1}(X_n)|X_1 = j\right]P_{1j} = 1 + \sum_{j = 0}^3W_{1j}P_{1j}\\
+&= 1 + W_{11}P_{11} + W_{12}P_{12}
+\end{align*}
+\begin{align*}
+W_{12} &= \E\left[\sum_{t = 0}^{T-1}\delta_{1}(X_n)|X_0 = 2\right] = \E\left[\sum_{t = 1}^{T-1}\delta_{1}(X_n)|X_0 = 2\right]\\
+&= \sum_{j = 0}^3\E\left[\sum_{t = 1}^{T-1}\delta_{1}(X_n)|X_1 = j\right]P_{2j} = \sum_{j = 0}^3W_{1j}P_{2j}\\
+&= W_{11}P_{21} + W_{12}P_{22}
+\end{align*}
+Now, solving the second equation for $W_{12} = \frac{P_{21}}{1-P_{22}}W_{11}$. Using this in our first equation, we arrive at the following. 
+\begin{align*}
+W_{11} &= 1 + W_{11}P_{11} + \frac{P_{21}P_{12}}{1-P_{22}}W_{11}\\
+W_{11}\Big(1 - P_{11} - \frac{P_{21}P_{12}}{1-P_{22}}\Big) &= 1 \\
+W_{11} &= \frac{(1-P_{22})}{(1-P_{11})(1-P_{22}) + P_{21}P_{12}}\\
+\end{align*}
+Using the transition probability matrix, we then see that $W_{11} \approx 1.8182$. Proceeding in the same way as above, we have the following two equations
+\begin{align*}
+W_{21} &= \E\left[\sum_{t = 0}^{T-1}\delta_{2}(X_n)|X_0 = 1\right] = \E\left[\sum_{t = 1}^{T-1}\delta_{2}(X_n)|X_0 = 1\right]\\
+&= \sum_{j = 0}^3\E\left[\sum_{t = 1}^{T-1}\delta_{2}(X_n)|X_1 = j\right]P_{1j} = \sum_{j = 0}^3W_{2j}P_{1j}\\
+&= W_{21}P_{11} + W_{22}P_{12}
+\end{align*}
+\begin{align*}
+W_{22} &= \E\left[\sum_{t = 0}^{T-1}\delta_{2}(X_n)|X_0 = 2\right] = 1 + \E\left[\sum_{t = 1}^{T-1}\delta_{2}(X_n)|X_0 = 2\right]\\
+&= 1+\sum_{j = 0}^3\E\left[\sum_{t = 1}^{T-1}\delta_{2}(X_n)|X_1 = j\right]P_{2j} = 1+\sum_{j = 0}^3W_{2j}P_{2j}\\
+&= 1 + W_{21}P_{21} + W_{22}P_{22}
+\end{align*}
+Solving the second equation, we see that $W_{22} = \frac{1 + W_{21}P_{21}}{1-P_{22}}$. Now using this in the first equation we see the following. 
+\begin{align*}
+W_{21} &= W_{21}P_{11} + \frac{P_{12}}{1-P_{22}} + \frac{P_{12}P_{21}}{1-P_{22}}W_{21}\\
+W_{21}\Big(1 - P_{11} - \frac{P_{12}P_{21}}{1-P_{22}}\Big) &= \frac{P_{12}}{1-P_{22}} \\
+W_{21} &= \frac{P_{12}}{(1-P_{11})(1-P_{22}) - P_{12}P_{21}}
+\end{align*}
+Using the values from the transition probability matrix, we have $W_{21}\approx 2.2728$. 
+
+To find the time until absorption let $w_i = \E[T|X_{0} = i]$. Then we have $w_0 = w_{3} = 0$ and moreover $$w_1 = \E[T|X_{0}=1] = \sum_{j = 0}^{3}\E[T+1|X_1 = j]P_{1j} = 1 + P_{11}w_1 + P_{12}w_2$$
+$$w_2 = \E[T|X_{0}=2] = \sum_{j = 0}^{3}\E[T+1|X_1 = j]P_{2j} = 1 + P_{21}w_1 + P_{22}w_2$$ Now, solving the first equation for $w_2$, we see that $w_{2} = \frac{1}{1-P_{22}} + \frac{P_{21}}{1-P_{22}}w_1$. Using this in the first equation we have
+\begin{align*}
+w_{1} &= 1 + P_{11}w_1 + \frac{P_{12}}{1-P_{22}} + \frac{P_{12}P_{21}}{1-P_{22}}w_1\\
+w_{1}\Big(1 - P_{11} - \frac{P_{12}P_{21}}{1-P_{22}}\Big) &= 1 + \frac{P_{12}}{1-P_{22}}\\
+w_{1} &= \frac{(1-P_{22}) + P_{12}}{(1-P_{11})(1-P_{22}) - P_{12}P_{21}}
+\end{align*}
+Now notice that from above, 
+$$w_{1} = \frac{1-P_{22}}{(1-P_{11})(1-P_{22}) - P_{12}P_{21}} + \frac{P_{12}}{(1-P_{11})(1-P_{22}) - P_{12}P_{21}} = W_{11} + W_{21}$$
+Numerically, we see that $w_1 \approx 4.091 \approx 2.2728 + 1.8182$
+
+\item[Problem 3.2.4] First note that $Z_{n} = (X_{n-1},X_n)$ and $Z_{n+1} = (X_{n}, X_{n+1})$ so any transition of the form $(a,b)\to(c,d)$ will have zero probability if $b\neq c$ and positive probability for $b = c$. In particular, this chain can be characterized at considered the transition probabilities for $(a,b)\to(b,c)$ by considering the probability transition matrix of $X$ corresponding to $b\to c$. With this, we arrive at the transition matrix as follows 
+\[\mathbf{P}=
+\begin{blockarray}{ccccc}
+& (0,0) & (0,1) & (1,0) & (1,1)\\
+\begin{block}{c(cccc)}
+  (0,0) & \alpha & 1-\alpha & 0 & 0 \\
+  (0,1) & 0 & 0 & 1-\beta & \beta\\
+  (1,0) & \alpha & 1-\alpha & 0 & 1\\
+  (1,1) & 0 & 0 & 1-\beta & \beta\\
+\end{block}
+\end{blockarray}
+ \]
+
+\item[Problem 3.3.8] Suppose there are two urns, $A$ and $B$, and at time $t$ the number of balls in $A$ is $k$ and the number of balls in $B$ is $N-k$. First an urn is selected with probability $p_{A} = \frac{k}{N}$ and $p_{B} = 1 - \frac{k}{N}$. Then a ball is selected from either $A$ with probability $p$ or $B$ with probability $q$ and placed in the urn selected above. Let $Y_n$ be the number of balls in urn $A$ at time $n$. Then using the above we have that $Y_{n+1} = Y_n + 1$ if urn $A$ is chosen and we select a ball from urn $B$. $Y_{n+1} = Y_n -1$ if we select urn $B$ then a ball from urn $A$. Finally, $Y_{n+1} = Y_n $ if we select from urn $A$ and a ball from $A$ or select $B$ and a ball from $B$. This corresponds to the following transition matrix 
+\[P_{ij} = 
+\begin{cases}
+\frac{i}{N}q & j = i+1\\
+\frac{i}{N}p + (1 - \frac{Y_n}{N})q & j = i\\
+(1 - \frac{i}{N})p & j = i-1\\
+0 & |i-j|\geq 2
+\end{cases}
+\]
+
+\item[Problem 3.4.6] First, define $T = \min\{n:X_{n} = 4\}$ and let $v_i = \E[T|X_0=i]$. Our goal to find $v_0$.First note that trivially we have $v_4 = 0$. Moreover, we have
+\begin{align*}
+v_0 &= \E[T|X_0 = 0] = 1 + \sum_{j=0}^{4}\E[T|X_1 = j]P_{0j} = 1 + \sum_{j=0}^{4}v_jP_{0j} = qv_0 + pv_1 + 1\\
+v_1 &= \E[T|X_0 = 1] = 1 + \sum_{j=0}^{4}\E[T|X_1 = j]P_{1j} = 1 + \sum_{j=0}^{4}v_jP_{1j} = qv_0 + pv_2 + 1\\
+v_2 &= \E[T|X_0 = 2] = 1 + \sum_{j=0}^{4}\E[T|X_1 = j]P_{2j} = 1 + \sum_{j=0}^{4}v_jP_{2j} = qv_0 + pv_3 + 1\\
+v_3 &= \E[T|X_0 = 3] = 1 + \sum_{j=0}^{4}\E[T|X_1 = j]P_{3j} = 1 + \sum_{j=0}^{4}v_jP_{3j} = qv_0 + 1\\
+\end{align*}
+Now seeing $p = 1-q$, $v_0 = qv_0 + pv_{1} + 1$ implies $v_0 = v_{1} + \frac{1}{p}$. Using this relation recusively, we have 
+\begin{align*}
+v_0 &= v_{1} + \frac{1}{p} = qv_0 + pv_2 + 1 + \frac{1}{p} = v_2 + \frac{1}{p} + \frac{1}{p^2}= qv_0 + pv_3 + 1 + \frac{1}{p} + \frac{1}{p^2}\\
+&= v_3 + \frac{1}{p} + \frac{1}{p^2} + \frac{1}{p^3}= qv_0 + 1 + \frac{1}{p} + \frac{1}{p^2} + \frac{1}{p^3}= \frac{1}{p} + \frac{1}{p^2} + \frac{1}{p^3} + \frac{1}{p^4}\\
+&= \sum_{k = 1}^4\frac{1}{p^k}\\
+\end{align*}
+
+
+\item[Problem 3.4.17] Let $T = \min\{n:X_n = 2\}$ be the time of the first failure and define $\phi_i(s) :=\E[s^T|X_0 = i]$. Given that our system starts in state $0$ (fully operational), we look to evaluate the probability generating function $\phi_0(s)$ for $0<s<1$. First note, that trivially $X_0 = 2$ implies $T = 0$ and $\phi_2(s) = 1$. Using this, we can use first step analysis to write 
+\begin{align*}
+\phi_0(s) &= \E[s^T|X_0 = 0] = \sum_{j=0}^{2}\E[s^{T+1}|X_1 = j]P_{0j} = s\sum_{j=0}^{2}\phi_j(s)P_{0j} = s\left[P_{00}\phi_0(s) + P_{01}\phi_1(s)\right]\\
+\phi_1(s) &= \E[s^T|X_0 = 1] = \sum_{j=0}^{2}\E[s^{T+1}|X_1 = j]P_{1j} = s\sum_{j=0}^{2}\phi_j(s)P_{1j} = s\left[P_{11}\phi_1(s) + P_{12}\right]\\
+\end{align*}
+Solving the second equation for $\phi_1(s)$, we have $\phi_1(s) = \frac{sP_{12}}{1-sP_{11}}$. Using this in the first equation, we have 
+\begin{align*}
+\phi_{0}(s) &= sP_{00}\phi_{0}(s) + sP_{01}\Big(\frac{sP_{12}}{1-sP_{11}}\Big)\\
+\phi_{0}(s) &= \frac{s^2P_{01}P_{12}}{(1-sP_{11})(1-sP_{00})}\\
+\end{align*}
+Nowing using the values from the transition probability matrix, we arrive at the following form. 
+
+$$\phi_{0}(s) = \frac{.12s^2}{(1 - .6s)(1 - .7s)}$$
+
+
+
+\end{description}	
+\end{document} 
+
+

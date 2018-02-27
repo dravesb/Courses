@@ -1,0 +1,142 @@
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+\usepackage{wrapfig}
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+%\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 583: HW1, \today, Discussion A4}
+\rhead{Benjamin Draves}
+
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\infsum}{{\sum_{n=1}^\infty}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\text{Var}}}
+\newcommand{\prob}{{\mathbb{P}}}
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+
+\begin{description}
+\item[Exercise 2.3.5]
+Let $N$ the number of accidents at the factory in a week where $N\sim\text{Pois}(2)$. Moreover, let $X_i$ be the number of injuries in accident $i$ of the week where $\E(X_i) = 3$ and $\V(X_i) = 4$. We assume that $(X_i)_{i=1}^{N}$ are iid. Since our interest centers on the number of injuries in a week, we define the random sum $Z = \sum_{i = 0}^NX_i$ where $Z \equiv 0$ when $N=0$. Using the results derived in lecture, we see that 
+\begin{align*}\E(Z) &= \E(N)\E(X_1) = (2)(3) = 6\\
+\V(Z) &= \E(N)\V(X_1) + [\E(X_1)]^2\V(N) = (2)(4) + (3)^2(2) = 26
+\end{align*}
+\item[Problem 2.3.3] Let $Z = \sum_{i=0}^{N}\xi_i $ where $(\xi_i)_{i=1}^n$ are iid with $\prob(\xi_i =\pm 1) = 1/2$ and $N\sim\text{Geom}(\alpha)$. 
+	\begin{enumerate}[a]
+		\item $\E(Z) = \E(N)\E(\xi_1) = \big(\frac{1-\alpha}{\alpha}\big)(0) = 0$\\ $\V(Z) = \E(N)\V(\xi_1) + [\E(\xi_1)]^2\V(N) = \big(\frac{1-\alpha}{\alpha}\big)(1) + [0]^2\big(\frac{1-\alpha}{\alpha^2}\big) = \big(\frac{1-\alpha}{\alpha}\big)$
+		\item First note that $Z^3$ can be written as follows $$Z^3 = \sum_{i = 1}^N\xi_i^3 + \sum_{i \neq j }\xi_i^2\xi_j + \sum_{i \neq j \neq k }\xi_i\xi_j\xi_k =  \sum_{i = 1}^N\xi_i + \sum_{i \neq j }\xi_j + \sum_{i \neq j \neq k }\xi_i\xi_j\xi_k$$ Now, notice that $\E(\xi_i) = \E(\xi_j) = \E(\xi_i\xi_j\xi_k) = 0$. Hence, regardless of the number of terms in each sum, we have that $\E(Z^3) = 0$. Proceeding in same fashion as above, we have 
+		\begin{align*}
+		Z^4 &= \left(\sum_{i=1}^N\xi_i^2 + \sum_{i\neq j}\xi_i\xi_j\right)\left(\sum_{i=1}^N\xi_i^2 + \sum_{i\neq j}\xi_i\xi_j\right)\\
+		&= \left(N + \sum_{i\neq j}\xi_i\xi_j\right)\left(N + \sum_{i\neq j}\xi_i\xi_j\right)\\
+		&= N^2 + 2N\sum_{i\neq j}\xi_i\xi_j + \left(\sum_{i\neq j}\xi_i\xi_j\right)\left(\sum_{k\neq \ell}\xi_k\xi_{\ell}\right)\\
+		&= N^2 + 2N\sum_{i\neq j}\xi_i\xi_j + 2\sum_{i\neq j}\xi_i^2\xi_j^2+ \sum_{i\neq j\neq k }\xi_i^2\xi_j\xi_k + \sum_{i\neq j \neq k\neq \ell}\xi_i\xi_j\xi_k\xi_{\ell}\\
+		&= N^2 + 2N\sum_{i\neq j}\xi_i\xi_j + 2\sum_{i\neq j}1+ \sum_{j\neq k }\xi_j\xi_k + \sum_{i\neq j \neq k\neq \ell}\xi_i\xi_j\xi_k\xi_{\ell}\\
+		&= N^2 + 3N\sum_{i\neq j}\xi_i\xi_j + 2N(N-1) + \sum_{i\neq j \neq k\neq \ell}\xi_i\xi_j\xi_k\xi_{\ell}
+		\end{align*}
+		Now, again, regardless of the number of terms in the sum, $\E[\xi_i\xi_j] = \E[\xi_i\xi_j\xi_k\xi_{\ell}] = 0$. Hence, we can write the expectation of $N$ as follows 
+		\begin{align*}
+		\E(Z^4) &= \E[N^2] + 2\E[N(N-1)] = 3\E[N^2] - 2\E[N] = 3[\V(N) + \E(N)^2]-2\E(N)\\
+		&= 3\left[\frac{1-\alpha}{\alpha^2} - \frac{(1-\alpha)^2}{\alpha^2}\right] - \frac{2-2\alpha}{\alpha} = \frac{1-\alpha}{\alpha}\left(\frac{3 - 3+3\alpha-2\alpha}{\alpha}\right) = \frac{1-\alpha}{\alpha}
+		\end{align*}
+
+
+	\end{enumerate}
+
+
+\item[Exercise 2.4.5] Let $U \sim\text{Unif}(0,L)$ for $L\sim xe^{-x}$. Then we see that the joint distribution can be expressed as $$f_{U,L}(u,\ell) = f_{U|L}(u|\ell)f_{L}(\ell) = \frac{1}{\ell}\ell e^{-\ell} = e^{-\ell}$$ 
+Now, let $V = L-U$ and $T = U$. This corresponds to $L = U + T$ and $U = T$. We can then express the joint distribution of $(T,V)$ or equivalently $(U, V)$ as follows.
+\begin{align*}
+f_{T,V}(t,v) &= f_{U,L}(t, v+t)|\det(J)|
+\end{align*}
+Where $J = \begin{bmatrix}\frac{\partial T}{\partial U} & \frac{\partial T}{\partial L}\\ \frac{\partial V}{\partial U} & \frac{\partial V}{\partial L}\end{bmatrix} = \begin{bmatrix}1 & 0\\ -1 & 1\end{bmatrix}$. Using this, we see that $|\det(J)| = 1$. Thus, we can write the final distribution as follows $$f_{T,V}(t,v) = e^{-(v+t)}\hspace{1em}\text{where}\hspace{1em} 0<u,v<\infty$$ 
+
+\item[Problem 2.4.3] Suppose that $X|\lambda = \ell\sim\text{Pois}(\ell)$ where $\lambda \sim\text{Exp}(\theta)$. 
+
+\begin{enumerate}[(a)]
+\item \begin{align*}
+P(X = n) &= \int_{\ell\in\Lambda}P(X=n|\lambda = \ell)f_{\lambda}(\ell)d\ell\\
+&= \int_0^{\infty}\frac{\ell^ne^{-\ell}}{n!}\theta e^{-\ell\theta}d\ell\\
+&= \frac{\theta}{n!}\int_0^{\infty}\ell^ne^{-(\theta+1)\ell}d\ell\\
+&= \frac{\theta}{n!}\frac{\Gamma(n+1)}{(\theta+1)^{n+1}}\left(\frac{(\theta+1)^{n+1}}{\Gamma(n+1)}\int_0^{\infty}\ell^ne^{-(\theta+1)\ell}d\ell\right)\\
+&= \frac{\theta}{(1+\theta)^{n+1}}\hspace{1em}\text{for}\hspace{1em}k = 0, 1, 2, \ldots
+\end{align*}
+
+\item Notice here that $$f_{\lambda|X}(\ell|n) = \frac{f_{\lambda,X}(\ell, n)}{f_{X}(n)} = \frac{f_{X|\lambda}(n|\ell)f_{\lambda}(\ell)}{f_{X}(n)}$$
+which are all known quantities. Hence, we can write 
+$$f_{\lambda|X}(\ell|n) = \frac{e^{-\ell}\ell^n}{n!}\theta e^{-\theta\ell}\left(\frac{\theta}{(\theta+1)^{(n+1)}}\right)^{-1} = \frac{1}{n!}\ell^{n}e^{-(\theta+1)\ell}(\theta+1)^{n+1} = \frac{\beta^{\alpha}}{\Gamma(\alpha)}\ell^{\alpha - 1}e^{-\beta\ell}$$
+for $\beta = \theta + 1$ and $\alpha = n+1$. This gives that $\lambda|X\sim\text{Gamma}(n+1, \theta + 1)$
+\end{enumerate}
+
+
+\item[Problem 2.4.7] We first find the joint distribution of the pair $(X,Y)$. Let $Z = X + Y$ and $U = X$. Then this is equivalent to writing $Y = Z-U$ and $X = U$. Then we can express this joint distribution as 
+\begin{align*}
+f_{X,Z}(u, x) = f_{U, Z}(u,z) = f_{(X,Y)}(u, z-u)|\det(J)| \overset{indep.}{=} f_X(u)f_Y(z-u)|\det(J)|
+\end{align*}
+where $J = \begin{bmatrix}\frac{\partial U}{\partial X} & \frac{\partial U}{\partial Y}\\\frac{\partial Z}{\partial X} & \frac{\partial Z}{\partial Y}\end{bmatrix} =\begin{bmatrix}1 & 0\\ 1 & 1\end{bmatrix}$. Hence $|\det(J)| = 1$ and we arrive at $$f_{X,Z}(u,z) = \alpha e^{-\alpha x}\alpha e^{-\alpha(z-x)} = \alpha^2e^{-\alpha z}$$
+Now, notice that $Z = X+Y$ is a sum of iid exponential distributions so $Z \sim\text{Gamma}(2,\alpha)$. Using this fact, we can write the conditional distribution as follows. 
+
+$$f_{X|Z}(x|z) = \frac{f_{X,Z}(x,z)}{f_Z(z)} = \frac{\alpha^2e^{-\alpha z}}{\alpha^2/\Gamma(2)z^{2 - 1}e^{-\alpha z}} = \frac{1}{z}$$
+Hence, $X|Z=z\sim\text{Unif}(0,z)$. 
+
+
+\item[Problem 2.5.1] Suppose that $\{X_n, n\geq 1\}$ is a martingale. By the law of total probability we have 
+\begin{align*}
+\E[X_{n+2}|X_0, \ldots, X_n] &= \E[\E\{X_{n+2}|X_0, \ldots, X_n, X_{n+1}\}|X_0, \ldots, X_n]\\
+&= \E[X_{n+1}|X_0, \ldots, X_{n}]\\
+&= X_{n}
+\end{align*}
+
+\item[Problem 2.5.3] Let $S_n = \e_1 + \e_2+\ldots + \e_n$ be the sum of $n$ independent random variables. Where $\e_i\overset{iid}{\sim}\text{Exp}(1)$. Let $X_n = 2^n\exp(-S_n)$. We note, we can write this value as $X_n = \prod_{i=1}^{n}2\exp(-\e_i)$. To see why $X_n$ is a martingale, we first note that since $\e_i\sim\text{Exp}(1)$ that $S_n>0$. Thefore, $-S_n<0$ and $\exp(-S_n)<1$. Hence we see that $$\E|X_n| = \E(X_n) = \E[2^n\exp(-S_n)]\leq \E[2^n] = 2^n<\infty$$
+
+Hence $\E|X_n|<\infty$ for all $n$. To prove the second property, we use the independence of $\e_i$ as follows
+\begin{align*}
+\E[X_{n+1}|X_0, \ldots, X_n] &= \E[2^{n+1}\exp(-S_{n+1})|X_0, \ldots, X_n]\\
+&= \E[2^n\exp(-S_n)2\exp(-\e_{n+1})|X_0, \ldots, X_n]\\
+&= X_n\E[2\exp(-\e_{n+1})|X_0, \ldots, X_n]\\
+&= X_n\E[2\exp(-\e_{n+1})]\\
+&= X_n
+\end{align*}
+
+
+
+
+
+\end{description}	
+\end{document} 
+
+

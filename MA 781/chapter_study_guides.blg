@@ -1,0 +1,9 @@
+[0] Config.pm:354> INFO - This is Biber 2.7
+[0] Config.pm:357> INFO - Logfile is 'chapter_study_guides.blg'
+[56] biber-darwin:303> INFO - === Sat Dec 16, 2017, 12:26:29
+[90] Biber.pm:359> INFO - Reading 'chapter_study_guides.bcf'
+[201] Biber.pm:835> INFO - Found 0 citekeys in bib section 0
+[212] Utils.pm:164> WARN - The file 'chapter_study_guides.bcf' does not contain any citations!
+[220] bbl.pm:608> INFO - Writing 'chapter_study_guides.bbl' with encoding 'UTF-8'
+[220] bbl.pm:712> INFO - Output to chapter_study_guides.bbl
+[220] Biber.pm:109> INFO - WARNINGS: 1
