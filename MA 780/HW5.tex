@@ -1,0 +1,127 @@
+
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 780: HW5, \today}
+\rhead{Benjamin Draves}
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\nsum}{{\sum_{i=1}^n}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\text{Var}}}
+\newcommand{\prob}{{\mathbb{P}}}
+\newcommand{\ind}{{\mathbf{1}}}
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+\begin{enumerate}
+\item 
+\begin{enumerate}
+\item Using the fact that $h:\R\to[0,1]$ we have 
+\begin{align*}
+|f_h| &= \Big|e^{x^2/2}\int_{-\infty}^x \left(h(y)-\E(h(N))\right)e^{-y^2/2}dy\Big|\\
+&\leq e^{x^2/2}\int_{-\infty}^x \Big|h(y)-\E(h(N))\Big|e^{-y^2/2}dy\\
+&\leq e^{x^2/2}\int_{-\infty}^x 1\cdot e^{-y^2/2}dy\\
+&\leq e^{x^2/2}\int_{-\infty}^x e^{-y^2/2}dy\\
+\end{align*}
+In a similar fashion we also have
+\begin{align*}
+|f_h| &= \Big|e^{x^2/2}\int_{-\infty}^x \left(h(y)-\E(h(N))\right)e^{-y^2/2}dy\Big|\\
+&= \Big|e^{x^2/2}\int_{-\infty}^{\infty} \left(h(y)-\E(h(N))\right)e^{-y^2/2}dy - e^{x^2/2}\int_{x}^{\infty} \left(h(y)-\E(h(N))\right)e^{-y^2/2}dy\Big|\\
+&\leq \Big|e^{x^2/2}\int_{-\infty}^{\infty} \left(h(y)-\E(h(N))\right)e^{-y^2/2}dy\Big| + \Big|e^{x^2/2}\int_{x}^{\infty} \left(h(y)-\E(h(N))\right)e^{-y^2/2}dy\Big|\\
+&\leq \Big|e^{x^2/2}\left(\int_{-\infty}^{\infty}h(y)e^{-y^2/2}dy-\E(h(N))\int_{-\infty}^{\infty}e^{-y^2/2}dy\right)\Big| \\&+ \Big|e^{x^2/2}\int_{x}^{\infty} \left(h(y)-\E(h(N))\right)e^{-y^2/2}dy\Big|\\
+&\leq \Big|e^{x^2/2}\left(\sqrt{2\pi}\E(h(N))-\sqrt{2\pi}\E(h(N))\right)\Big| + e^{x^2/2}\int_{x}^{\infty} \Big|h(y)-\E(h(N))\Big|e^{-y^2/2}dy\\
+&\leq e^{x^2/2}\int_{x}^{\infty} e^{-y^2/2}dy\\
+\end{align*}
+Therefore we see that $$|f_h|\leq e^{x^2/2}\min\left\{\int_{-\infty}^xe^{-y^2/2}dy,\int_x^{-\infty}e^{-y^2/2}dy,\right\}$$
+\item asdf
+\item ???
+\item By Stein's equation we know that $f_h'(x) = xf_h(x) + h(x)-\E[h(N)]$
+\end{enumerate}	
+\item 
+\begin{enumerate}
+\item 
+\begin{align*}
+f_z(x) &= e^{x^2/2}\int_{-\infty}^x\left(\ind_{(-\infty, z]}(y)-\E[\ind_{(-\infty, z]}(N)]\right)e^{-y^2/2}dy\\
+&= e^{x^2/2}\left(\frac{\sqrt{2\pi}}{\sqrt{2\pi}}\int_{-\infty}^x\ind_{(-\infty, z]}(y)e^{-y^2/2}dy - \prob(N\leq z)\frac{\sqrt{2\pi}}{\sqrt{2\pi}}\int_{-\infty}^{x}e^{-y^2/2}dy\right)\\
+&= e^{x^2/2}\left(\frac{\sqrt{2\pi}}{\sqrt{2\pi}}\int_{-\infty}^x\ind_{(-\infty, z]}(y)e^{-y^2/2}dy - \Phi(z)\sqrt{2\pi}\Phi(x)\right)
+\end{align*}
+Now, the first integral depends on $x\leq z$ or $x\geq z$. That is the integral's top limit will be given by $\min\{x,z\}$. Hence we can write $f_z$ in general as 
+\[f_z(x) = 
+\begin{cases}
+\sqrt{2\pi}e^{x^2/2}\Phi(x)(1-\Phi(z)) & z\geq x\\
+\sqrt{2\pi}e^{x^2/2}\Phi(z)(1-\Phi(x)) & z\leq x 
+\end{cases}\]
+\item Recall the useful fact that $\Phi(-z) = 1-\Phi(z)$ due to the symmetry of $\Phi(\cdot)$. With this fact we have 
+\[f_{-z}(-x) = 
+\begin{cases}
+\sqrt{2\pi}e^{x^2/2}\Phi(-x)(1-\Phi(-z)) & -z\geq -x\\
+\sqrt{2\pi}e^{x^2/2}\Phi(-z)(1-\Phi(-x)) & -z\leq -x 
+\end{cases}\]
+\[=
+\begin{cases}
+\sqrt{2\pi}e^{x^2/2}(1-\Phi(x))(\Phi(z)) & z\leq x\\
+\sqrt{2\pi}e^{x^2/2}(1-\Phi(z))(\Phi(x)) & z\geq x 
+\end{cases} = f_z(x)\] 
+Here we may assume without loss of generality that $z\geq 0$. 
+\item Now, we take the derivative of $xf_z(x)$ in an attempt to show the function is increasing in $x$. Let $\varphi$ be the density of a standard normal random variable. First we calculate the derivative of $f_h$. 
+
+\begin{align*}
+f_h'(x) &= \begin{cases}
+\sqrt{2\pi}xe^{x^2/2}(1-\Phi(x))(\Phi(z)) -\sqrt{2\pi}e^{x^2/2}\varphi(x)\Phi(z) & z\leq x \\ 
+\sqrt{2\pi}xe^{x^2/2}(1-\Phi(z))(\Phi(x)) +\sqrt{2\pi}e^{x^2/2}(1-\Phi(z))\varphi(x) & z\geq x \\
+\end{cases}\\
+&= \begin{cases}
+\sqrt{2\pi}e^{x^2/2}\Phi(z)\left[x(1-\Phi(x)) -\varphi(x)\right]& z\leq x \\ 
+\sqrt{2\pi}e^{x^2/2}(1-\Phi(z))\left[x\Phi(x) + \varphi(x)\right] & z\geq x \\
+\end{cases}
+&= \begin{cases}
+xf(x)& z\leq x \\ 
+& z\geq x \\
+\end{cases}
+\end{align*}
+Therefore, in general 
+\begin{align*}
+\frac{d}{dx}[xf_h(x)] = f_h(x) + xf'_h(x)
+\end{align*}
+
+\end{enumerate}	
+
+\end{enumerate}	
+\end{document} 
+
+

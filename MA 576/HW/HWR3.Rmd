@@ -1,8 +1,8 @@
 ---
 title: "MA 576 HW 3"
 author: "Benjamin Draves"
-#output: pdf_document
-output: html_document
+output: pdf_document
+#output: html_document
 fontsize: 11pt
 geometry: margin=1in
 ---
@@ -68,6 +68,9 @@ grid.arrange(p5,p6, nrow = 2)
 
 
 ```
+Above are six plots. The first four plots are marginal bubble plots of the proportion of deaths against year and age and the logistic proportion of deaths against year age. The size of each bubble corresponds to the number of registered pilots in that year or age group. We notice in general, there is a slight increase in the proportion of aviation deaths over time, but this trend could be attributable to noise. The proportion of deaths against age, however, exhibits a clear positive correlation between age and proportion of deaths. That is there are more aviation deaths for older pilots compared to their younger counterparts. In general, the logistic mappings provide the same insights as the untransformed data. 
+
+The last two plots attempt to visualize this trend simultaneously. The age groups are colored as the $x$ axis is time is plotted against the response variable. There appears to be little variance explained by year but the age groups are almost always ordered by age on the y-axis. 
 
 #### b 
 
@@ -78,6 +81,14 @@ m1 = glm(prop.deaths ~ Age + as.factor(Year), data = planes,
          family = binomial, weights = Numbers)
 summary(m1)
 ```
+Here we construct a binomial glm with predictors Age and Year which are considered categorical variables. As a result, there are 12 covariates. We choose to interpret a single age variable, a single year variable, as well as the intercept in this model. 
+
+The intercept for this model is given by $\hat{\beta}_0 =-8.05724$. This value can be interpreted as follows; the odds a pilot in the age range 20 - 29 in the year 1992 with die in an aviation accident is $e^{-8.05724} = 0.0003168$. Identically a pilot in the age range 20 - 29 in the year 1992 with die in an aviation accident with probability 0.0003166996.
+
+The coefficient for the $60-69$ age group is given by $\hat{\beta}_{60-69} =1.22258$. This value can be interpreted as follows; the odds a pilot in the age range 60-69 in 1992 dies in an aviation accident is $e^{1.22258} = 3.395938$ greater than a pilot in the age range $20-29$. This corresponds to a probability of death given by $$p_{death = }\frac{\exp{-8.05724 + 1.22258}}{1 + \exp{-8.05724 + 1.22258}} = 0.001074677$$
+
+The coefficient for the year $1998$ is given by $\hat{\beta}_{1998} =0.53002$. This value can be interpreted as follows; the odds a pilot in the age range 20-29 in 1998 dies in an aviation accident is $e^{0.53002} = 1.698966$ greater than a pilot in the age range $20-29$ in 1992. This corresponds to a probability of death given by $$p_{death = }\frac{\exp{-8.05724 + 0.53002}}{1 + \exp{-8.05724 + 0.53002}} = 0.0005379429$$
+The only significant variables in this model are the intercept and age groups $50-59$ and $60-69$.
 
 #### (c)
 
@@ -86,9 +97,13 @@ m2 = glm(prop.deaths ~ Age, data = planes,
          family = binomial, weights = Numbers)
 summary(m2)
 ```
+
+By removing the year covariant, we see slight changes to the parameter estimates. In most every case, save the intercept we see a slight increase in coefficients suggesting that there is variance in aviation deaths that is explained by both age and year. 
+
 ```{r}
 anova(m0, m2, m1, test='Chisq')
 ```
+After constructing an analysis of deviance table, we see that the model with age explains a significant amount of variances in the response while the addition of year proved insignificant. We do note however, that in some of our models, there could be slight overdispersion which affect these test statistics.
 
 #### (d)
 ```{r}
@@ -96,6 +111,14 @@ m3 = glm(prop.deaths ~as.numeric(Age), data = planes,
          family = binomial, weights = Numbers)
 summary(m3)
 ```
+The intercept estimate in this model $\hat{\beta}_0 =-8.53229$ can be interpreted as the odds that a ``zero year old pilot" dies in a plane accident is given by $e^{-8.53229}$. That is, $\hat{\beta}_0$ has little practical meaning in this context.
+
+Now notice that in this context we model $$\log\frac{p_{death}}{1 -p_{death}} = \beta_0 + \beta_1Age$$
+Rewriting in terms of odds we have $$Odds = e^{\beta_0}(e^{\beta_1})^x$$ Therefore, we can interpret $\hat{\beta}_1 = 0.34807$ as follows; the odds a pilot dies in an aviation accident is $e^{0.34807} =1.416331$ times more likely each year.  This interpretation is different from that in $(c)$ as it is recursive and not with respect to some reference group.  
+
+The pros of this model is that it is more parsimonious in the sense that less covariates are used. This allows for inference to occur through a single parameter instead of several parameters as before. One possible drawback to this framework is that the interpretation of the parameters are in terms of previous odds and not to a specific reference group. By treating age as a factor, we are able to reference a single group's odds instead of recursively as we do in this model.
+
+
 #### (e)
 ```{r}
 dev.res = resid(m3,type='pearson')
@@ -122,6 +145,8 @@ p8 = ggplot(res, aes(x = Year, y = Residual.Value, shape = Type)) +
 
 grid.arrange(p7,p8, nrow = 2)
 ```
+
+Above are two plots of the Pearson and Deviance residuals against year and age. In the age only model, we estimate the residual deviance as $47.614$ on $39$ degrees of freedom. Normally we anticipate that each residual is less than 1 but this estimate suggests that these values could be larger for this model. We see this behavior in both deviance and Pearson residuals (we expect this behavior as show in problem 1). In general, while we may have some overdispersion issues, this model seems quite appropriate. 
 
 
 

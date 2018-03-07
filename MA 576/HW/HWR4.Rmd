@@ -1,0 +1,206 @@
+---
+title: "MA 576 HW 4"
+author: "Benjamin Draves"
+#output: pdf_document
+output: html_document
+fontsize: 11pt
+geometry: margin=1in
+---
+```{r}
+#load necessary packages 
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(gridExtra)
+```
+
+### Exercise 3 
+
+#### (a)
+
+```{r}
+#read in and format data
+discover = read.table("~/Desktop/Courses/MA 576/data/discoveries.dat")
+discover$Year = 1860:1959
+colnames(discover)[1] = "Discoveries"
+discover = data.frame(discover)
+
+#Make plot
+plot(discover$Year, discover$Discoveries, 
+     xlab = "Year", ylab = "Discoveries", 
+     main = "Discoveries by Year", col = "blue")
+```
+
+The rate appears to be variable through time. Specifically around 1880 - 1900, there are several years with more than 5 discoveries per year. This rate generally decreases as a function of a time. That is, past 1940, there are no years with more than 5 major discoveries. In generally, it appears the discovery rate increases until about 1900 when it starts to decrease. We can model this rate using a Poisson GLM. 
+
+#### (b)
+
+```{r}
+model = glm(Discoveries ~ poly(Year, 5), data = discover, family = poisson)
+summary(model)
+```
+
+While using the poly function, we can compare orthogonal polynomial values of Year. In this way, we can ensure that there is no inflated variance due to colinearity. This model shows that any polynomial degree past 2 describes an insignificant amount of the variability in the discovery rate. For this reason, we will only consider the linear and quadratic models.
+```{r}
+model0 = glm(Discoveries ~1, data = discover, family = poisson)
+model1 = glm(Discoveries ~ poly(Year, 1, raw = TRUE), data = discover, family = poisson)
+model2 = glm(Discoveries ~ poly(Year, 2, raw = TRUE), data = discover, family = poisson)
+model3 = glm(Discoveries ~ poly(Year, 3, raw = TRUE), data = discover, family = poisson)
+anova(model0, model1, model2, model3, test = "Chisq")
+```
+Here we see that indeed the addition of a quadratic year term results in a significant reduction in the deviance. While the linear term does the same, this test statistic is not nearly as strong as that of the quadratic term. For this reason we consider the quadratic only model and will compare model fit criterion to choose the most parsimonious model. 
+
+```{r}
+model3 = glm(Discoveries ~ I(Year^2), data = discover, family = poisson)
+summary(model3)
+```
+Here we see that the single term model, with $Year^2$ as the only covariate, still suggests that this term explains a sizable portion of the deviance in the discovery rate. This model, however, does not explain the data as well as that of the model including the linear term. One can see this by the increase in AIC values from 407.85 to 430.15. Hence, we choose the two term model including Year and $Year^2$ for our working model. 
+
+The estimated coefficient values are given by $\mathbf{\beta} = (-1482, 1.561,-0.0004106)$. We can interpret these values as follows. In year $0$, we expect to see $exp(-1482) \approx 0$ discoveries. We can interpret the covariate values as follows. As $$Discoveries = e^{\beta_0}e^{\beta_1Year + \beta_2 Year^2}$$ we see that for every additional year, we expect to see the baseline number of discoveries to be modulated by the value of $e^{\hat{\beta}_1Year + \hat{\beta}_2 Year^2}$. Seeing that $\beta_1$ is positive, we expect as number of years increases, then we expect the discovery rate to increase by a factor of $4.763582$. But with this growth, we also expect each additional year^2 we expect the discovery rate to decrease by a factor of $0.9995895$ (due to the quadratic term). Jointly, the effect of year on discovery rate is a concave function in Year. We expect to see a peak number of discoveries at around the year 1900. Moreover, with any additional year before (or after) 1900, we expect a reduction in the number of discoveries. This trend is evident in the following plot.
+
+```{r}
+plot(discover$Year, discover$Discoveries, 
+      xlab = "Year", ylab = "Discoveries", 
+      main = "Discoveries by Year", col = "blue")
+points(1860:1959, model2$fitted.values, type = "l")
+```
+
+#### (c)
+
+```{r}
+dev.res = resid(model2,type='pearson')
+pear.res = resid(model2,type='deviance')
+
+par(mfrow = c(1,2))
+plot(discover$Year, dev.res,xlab = "Year", ylab = "Residual")
+plot(discover$Year, pear.res,xlab = "Year", ylab = "Residual")
+
+```
+
+The residuals appear to have clear banding issues. That is there is a clear quadratic patter in both the Pearson and deviance residuals. This suggests that we could be missing some quadratic variance in the model due to another outstanding covariate. Moreover, we see that several values lay outside the range of plus or minus 2 in the Pearson residuals. As we expect that the majority of these residuals should asymptotically lay within $\pm 2$ we could have a few outliers/leverage points. Lastly, we see that out residual deviance is 132.84 on 97 degrees of freedom suggesting some over dispersion in this model.
+
+### 4
+
+#### (a)
+
+```{r}
+#read in data
+frogs = discover = read.table("~/Desktop/Courses/MA 576/data/stretch.dat", 
+                              header = TRUE)
+# format data
+nfrogs = group_by(frogs, Trial, StretchMagnitude)
+impulses = data.frame(summarize(nfrogs, nimpulses = n()))
+
+#visualize data 
+ggplot(impulses, aes(x = as.factor(StretchMagnitude), y = nimpulses)) + 
+  geom_boxplot() + 
+  labs(x = "Stretch Magnitude", y = "Impluses")
+```
+
+```{r}
+#not sure what plot he's looking for here... 
+```
+
+#### (b)
+```{r}
+model = glm(nimpulses ~ StretchMagnitude, data = impulses, family = poisson)
+summary(model)
+```
+I argue that this value should be considered a continuous value. A muscle can be stretched in a number of ways that does not naturally lay on a discrete scale. That is, these values,(5,10,15), all represent an underlying continuous scale of muscle stretching. Therefore we should model is as a continuous quantity. 
+
+The model coefficients are given by $\hat{\beta} = (1.50228,0.08149)$. These values can be interpreted as follows. For a muscle under no tension ($StretchMagnitude =  0$), we expect to observe $e^{1.50228} = 4.491919$ electrical impulses in a minute. In addition with each unit increase in Stretch Magnitude, we expect that the number of observed electrical impulses per minute to increase by a factor of $e^{0.08149} = 1.084902$ compared to the baseline rate. Moreover, we see that the StretchMagnitude is quite significant and explains a significant portion of deviance in this model. Moreover, we see that the residual deviance is $67.589$ on 58 degrees of freedom. We will test to see if this significant evidence to for over dispersion. 
+
+```{r}
+#Chisquare test for sigma^2
+sigma2 <- sum(residuals(model,type="pearson")^2)/(model$df.resid)
+1-pchisq(sigma2*model$df.residual,model$df.residual)
+
+#check our residuals
+qqnorm(residuals(model,type="deviance"))
+anova(model,test="Chisq")
+
+dev.res = resid(model,type='pearson')
+pear.res = resid(model,type='deviance')
+
+par(mfrow = c(1,2))
+plot(dev.res,xlab = "Trial", ylab = "Residual")
+plot(pear.res,xlab = "Trial", ylab = "Residual")
+```
+As our chi-square test shows, we do not have evidence for over dispersion in this model. Moreover, the residuals in this model appear quite normal. Lastly, they appear to have constant variance and lay within the $\pm 2$ threshold as we expect asymptotically. While there may be a few issues with outliers, this model fits quite well. 
+
+#### (c)
+```{r}
+#get counts by ms using hist function
+df = matrix(NA, ncol = 4)
+for(i in 1:60){
+
+    #use hist to get counts per bin
+  tmp = frogs[frogs$Trial==i,]
+  x = hist(tmp$SpikeTimes, breaks = seq(0,1,.001), plot = FALSE)$counts
+  dfi = cbind(rep(i, 1000), rep(frogs[frogs$Trial == i,2][1], 1000),seq(0,1,.001)[-1],x)
+  dim(dfi)
+  
+  #put in the df
+  df = rbind(df,dfi)
+}
+
+#clean up df 
+df = df[-1,]
+colnames(df) = c("Trial", "StretchMagnitude","msBin","Count")
+df = data.frame(df)
+```
+
+
+```{r}
+model = glm(Count ~ StretchMagnitude + msBin, data = df, family = poisson)
+summary(model)
+```
+There is evidence to suggest that time plays a roll 
+```{r}
+#Chisquare test for sigma^2
+sigma2 <- sum(residuals(model,type="pearson")^2)/(model$df.resid)
+1-pchisq(sigma2*model$df.residual,model$df.residual)
+
+#check our residuals
+qqnorm(residuals(model,type="deviance"))
+anova(model,test="Chisq")
+
+dev.res = resid(model,type='pearson')
+pear.res = resid(model,type='deviance')
+
+par(mfrow = c(1,2))
+plot(dev.res,xlab = "MilliSecond", ylab = "Residual")
+plot(pear.res,xlab = "MilliSecond", ylab = "Residual")
+```
+
+
+
+#### (d)
+
+
+```{r}
+n = 4
+df2 = df[,-1]
+df2 = cbind(df2, matrix(NA, nrow = 60000, ncol = n))
+models = list()
+take.aways = 60000:(60000-10)
+
+for(i in 1:n){
+  
+  lag = c(rep(0,i), df$Count[-take.aways[1:i]])
+  #take care of boundaries
+  for(j in 1:i){
+    lag[seq(j,60000, 1000)] = 0 # start of every trial  
+  }
+
+  df2[,(3 + i)] = lag
+  model = glm(Count ~., data = df2[,1:(3+i)], family = poisson)
+  models[[i]] = model
+}
+
+model0 = glm(Count ~ StretchMagnitude + msBin, data = df, family = poisson)
+anova(model0, models[[1]],models[[2]],models[[3]],models[[4]],test = "Chisq")
+
+```
+
+

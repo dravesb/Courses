@@ -77,9 +77,10 @@
 
 \begin{enumerate}[(i)]
 \item First note that $\E_1[T_{**}] = 1-\E_1[T_{*}]$. Note this is just the power of $T_*$ when $H_1$ is true which we defined to be $\beta$. Hence  $\E_1[T_{**}] = 1-\E_1[T_{*}] = 1-\beta$. Hence $T_{**}$ is of size $1-\beta$.
-\item Let $\tilde{T}_{**}$ be a test with $\E_1[\tilde{T}_{**}]\leq 1 - \beta$. Then there exists a test $\tilde{T}_{*}$ of $H_0$ vs $H_1$ with $\tilde{\alpha} = \E_0[\tilde{T}_{*}]\geq \alpha$ such that we can write $\tilde{T}_{**} = 1- \tilde{T}_{*}$.  Using this we see that $$\E_0[T_{**}] = 1 - \E_0[T_*] = 1 - \alpha \geq 1 - \tilde{\alpha} = 1 - \E_0[\tilde{T}_{*}] = \E_0[\tilde{T}_{**}]$$ 
+\item Let $\tilde{T}_{**}$ be a test with $\E_1[\tilde{T}_{**}]\leq 1 - \beta$. Recall that $T_{*}$ is UMP of level $\alpha$ for $H_0$ vs $H_1$. By the contrapositive, we have that for any test $\delta$ with $\E_1[\delta]>\E_1[T_*]$ implies $\E_0[\delta]>\E_0[T_*]$. But notice that we have $\E_1[1-\tilde{T}_{**}]\geq \beta = \E_1[T_*]$ so by the contrapositive $\E_0[1-\tilde{T}_{**}]\geq \alpha$. Upon rearranging, we have that $\E_0[\tilde{T}_{**}]\leq 1 - \alpha = 1-\E_0[T_*] = \E_0[1-T_*]$. 
 \end{enumerate}
-Hence $T_{**}$, being of the form in the Neyman-Pearson Lemma, is UMP for $H_1$ vs $H_0$. 
+Therefore, $1-T_{*}$ is UMP for $H_1$ vs $H_0$ with level $1-\beta$. 
+
 \item (6.7) Suppose that $\phi_*\in\mathcal{T}_0$ is given by equation $(6.9)$. We derive a useful result for later in the proof. 
 \begin{align*}
 \int(\phi_* - \phi)\sum_{i=1}^mc_if_id\nu&= \int\sum_{i=1}^{m}c_if_i\phi_*d\nu - \int\sum_{i=1}^{m}c_if_i\phi d\nu\\
