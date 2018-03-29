@@ -1,0 +1,217 @@
+
+%%%%% Beginning of preamble %%%%%
+
+\documentclass[12pt]{article}  %What kind of document (article) and what size
+\usepackage[document]{ragged2e}
+
+%Packages to load which give you useful commands
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm}
+\usepackage{fancyhdr}
+\usepackage[linguistics]{forest}
+\usepackage{enumerate}
+\usepackage[margin=1in]{geometry} 
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MA 780: HW6, \today}
+\rhead{Benjamin Draves}
+
+\renewcommand{\headrulewidth}{.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\topmargin = -0.4 in
+%\headheight = 0.0 in t
+%\headsep = .3 in
+\parskip = 0.2in
+%\parindent = 0.0in
+
+%%%%%%%%%%new commands%%%%%%%%%%%%
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\Z}{{\mathbb{Z}}}
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\Q}{{\mathbb{Q}}}
+\newcommand{\e}{{\epsilon}}
+\newcommand{\del}{{\delta}}
+\newcommand{\m}{{\mid}}
+\newcommand{\nsum}{{\sum_{i=1}^n}}
+\newcommand{\la}{{\langle}}
+\newcommand{\ra}{{\rangle}}
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\text{Var}}}
+\newcommand{\prob}{{\mathbb{P}}}
+\newcommand{\ind}{{\mathbf{1}}}
+%defines a few theorem-type environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+%%%%% End of preamble %%%%%
+
+\begin{document}
+\begin{enumerate}
+
+\item 
+\begin{enumerate}
+	\item Let $f:\N\to\N$ be a bounded function. Then we have 
+	\begin{align*}
+	\E(Zf(Z)) &= \sum_{n=0}^{\infty}nf(n)\frac{e^{-\lambda}\lambda^n}{n!}\\
+	&= \sum_{n=1}^{\infty}nf(n)\frac{e^{-\lambda}\lambda^n}{n!}\\
+	&= \sum_{k=0}^{\infty}(k+1)f(k+1)\frac{e^{-\lambda}\lambda^{k+1}}{(k+1)!}\\
+	&= \sum_{k=0}^{\infty}f(k+1)\frac{e^{-\lambda}\lambda^{k+1}}{k!}\\
+	&= \lambda\sum_{k=0}^{\infty}f(k+1)\frac{e^{-\lambda}\lambda^{k}}{k!}\\
+	&= \lambda\E(f(Z+1))\\
+	\end{align*}
+\item Let $A\subset \N$ and define the function $f_A:\N\to\N$ by the recursive formula $$\lambda f_A(k+1) -kf_A(k) = \ind_A(k) - \prob(Z\in A)$$ and define $f_A(0) = 0$. We show the first form by induction. Consider the following for $f_A(1)$. 
+\begin{align*}
+\lambda f_A(1) -kf_A(0) = \ind_A(0) -\prob(Z\in A)\\
+f_A(1) &= \frac{1}{\lambda}\left(\ind_A(0) -\prob(Z\in A)\right)\\
+&= \frac{0!}{\lambda}\sum_{n=0}^0\left(\ind_A(n)-\prob(Z\in A)\right)\frac{\lambda^n}{n!} 
+\end{align*}
+Now assume the formula holds for $f_A(k)$, $k\geq 1$. Then we see 
+\begin{align*}
+\lambda f_A(k+1) -kf_A(k) &= \ind_A(k) -\prob(Z\in A)\\
+f_A(k+1) &= \frac{1}{\lambda}\left(kf_A(k) + \ind_A(0) -\prob(Z\in A)\right)\\
+&= \frac{1}{\lambda}\left(k\frac{(k-1)!}{\lambda^k}\sum_{n=0}^{k-1}\left(\ind_A(n)-\prob(Z\in A)\right)\frac{\lambda^n}{n!}  + \ind_A(0) -\prob(Z\in A)\right)\\
+&= \frac{k!}{\lambda^{k+1}}\sum_{n=0}^{k-1}\left(\ind_A(n)-\prob(Z\in A)\right)\frac{\lambda^n}{n!}  + \frac{1}{\lambda}[\ind_A(0) -\prob(Z\in A)]\\
+&= \frac{k!}{\lambda^{k+1}}\sum_{n=0}^{k}\left(\ind_A(n)-\prob(Z\in A)\right)\frac{\lambda^n}{n!}\\
+\end{align*}
+Hence we see this expression is valid. Now using this expression, with the fact that $Z\sim\text{Pois}(\lambda)$ we can write the following 
+\begin{align*}
+f_A(k+1) &= \frac{k!}{\lambda^{k+1}}\sum_{n=0}^{k}\left(\ind_A(n)-\prob(Z\in A)\right)\frac{\lambda^n}{n!}\\
+&= \frac{e^{-\lambda}}{\lambda\prob(Z = k)}\left(\sum_{n=0}^{k}\ind_A(n)\frac{\prob(Z = n)}{e^{-\lambda}}-\sum_{n=0}^{k}\prob(Z\in A)\frac{\prob(Z = n)}{e^{-\lambda}}\right)\\
+&= \sum_{n=0}^{k}\ind_A(n)\frac{\prob(Z = n)}{\lambda\prob(Z = k)}-\frac{\prob(Z \in A)}{\lambda\prob(Z=k)}\sum_{n=0}^{k}\prob(Z = n)\\
+&= \sum_{n=0}^{k}\ind_A(n)\frac{\prob(Z = n)}{\lambda\prob(Z = k)}-\frac{\prob(Z \in A)\prob(Z \leq k )}{\lambda\prob(Z=k)}\\
+\end{align*}
+
+Now notice that the first sum is zero when $n\not\in A$ hence we can rewrite this probability as follows
+$$\sum_{n=0}^{k}\ind_A(n)\frac{\prob(Z = n)}{\lambda\prob(Z = k)}=\frac{\prob(Z \leq k\cap Z \in A)}{\lambda\prob(Z = k)}$$ Hence we see that 
+\begin{align}
+f_A(k+1) = \frac{\prob(Z \leq k \cap Z \in A)-\prob(Z \in A)\prob(Z \leq k )}{\lambda\prob(Z = k)}
+\end{align}
+
+Using the first expression we see that 
+\begin{align*}
+|f_A(k+1)| &= \left|\frac{k!}{\lambda^{k+1}}\sum_{n=0}^{k}\left(\ind_A(n)-\prob(Z\in A)\right)\frac{\lambda^n}{n!}\right|\\
+&= \frac{k!}{\lambda^{k+1}}\sum_{n=0}^{k}\left|\ind_A(n)-\prob(Z\in A)\right|\frac{\lambda^n}{n!}\\
+&\leq \frac{k!}{\lambda^{k+1}}\sum_{n=0}^{k}\frac{\lambda^n}{n!}\\
+&\leq \frac{1}{\lambda}\\
+\end{align*}
+Therefore, $f_A$ is bounded. 
+
+Now, consider the following 
+\begin{align*}
+&f_A(k+1)+f_{A^c}(k+1)\\ &= \frac{\prob(Z \leq k \cap Z \in A)-\prob(Z \in A)\prob(Z \leq k )}{\lambda\prob(Z = k)} + \frac{\prob(Z \leq k \cap Z \in A^c)-\prob(Z \in A^c)\prob(Z \leq k )}{\lambda\prob(Z = k)}\\
+&= \frac{\prob(Z \leq k \cap Z \in A)+ \prob(Z \leq k \cap Z \in A^c)-\prob(Z \leq k )[\prob(Z \in A) +\prob(Z \in A^c)]}{\lambda\prob(Z = k)}\\
+&= \frac{\prob(Z\leq k) - \prob(Z\leq k)}{\lambda\prob(Z = k)}\\
+&= 0
+\end{align*}
+Hence we see that $f_A(k+1)+f_{A^c}(k+1) = 0$ for $k = 0, 1, 2,\ldots$. Specifically, we know that $f_A(k)+f_{A^c}(k) = 0$. Combining these facts, we see that $f_A(k+1)+f_{A^c}(k+1) = f_A(k)+f_{A^c}(k)$ which upon rearranging gives $$f_A(k+1)-f_{A^c} = f_A(k)-f_{A^c}(k+1)(k)$$
+
+\item Assume that $W$ has a Poisson distribution. Then by part 1, we see $\E(Wf(W)) = \lambda\E(f(W+1))$ which upon rearranging gives $$\E\left[\lambda f(W+1)-Wf(W)\right] = 0$$ Now suppose that this equation holds. As it holds for \textit{any} bounded function, it certainly holds for our $f_A$. Hence we see that 
+\begin{align*}
+	\E\left[\lambda f(W+1)-Wf(W)\right] &= 0\\
+	\E\left[\lambda f_A(W+1)-Wf_A(W)\right] &= 0\\
+	\E\left[\ind_{A}(W) - \prob(Z\in A)\right] &= 0\\
+	\prob(W\in A) &= \prob(Z\in A)
+\end{align*}
+Now as $A\subset\N$ was arbitrary, we can take it to be $A = \{0,1,2,\ldots, n\}$ and see that $\prob(W\leq n) = \prob(Z\leq n)$. That is $W$ has the same distribution function as $Z$ which a Poisson random variable and therefore $W\overset{D}{=}Z$ and we see that $W$ has the Poisson distribution.
+
+\item Suppose that $j = k$. First notice that we can write $f_j(k+1)$ as follows
+\begin{align*}
+f_{j}(k+1) &= f_k(k+1)\\
+&= \frac{\prob(Z\leq k\cap Z = k)-\prob(Z=k)\prob(Z\leq k)}{\lambda\prob(Z=k)} \\
+&= \frac{\prob(Z = k)\left[1-\prob(Z\leq k)\right]}{\lambda\prob(Z=k)}\\
+&= \frac{\prob(Z>k)}{\lambda}
+\end{align*}
+Moreover we see 
+\begin{align*}
+f_{j}(k) &= f_k(k)\\
+&= \frac{\prob(Z\leq k-1\cap Z = k)-\prob(Z=k)\prob(Z\leq k-1)}{\lambda\prob(Z=k-1)} \\
+&= -\frac{\prob(Z = k)\prob(Z\leq k-1)}{\lambda\prob(Z=k-1)}\\
+\end{align*}
+Putting these together we see the following 
+\begin{align*}
+f_{j}(k+1)-f_j(k) = f_{k}(k+1)-f_k(k) = \frac{\prob(Z>k)}{\lambda} + \frac{\prob(Z = k)\prob(Z\leq k-1)}{\lambda\prob(Z=k-1)} > 0 
+\end{align*}
+Now, suppose that $j\neq k$ and we will prove the contrapositive. Suppose that $j>k$. Then we see that 
+\begin{align*}
+f_j(k+1) &= -\frac{\prob(Z\leq k)\prob(Z=j)}{\lambda\prob(Z = k)}\\
+f_j(k) &= -\frac{\prob(Z\leq k-1)\prob(Z=j)}{\lambda\prob(Z = k-1)}
+\end{align*}
+Hence we see that 
+$$f_j(k+1)- f_j(k)= -\frac{\prob(Z\leq k)\prob(Z=j)}{\lambda\prob(Z = k)} + \frac{\prob(Z\leq k-1)\prob(Z=j)}{\lambda\prob(Z = k-1)}$$ For the sake of contradiction $f_j(k+1)- f_j(k)>0$. Then we see that  $$\frac{\prob(Z\leq k-1)\prob(Z=j)}{\lambda\prob(Z = k-1)}>\frac{\prob(Z\leq k)\prob(Z=j)}{\lambda\prob(Z = k)} $$ But notice that this implies the following chain of inequalities $$f_j(k+1)<f_j(k)<\ldots < 0$$ But as $f_A:\N\to\N$ we see that this is a contradiction. That is $f_j(k+1)- f_j(k)\leq0$. Now for the case $j<k$ we can write $$f_{j}(k+1) - f_j(k) = f_{A\setminus j}(k) - f_{A\setminus j}(k+1)$$ But if we assume that this quantity is greater than $0$ then we see that $f_{A\setminus j}(k) > f_{A\setminus j}(k+1)$ and hence $f_A$ is a decreasing function which is not possible. Hence we see that $f_{j}(k+1) - f_j(k) \leq 0$ which concludes this portion of the proof. 
+
+With this fact, consider the quantity $|f_A(k+1) - f_A(k)|$. Suppose for the moment that $f_A(k+1) - f_A(k) > 0$. As we just showed we have $$f_A(k+1) - f_A(k)\leq f_k(k+1) - f_k(k) = \frac{\prob(Z>k)}{\lambda} + \frac{\prob(Z\leq k -1)\prob(Z=k)}{\lambda\prob(Z = k-1)}$$
+Now notice that $$\frac{\prob(Z=k)}{\lambda \prob(Z=k-1)} = \frac{(k-1)!}{k!} = \frac{1}{k}$$ Hence we can write the following 
+\begin{align*}
+f_A(k+1) - f_A(k) &\leq \frac{1}{\lambda}\prob(Z> k) + \frac{1}{k}\prob(Z\leq k-1)\\
+&= \frac{1}{\lambda}\sum_{n=k+1}^{\infty}\frac{e^{-\lambda}\lambda^n}{n!} + \frac{1}{k}\sum_{n=0}^{k-1}\frac{e^{-\lambda}\lambda^n}{n!}\\
+&= \frac{e^{-\lambda}}{\lambda}\left(\sum_{n=k+1}^{\infty}\frac{\lambda^n}{n!} + \frac{1}{k}\sum_{n=0}^{k-1}\frac{\lambda^{n+1}}{n!}\right)\\
+&= \frac{e^{-\lambda}}{\lambda}\left(\sum_{n=k+1}^{\infty}\frac{\lambda^n}{n!} + \frac{1}{k}\sum_{m=1}^{k}\frac{\lambda^{m}}{(m-1)!}\right)\\
+&= \frac{e^{-\lambda}}{\lambda}\left(\sum_{n=k+1}^{\infty}\frac{\lambda^n}{n!} + \sum_{m=1}^{k}\frac{\lambda^{m}}{m!}\frac{m}{k}\right)\\
+\end{align*}
+Now notice that $\frac{m}{k}\leq 1$ so we can bound from above to get 
+\begin{align*}
+&\frac{e^{-\lambda}}{\lambda}\left(\sum_{n=k+1}^{\infty}\frac{\lambda^n}{n!} + \sum_{m=1}^{k}\frac{\lambda^{m}}{m!}\frac{m}{k}\right)\\
+&\leq \frac{e^{-\lambda}}{\lambda}\left(\sum_{n=0}^{\infty}\frac{\lambda^n}{n!} - \sum_{n=0}^{0}\frac{\lambda^n}{n!}\right)\\
+&= \frac{e^{-\lambda}}{\lambda}\left(e^{\lambda} - 1\right)\\
+&= \frac{1-e^{-\lambda}}{\lambda}
+\end{align*}
+Now assume that $f_A(k+1)-f_A(k)<0$. Then by our complement identity we see that $f_A(k+1)-f_A(k) = f_{A^c}(k) - f_{A^c}(k+1)<0$ or $f_{A^c}(k+1)-f_{A^c}(k) >0$. Then by part $f_{A^c}(k+1)-f_{A^c}(k)\leq \frac{1-e^{-\lambda}}{\lambda}$. Hence we see that $$|f_A(k+1)-f_A(k)|\leq \frac{1-e^{-\lambda}}{\lambda}$$
+
+Lastly, assume that $j>i$ and consider $|f_A(j)-f_A(i)|$. Using the fact from above we can write the following 
+\begin{align*}
+|f_A(j)-f_A(i)| &= |f_A(j) - f_A(j-1) + f_A(j-1)-f_A(i)|\\
+&\leq |f_A(j) - f_A(j-1)| + |f_A(j-1)-f_A(i)|\\
+&\leq \frac{1-e^{-\lambda}}{\lambda} + |f_A(j-1)-f_A(i)|\\
+\end{align*} 
+Applying this recursively, we see that 
+$$|f_A(j)-f_A(i)|\leq \frac{1-e^{-\lambda}}{\lambda} + |f_A(j-1)-f_A(i)|\leq \ldots $$ 
+
+$$\leq (j-i)\frac{1-e^{-\lambda}}{\lambda} + |f_A(i)-f_A(i)| = (j-i)\frac{1-e^{-\lambda}}{\lambda}$$
+By as symmetric argument we see that $$|f_A(j)-f_A(i)|\leq|j-i|\frac{1-e^{-\lambda}}{\lambda}$$
+
+\item First notice by the Chen-Stein Lemma we have $$|\prob(W\in A)-\prob(Z\in A)| = |\E[\ind_{A}(W)-\prob(Z\in A)]| = |\lambda f_A(W+1)-Wf_A(W)|$$ Hence we see that $$\sup_{A\subset\N}|\prob(W\in A)-\prob(Z\in A)| = \sup_{f_A}|\E(\lambda f_A(W+1)-Wf_A(W))|$$ Now consider the set $\Psi$ of bounded functions that map $\N\to\N$ with the property $|f(j)-f(i)|\leq \frac{1-e^{-\lambda}}{\lambda}|j-i|$. Notice that for all $A\subset\N$ we have $f_A\in\Psi$. Therefore
+$$\sup_{A\subset\N}|\prob(W\in A)-\prob(Z\in A)| = \sup_{f_A}|\lambda f_A(W+1)-Wf_A(W)|\leq \sup_{f\in\Psi}|\lambda f(W+1)-Wf(W)|$$ 
+\end{enumerate}	
+\item 
+\begin{enumerate}
+\item 
+\begin{align*}
+\E(Wf(W)) &= \sum_{k=0}^n\binom{n}{k}p^k(1-p)^{n-k}kf(k)\\
+&= \sum_{k=1}^n\binom{n}{k}p^k(1-p)^{n-k}kf(k)\\
+&= \sum_{k=1}^n\frac{n!}{(n-k)!k!}p^k(1-p)^{n-k}kf(k)\\
+&= np\sum_{k=1}^n\frac{(n-1)!}{(n-k)!(k-1)!}p^{k-1}(1-p)^{n-k}f(k)\\
+&= \lambda\sum_{m=0}^{n-1}\frac{(n-1)!}{(n-1-m)!(m)!}p^{m}(1-p)^{n-1-m}f(m+1)\\
+&= \lambda\sum_{m=0}^{n-1}\binom{n-1}{m}p^{m}(1-p)^{n-1-m}f(m+1)\\
+&= \lambda\E(f(V+1))
+\end{align*}
+By an identical argument as in exercise $5$ we see that 
+\begin{align*}
+|\prob(W\in A)-\prob(Z\in A)| &= |\E[\ind_{A}(W)-\prob(Z\in A)]|\\ 
+&= |\E[\lambda f_A(W+1)-Wf_A(W)]| \\
+&= |\E[\lambda f_A(W+1)-\lambda f_A(V+1)]| \\
+&= \lambda|\E[ f_A(W+1)-f_A(V+1)]| \\
+\end{align*}
+Hence we see that 
+$$\sup_{A\subset\N}|\prob(W\in A)-\prob(Z\in A)| = \lambda\sup_{f_A}|\E[ f_A(W+1)-f_A(V+1)]|$$
+As we argued in the previous section we see that $f_A\in\Psi$  as we have 
+$$\sup_{A\subset\N}|\prob(W\in A)-\prob(Z\in A)| \leq \sup_{f\in\Psi}|\E[ f_A(W+1)-f_A(V+1)]|$$
+Moreover, to prove this bound consider the following 
+\begin{align*}
+\sup_{A\subset\N}|\prob(W\in A)-\prob(Z\in A)|&\leq \sup_{f\in\Psi}\lambda|\E[f(V+1)-f(W+1)]|\\
+&\leq\lambda \sup_{f\in\Psi}\E|f(V+1)-f(W+1)|\\
+&\leq\lambda \E|\frac{1-e^{-\lambda}}{\lambda}|V+1 - W - 1||\\
+&=(1-e^{-\lambda})\E|V+1 - W - 1|\\
+&=(1-e^{-\lambda})\E|X_n|\\
+&=(1-e^{-\lambda})\E(X_n)\\
+&=p(1-e^{-\lambda})\\
+\end{align*}
+\item Let $W$ be a Poisson random variable. Then by definition we have $$d_{TV}(Y_n, W) = \sup_{B\in\mathcal{B}(\R)}|\prob(Y_n \in B)-\prob(W\in B)|$$ As $Y_n$ and $W$ only take on integer values, for $B,B'\in\mathcal{B}(\R)$ that contain the same integer values will produce the same metric. For this reason, we can rewrite the metric as follows 
+$$\sup_{B\in\mathcal{B}(\R)}|\prob(Y_n \in B)-\prob(W\in B)| = \sup_{A\subset\N}|\prob(Y_n \in A)-\prob(W\in A)|$$ Now using the bound we just derived we see that $$d_{TV}(W, Y_n)\leq p_n(1-e^{-np_n})\to0(1-e^{-\lambda}) = 0$$ Hence we see that $Y_n\overset{TV}{\longrightarrow}W$
+\end{enumerate}	
+
+\end{enumerate}	
+\end{document} 
+
+

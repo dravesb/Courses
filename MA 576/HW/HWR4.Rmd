@@ -1,8 +1,10 @@
 ---
 title: "MA 576 HW 4"
 author: "Benjamin Draves"
-#output: pdf_document
-output: html_document
+output: pdf_document
+#output: html_document
+fig_width: 4 
+fig_height: 3 
 fontsize: 11pt
 geometry: margin=1in
 ---
@@ -11,7 +13,6 @@ geometry: margin=1in
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(gridExtra)
 ```
 
 ### Exercise 3 
@@ -77,7 +78,20 @@ plot(discover$Year, pear.res,xlab = "Year", ylab = "Residual")
 
 ```
 
-The residuals appear to have clear banding issues. That is there is a clear quadratic patter in both the Pearson and deviance residuals. This suggests that we could be missing some quadratic variance in the model due to another outstanding covariate. Moreover, we see that several values lay outside the range of plus or minus 2 in the Pearson residuals. As we expect that the majority of these residuals should asymptotically lay within $\pm 2$ we could have a few outliers/leverage points. Lastly, we see that out residual deviance is 132.84 on 97 degrees of freedom suggesting some over dispersion in this model.
+The residuals appear to have clear banding issues. That is there is a clear quadratic patter in both the Pearson and deviance residuals. This suggests that we could be missing some quadratic variance in the model due to another outstanding covariate. Moreover, we see that several values lay outside the range of plus or minus 2 in the Pearson residuals. As we expect that the majority of these residuals should asymptotically lay within $\pm 2$ we could have a few outliers/leverage points. Lastly, we see that out residual deviance is 132.84 on 97 degrees of freedom suggesting some over dispersion in this model. We test this with the following chi-square test 
+
+```{r}
+#find rejection region
+sigma2 <- sum(residuals(model2,type="pearson")^2)/(model2$df.resid)
+#Rejection region: (cutoff, \infty)
+cutoff = qchisq(0.95, model2$df.residual)
+#test statistic 
+ts = sigma2*model2$df.residual
+
+#test hypothesis
+cutoff < ts
+```
+Here we see that we have significant evidence to suggest that $\hat{\sigma^2}\not\leq 1$. Therefore, we see we have a significant amount of overdispersion in this model. 
 
 ### 4
 
@@ -95,11 +109,21 @@ impulses = data.frame(summarize(nfrogs, nimpulses = n()))
 ggplot(impulses, aes(x = as.factor(StretchMagnitude), y = nimpulses)) + 
   geom_boxplot() + 
   labs(x = "Stretch Magnitude", y = "Impluses")
+
 ```
 
 ```{r}
-#not sure what plot he's looking for here... 
+groupfrogs = frogs
+groupfrogs$SM= as.factor(frogs$StretchMagnitude)
+ggplot(groupfrogs, aes(x = SpikeTimes, color = SM))+
+  geom_density(position = "identity", fill = NA, size = 1) + 
+  labs(x = "Time", y = "Impulses")
+
+
 ```
+
+
+
 
 #### (b)
 ```{r}
@@ -155,7 +179,13 @@ df = data.frame(df)
 model = glm(Count ~ StretchMagnitude + msBin, data = df, family = poisson)
 summary(model)
 ```
-There is evidence to suggest that time plays a roll 
+Without considering the deviance of this model, there is evidence to suggest that time plays a roll in this process as the msBin is a significant variable. But we do note that as the deviance is 5717.8 on 5717.8 we see that this model is quite underdispersed so making any statement on confidence levels is inappropriate. 
+
+
+As above, for $t = 0$ and no stretching of the muscle, we expect to observe $e^{-4.96796} = 0.006957327$ electrical impulses. Moreover, at $t = 0$, we expect this baseline rate to increase by a factor of $e^{0.08149} = 1.084902$ electrical impulses for a unit increase in Stretch Magnitude. Lastly, under no stretching, we expect to see a decrease in the number of impulses by a factor of $e^{-0.94850} = 0.3873216$ for every passing millisecond. 
+
+We know evaluate the fit of this model. 
+
 ```{r}
 #Chisquare test for sigma^2
 sigma2 <- sum(residuals(model,type="pearson")^2)/(model$df.resid)
@@ -172,14 +202,14 @@ par(mfrow = c(1,2))
 plot(dev.res,xlab = "MilliSecond", ylab = "Residual")
 plot(pear.res,xlab = "MilliSecond", ylab = "Residual")
 ```
-
-
+While we do not have statistical evidence to suggest that we have underdispersion, the residuals clearly show that this model is overfit. The residuals that are greater than zero correspond to a count greater than one. But as there are so many zero counts, the model's optimal solution is to simply estimate ~$0$ for all points. With so many time covariates, this model is practically the saturated model which explains the small values of deviance.  
 
 #### (d)
 
+To determine if we have a history dependency in this dataset, we will include previous counts as covariates to the GLM. In this way we can model any autocorrelation structure in the response. We will consider lags up to 10 milliseconds.  
 
 ```{r}
-n = 4
+n = 10
 df2 = df[,-1]
 df2 = cbind(df2, matrix(NA, nrow = 60000, ncol = n))
 models = list()
@@ -192,7 +222,7 @@ for(i in 1:n){
   for(j in 1:i){
     lag[seq(j,60000, 1000)] = 0 # start of every trial  
   }
-
+  
   df2[,(3 + i)] = lag
   model = glm(Count ~., data = df2[,1:(3+i)], family = poisson)
   models[[i]] = model
@@ -201,6 +231,12 @@ for(i in 1:n){
 model0 = glm(Count ~ StretchMagnitude + msBin, data = df, family = poisson)
 anova(model0, models[[1]],models[[2]],models[[3]],models[[4]],test = "Chisq")
 
+summary(models[[3]])
 ```
+Using an analysis of deviance table, we see that including lags up to order $3$ play a significant role in predicting the current time's electrical implus count. Again, however, by including the time variable these models in essence are approaching the saturated model so any assessment of term significance is inappropriate in this setting. 
+
+For interpretation, the Intercept, Stretch Magnitude and msBin covariates do not change interpretation from part $c$. We even see that several of the estimated coefficients are similar. For the lag covariates, we can interpret these values as follows; given that we observe an electrical impulses at time $t-1$, we expect to see the baseline rate of impulses to reduce by a factor of $e^{-13.94924}\approx 0$. That if we see an impulse at time $t-1$, we expect zero impulses at this time. The same interpretation holds for lag $t-2$ with a reduction $e^{-13.94869} \approx 0$. Note for the $t-3$ lag however, we only see a reduction of $e^{-0.3572641} = 0.3572641$ from the baseline rate. With these estimates, one reasonable interpretation electrical impulses can only occur in $3ms$ time frames. 
+
+As discussed above, these models are practically the saturated models given the time variable $msBins$. Therefore, we model more variance than we anticipate given the number of covariates in the model which corresponds to underdispersion. This can be seen by the deviance 5680.3 on 59994 degrees of freedom. 
 
 
