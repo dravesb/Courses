@@ -1,0 +1,146 @@
+---
+title: "MA 576 HW 5"
+author: "Benjamin Draves"
+output: pdf_document
+#output: html_document
+fig_width: 4 
+fig_height: 3 
+fontsize: 11pt
+geometry: margin=1in
+---
+```{r}
+#load necessary packages 
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+### Exercise 3 
+
+#### (a)
+
+```{r}
+polish = read.table("~/Desktop/Courses/MA 576/data/polishing.dat", header = T)
+head(polish)
+
+#categorical covariates
+par(mfrow = c(2,2))
+boxplot(TIME ~ BOWL, data = polish, xlab = "Bowl Type", ylab = "Polish Time")
+boxplot(TIME ~ CASS, data = polish, xlab = "Cass Type", ylab = "Polish Time")
+boxplot(TIME ~ DISH, data = polish, xlab = "Dish Type", ylab = "Polish Time")
+boxplot(TIME ~ TRAY, data = polish, xlab = "Tray Type", ylab = "Polish Time")
+
+#cont. covariates
+par(mfrow = c(1,2))
+plot(TIME~DIAM, data = polish, xlab = "Diameter", ylab = "Polish Time")
+plot(TIME~PRICE, data = polish, xlab = "Price", ylab = "Polish Time")
+```
+#### (b)
+```{r}
+#build Gamma glm
+m1 = glm(TIME ~ DIAM + BOWL + CASS + TRAY + DISH, data = polish, family = Gamma(link = log))
+summary(m1)
+
+#test for underdispersion
+X2 = sum(residuals(m1, type = "pearson")^2)/m1$df.residual
+pval = pchisq(X2*m1$df.residual, m1$df.residual)
+pval 
+
+#plot residuals
+par(mfrow  = c(1,2))
+plot(residuals(m1, type ="deviance"), ylab = "Deviance Residuals")
+plot(residuals(m1, type ="pearson"), ylab = "Pearson Residuals")
+
+#plots true versus predicted
+plot(polish$TIME, predict(m1, type = "response"))
+abline(a = 0, b = 1)
+```
+
+
+It appears that this model's residuals are quite appropriate. That is there does not appear to be any clear trend in the pearson or deviance residuals. Moreover they all apear to lay within the $\pm1$ threshold. A test for underdispersion was completed and we have signficant evidence to suggest under dispersion in this model. Even with this underdispersion all coefficents save BOWL were significant at the $\alpha = 0.05$ level. It appears that our model's assumptions about the variance may be too strong. 
+
+#### (c)
+
+```{r}
+#build Gaussian glm
+m2 = glm(TIME ~ DIAM + BOWL +CASS+TRAY+DISH, data = polish, family = gaussian(link = log))
+summary(m2)
+
+#test for overdispersion
+X2 = sum(residuals(m2, type = "pearson")^2)/m2$df.residual
+pval = 1 - pchisq(X2*m2$df.residual, m1$df.residual)
+pval 
+
+#plot residuals
+par(mfrow  = c(1,2))
+plot(residuals(m2, type ="deviance"), ylab = "Deviance Residuals")
+plot(residuals(m2, type ="pearson"), ylab = "Pearson Residuals")
+
+#plots true versus predicted
+plot(polish$TIME, predict(m2, type = "response"))
+abline(a = 0, b = 1)
+```
+
+This model appears to fit the data very similarily expect for the clear error estimates. That is, the coefficents all appear similar, if not entirely unchanged. This model, however, appears to be extremely overdispersed. A test was completed and we have signfincant evidence to suggest over dispersion here. This is apparent in the deviance residuals that range from $\pm 30$. 
+
+It appears here that the models are near equivalent save the assumptions on the variance. In either case it appears that the variance doesn't change as a function of the mean. For this reason, I suggest using the Gaussian GLM with the log link and estimate the dispersion for testing purposes. 
+
+### Exercise 4 
+
+#### (a)
+
+```{r}
+fish = read.table("~/Desktop/Courses/MA 576/data/fish.txt", header = T)
+head(fish)
+
+#make new log area covariate 
+fish$larea = log(fish$Area)
+
+#make plots
+pairs(fish[,c(3,5:6)])
+```
+
+#### (b)
+
+```{r}
+m3 = glm(Species~ Latitude + larea, data = fish, family = poisson())
+summary(m3)
+
+#test for over dispersion 
+X2 = sum(residuals(m3, type = "pearson")^2)/m3$df.residual
+1 - pchisq(X2*m3$df.residual, m3$df.residual)
+```
+We have evidence for overdispersion as evident by the asympototic hypothesis test. 
+
+#### (c)
+
+```{r}
+m4 = glm(Species~ Latitude + larea, data = fish, family = quasipoisson())
+summary(m4)
+
+#test for over dispersion 
+X2 = sum(residuals(m4, type = "pearson")^2)/m4$df.residual
+1 - pchisq(X2*m4$df.residual, m4$df.residual)
+
+#plot deviane residuals
+plot(fish$larea, residuals(m4, type = "deviance"), xlab = "log - area", ylab = "Deviance Residuals")
+```
+#### (d)
+
+```{r}
+m5 = glm(Species~ Latitude + larea, data = fish, family = quasi(variance = "mu^2", link = "log"))
+summary(m5)
+
+#plot deviane residuals
+plot(fish$larea, residuals(m5, type = "deviance"), xlab = "log - area", ylab = "Deviance Residuals")
+```
+#### (e)
+The first model is very clearly not modeling all of the variance in the model. The assumption that this data has the variane - mean relation impossed by the poisson GLM is not a good one. 
+
+The second model assumes the variance structure is given by $V(\mu) = \sigma^2\mu$ for some constant $\sigma^2$ that does not vary over the population. Well, plotting the deviance residuals of this model shows that the variance increases as the area of the lake also increases. Therefore this is not a good assumption. 
+
+The quasi-glm is the most appropriate fit for this data. It models the changing variance for each data point as evident in the last deviance residual plot where it appears that the linear space predictions have a constant variance after scaling by the associated estimates $\hat{V}_i$. 
+
+Using this last model to for inferential reason we see that the a lake at $0$ latitude with area of 1 that the number of expected specicies is given by $\exp(2.958730) = 19.27348$. Moreover, holding area constant, for each additional degree of latitude away from the equator we expect the number of species to decrease by a factor of $exp(-0.013061) = 0.9870239$. Lastly, holding latidude constant, we expect the number of species to incease by a factor for $\exp(0.154812) = 1.167438$ for each additional unit increase in $\log(area)$. 
+
+
