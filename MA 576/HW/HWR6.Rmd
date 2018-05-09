@@ -1,0 +1,177 @@
+---
+title: "MA 576 HW 6"
+author: "Benjamin Draves"
+output: pdf_document
+#output: html_document
+fig_width: 4 
+fig_height: 3 
+fontsize: 11pt
+geometry: margin=1in
+---
+```{r}
+#load necessary packages 
+library(plyr)
+library(tidyr)
+library(ggplot2)
+```
+
+### Exercise 3 
+
+
+#### Part a
+```{r}
+#Read in data
+trucks = read.table("~/Desktop/Courses/MA 576/data/trucks.dat", header = T)
+head(trucks)
+
+#rename levels
+levels(trucks[,1])[levels(trucks[,1])=="-"] = "1"
+levels(trucks[,2])[levels(trucks[,2])=="-"] = "1"
+levels(trucks[,3])[levels(trucks[,3])=="-"] = "1"
+levels(trucks[,4])[levels(trucks[,4])=="-"] = "1"
+levels(trucks[,5])[levels(trucks[,5])=="-"] = "1"
+
+levels(trucks[,1])[levels(trucks[,1])=="+"] = "2"
+levels(trucks[,2])[levels(trucks[,2])=="+"] = "2"
+levels(trucks[,3])[levels(trucks[,3])=="+"] = "2"
+levels(trucks[,4])[levels(trucks[,4])=="+"] = "2"
+levels(trucks[,5])[levels(trucks[,5])=="+"] = "2"
+
+#fit linear regression
+m1 = glm(height~., data = trucks, family = gaussian)
+summary(m1)
+
+#find combination of factors that is closest to 8 inches
+possible = expand.grid(rep(list(1:2), 5))
+possible = as.data.frame(lapply(possible,factor))
+colnames(possible) = colnames(trucks[,-6])
+pred = as.vector(predict(m1, newdata = possible))
+opt = which.min(abs(8-pred))
+possible[opt,]
+
+
+#plot residuals
+par(mfrow = c(2,2))
+plot(m1)
+```
+It appears that the furnance temperature (B+), heating time (C+), and quench oil temperature (O+) all significantly affect height. Moreover, hold-down time (E+) is significantly affects the height at the $p=0.05$ level. The only covariate that does not play a signficant role is transfer time. From this model fit, we expect that the vector $(B,C,D,E,O) = (+,-,+,+,-)$ makes the leaf spring free height as close to 8 inches as possible (8.002083 inches). It appears that this model is quite underdispersed. While the residuals show no clear behavior and are relatively normally the variance appears to be smaller than expected. 
+
+#### Part b 
+Now suppose that the model variance is a function of the covariates. Then we may wish to fit the model $\sigma^2 = \sum_{j=1}^p \gamma_jX_j$ and use this model estimate in a weighted least square regression. Here, as $\sigma^2>0$ we will fit a Gamma GLM to the data with a log-link to arrive at estimates of $\hat{\sigma^2}$ as a function of the covariates.
+
+```{r}
+#get residuals
+res = residuals(m1, type = "response")^2
+
+#fit a Gamma GLM
+df2 = cbind(trucks[,-6], res)
+m2 = glm(res~., df2, family = Gamma(link = "log"))
+summary(m2)
+```
+We note that while this model suggests that the covariates are relatively unrelated, we now have estimates for the model variance at each given datapoint. With this we can complete a weighted regression based on these estimates as follows. 
+
+```{r}
+#fit joint model
+sigma_weights = 1/m2$fitted.values
+m3 = glm(height~., data = trucks, family = gaussian, weights = sigma_weights)
+
+#summary statistics
+summary(m3)
+par(mfrow = c(2,2))
+plot(m3)
+```
+Under this new joint model, we see that the model estimates are altered, but only slightly. Moreover, the standard errors seem to go unchanged. We notice however, as the weight matrix change (from $I$ to $W = diag(1/\hat{\sigma^2})$) that our residual deviance is much closer to what we expect. That is, the model does not appear underdispersed any longer. 
+
+
+### Exercise 4 
+
+#### Part a
+```{r}
+#Read in data
+gala = read.table("~/Desktop/Courses/MA 576/data/galapagos.txt", header = T)
+head(gala)
+
+#fit binomial GLM 
+m4 = glm(cbind(PlantEnd,Plants-PlantEnd)~ Elevation + Adjacent, data  = gala, family = binomial)
+
+#get covariance
+S = summary(m4)$cov.unscaled
+S
+sigma = 1
+
+#get point estimate
+nd = data.frame(Elevation = 100, Adjacent = 100)
+linear_pred = predict(m4, nd)
+data_pred = exp(linear_pred)/(1+exp(linear_pred))
+```
+Notice to get a standard error on our prediction we have $$Var(y*) = Var(\hat{\beta}_0 + 100\hat{\beta}_1 + 100\hat{\beta}_2)$$ which we can compute via the covariance matrix $\Sigma$. 
+```{r}
+#get standard error
+var = S[1,1] + 100^2*S[2,2] + 100^2*S[3,3] + 2*100*S[1,2] + 2*100*S[1,3] + 2*100*100*S[2,3]
+se = sigma*sqrt(var)
+
+#get linear space PI
+linear_left = linear_pred - qnorm(.975)*se
+linear_right = linear_pred + qnorm(.975)*se
+
+#get data space PI
+data_left = exp(linear_left)/(1+exp(linear_left))
+data_right = exp(linear_right)/(1+exp(linear_right))
+c(data_left, data_right)
+```
+
+#### Part b
+```{r}
+#fit quasi-binomial GLM 
+m5 = glm(cbind(PlantEnd,Plants-PlantEnd)~ Elevation + Adjacent, data  = gala, family = quasibinomial)
+
+#get scaled covariance
+S = summary(m5)$cov.unscaled
+S
+sigma2 = sum(resid(m5, type = "pearson")^2)/(m5$df.residual)
+
+#get standard error
+var = S[1,1] + 100^2*S[2,2] + 100^2*S[3,3] + 200*S[1,2] + 200*S[1,3] + 2*100*100*S[2,3]
+se = sqrt(sigma2)*sqrt(var)
+
+#get linear space PI
+linear_left = linear_pred - qnorm(.975)*se
+linear_right = linear_pred + qnorm(.975)*se
+
+#get data space PI
+data_left = exp(linear_left)/(1+exp(linear_left))
+data_right = exp(linear_right)/(1+exp(linear_right))
+c(data_left, data_right)
+```
+#### Part c 
+
+```{r}
+#Sandwich estimator for quasi-binomial
+Sinv = summary(m5)$cov.unscaled
+A = crossprod(model.matrix(m5), model.matrix(m5) * m5$weights * resid(m5, type="pearson")^2)
+S = Sinv %*% A %*% Sinv
+S
+sigma2 = sum(resid(m5, type = "pearson")^2)/(m5$df.residual)
+
+
+#get standard error
+var = S[1,1] + 100^2*S[2,2] + 100^2*S[3,3] + 200*S[1,2] + 200*S[1,3] + 2*100*100*S[2,3]
+se = sqrt(sigma2)*sqrt(var)
+
+#get linear space PI
+linear_left = linear_pred - qnorm(.975)*se
+linear_right = linear_pred + qnorm(.975)*se
+
+#get data space PI
+data_left = exp(linear_left)/(1+exp(linear_left))
+data_right = exp(linear_right)/(1+exp(linear_right))
+c(data_left, data_right)
+```
+
+Here we notice that by using the sandwich estimator for the covariance that the estimates on teh variance remain relataively similar (except the intercept term). The covariance components, however, increase considerably. As a result we see that when we estimate this variance that our prediction interval increases sizeably. The prediction interval for the binomial-glm is the smallest. The prediction interval for the quasi-binomial is larger as we estimate the dispersion to be $\hat{\sigma^2} = 3.439451$. Lastly, we see the sandwich estimator has the largest interval as it detects covariance amoungst the parameters of the model. 
+
+
+
+
+
+

@@ -1,0 +1,241 @@
+---
+title: "MA 576 HW 7"
+author: "Benjamin Draves"
+output: pdf_document
+#output: html_document
+fig_width: 4 
+fig_height: 3 
+fontsize: 11pt
+geometry: margin=1in
+---
+
+
+### Exercise 3 
+
+#### Part A
+First we build the proportional hazards model to estimate the hazard ratio. The confidence intervals for these values are given below. 
+```{r}
+#packages
+library(ggplot2)
+#read in data 
+bladder = read.table("~/Desktop/Courses/MA 576/data/bladder.txt", header = TRUE)
+head(bladder)
+
+#remove pathalogical case
+bladder = bladder[-1,]
+
+#format survival data 
+t = bladder$time
+
+#fit proportional hazard model
+m1 = glm(uncensored~ group + number, family = poisson, data = bladder,
+         offset = log(time))
+
+#hazard ratio 
+exp(coef(m1)[2])
+exp(-coef(m1)[3])
+
+#Confidence Intervals
+CI  = confint(m1)
+hazPCI =  as.numeric(CI[2,])
+hazTCI = as.numeric(-CI[3,2:1])
+
+hazPCI
+hazTCI
+```
+#### Part B
+```{r}
+#iteraction model
+m2 = glm(uncensored~ group + number + group:number, family = poisson
+         ,data = bladder,
+         offset = log(time))
+summary(m2)
+#not significant iteraction model
+```
+After fitting the iteraction term, we see that the interaction is not signficiant. That is we do not have evidence to suggest that the drug type along with the number of tumors removed has an effet on this proportional hazards model. 
+
+#### Part C
+```{r}
+bladder2 = matrix(NA, nrow = sum(bladder$time), ncol = 4)
+current = 1
+for(i in 1:nrow(bladder)){
+  n = bladder[i,"time"]
+  tmp = matrix(NA, ncol = 4, nrow = n)
+  tmp[,1] = 1:n
+  tmp[,2] = rep(bladder[i,2], n)
+  tmp[,3] = c(rep(0, n-1), bladder[i,3])
+  tmp[,4] = rep(bladder[i,4], n)
+  bladder2[current:(current + n-1),] = tmp
+  current = current + n 
+}
+
+colnames(bladder2) = colnames(bladder)
+bladder2 = data.frame(bladder2)
+bladder2[,2] = as.factor(bladder2[,2])
+bladder2[,4] = as.factor(bladder2[,4])
+bladder2$time2 = (bladder2$time)^2
+
+#t^2 model
+m3 = glm(uncensored~ group + number + time + time2, family = poisson
+         ,data = bladder2)
+summary(m3)
+
+#t model
+m4 = glm(uncensored~ group + number + time2, family = poisson
+         ,data = bladder2)
+summary(m4)
+anova(m3, m4, "Chisq")
+```
+Here we use a general point process model to model the hazard of recurrence. We expand the dataset to contain binned times $1, 2, \ldots, t_i$ where $t_i$ is the time of the $i$th censoring. We simply repeat covariate values along with a new censoring variable $(0,0,\ldots, 1)$. After this model with time covariates $(t,t^2)$, we see that that only significant random varible is given by the intercept and the linear time variable. The baseline number of occurrences is given by $\exp(-2.2701654) = 0.1032951$. Moreover, we see a decrease in the expected number of occurences for those in the drug group compared to the placebo group. Similarly we expect the number of censorings to decrease, 
+
+### Exerice 4 
+
+#### Part A
+```{r}
+#read in data 
+baseball = as.data.frame(read.table("~/Desktop/Courses/MA 576/data/baseball.txt", header = TRUE))
+head(baseball)
+```
+Below, we make some visuals describing the data presented here. Directly to the right corresponds to center field and the length of the vector corresponds to the pitch speed. 
+```{r}
+#visuals
+baseball$x = (baseball$speed-80) * cos(baseball$dir)
+baseball$y = (baseball$speed-80) * sin(baseball$dir)
+baseball$Hand = as.factor(baseball$hand)
+baseball$zero = 0 
+
+baseballR = baseball[which(baseball$hand == 0),]
+baseballL = baseball[which(baseball$hand == 1),]
+
+p1 = ggplot(aes(x, y, col = Hand),data = baseball) +
+    geom_segment(aes(x = zero, y = zero, xend = x, yend = y )) + 
+    theme_bw()+
+    geom_point()
+p1
+
+p2 = ggplot(aes(x, y),data = baseballR) +
+    geom_segment(aes(x = zero, y = zero, xend = x, yend = y )) + 
+    theme_bw()+
+    geom_point() + ggtitle("Right Handed Hitters") 
+p2
+p3 = ggplot(aes(x, y),data = baseballL) +
+    geom_segment(aes(x = zero, y = zero, xend = x, yend = y )) + 
+    theme_bw()+
+    geom_point() + ggtitle("Left Handed Hitters") 
+p3
+```
+Now, to construct this model, we note that for right handers: for slower pitches we expect their swing to be ``early" or $sin(dir) > 0$. Conversely, for faster pitches we expect the batter to be late corresponding to $sin(dir)<0$. For this reason, for right handed hitters only, we ciuld build Gamma glm with $log(MPH) = \beta_0 + \beta_1sin(dir)$. In this model we would expect $\beta_1 < 0$ which corresponds to the relation: as sin(dir) increases we expect the pitch speed to decrease.
+
+For left handers we expect slower pitch with result inearly swings or $sin(dir) < 0$. Faster pitches corresponds to late swings which can be measured with $sin(dir)>0$. Similarily for the right harnders, we could model left handed hitters by building a gamma glm with $log(MPH) = \beta_0 + \beta_2sin(dir)$. Notice we can simply combine these models and we fit 
+$$\log(MPH) = \beta_0 + \beta_1Hand*sin(dir)+ \beta_2(1-Hand)*sin(dir)$$
+
+```{r}
+#append some additional variables
+baseball$liter = baseball$y * baseball$hand
+baseball$riter = baseball$y * (1 - baseball$hand)
+
+#fit gamma glm 
+m1 = glm(speed ~ riter +liter ,data = baseball, family = Gamma(link = "log"))
+summary(m1)
+exp(coef(m1))
+
+
+```
+The paramter estimates of this model can be interpreted as follows. $e^{\beta_0} = 93.4467977$: Expected speed of pitch when hit to dead center ($sin(0) = 0$). $e^{\beta_1} = 0.9980005$: modulation in expected speed for left handers as $\exp(\sin(\varphi_i))$ changes by a single unit. $e^{\beta_2} = 1.0013890$: modulation in expected speed for right handers as $\exp(\sin(\varphi_i))$ changes by a single unit. 
+
+#### Part B 
+```{r}
+#set up data frame 
+X = as.matrix(cbind(baseball[,c("speed","hand")]))
+
+#initialize variables
+beta = matrix(c(0, 0), nrow =2)
+mu0 = 0
+beta.diff = Inf
+mu.diff = Inf
+
+#iterate until covergence 
+while(mu.diff > .000000000000000001){
+  beta.diff = Inf
+  
+  while(beta.diff > .0000000000000001){
+    #set eta
+    eta = as.vector(X %*% beta)
+    
+    #set linear space prediction
+    z = eta + sin(baseball$dir - mu0 - 2*atan(eta)) * (1 + eta^2)/2
+    
+    #set G
+    G = diag(c(2/(1 + eta^2)))
+    
+    #get beta
+    Fisher = t(X) %*% G^2 %*% X
+    beta.new = solve(Fisher) %*% t(X) %*% G^2 %*% z 
+    
+    #set beta.diff
+    beta.diff = sum((beta - beta.new)^2)
+    
+    #reset variables
+    beta = beta.new
+  }
+  
+  #update mu
+  est = 2*atan(X%*%beta)
+  mu.new = atan(sum(sin(baseball$dir - est))/sum(cos(baseball$dir - est)))
+  
+  #set mu diff
+  mu.diff = (mu0 - mu.new)^2
+
+  #set mu0
+  mu0 = mu.new
+}
+
+#load in Ainv function
+library("circular")
+est = 2*atan(X%*%beta)
+
+#get R values
+R = sqrt(sum(sin(baseball$dir - est))^2 + sum(cos(baseball$dir - est))^2)
+Rbar = R /nrow(X)
+
+#get estimate for kappa
+Kappa = A1inv(Rbar)
+
+#Covariance stuff
+g = as.matrix(2/(1+eta^2), nrow = 100)
+y = baseball$dir
+CovB = 1/(Kappa * A1(Kappa))*solve(Fisher) * as.numeric((1 + 1/(nrow(X) - t(g)%*% X %*% solve(Fisher)%*% t(X) %*% g)))
+VarMu = 1/(nrow(X) - as.numeric(t(g)%*% X %*% solve(Fisher)%*% t(X) %*% g))
+VarK = 1/(nrow(X)*A1FirstDerivative(Kappa))
+
+#build beta CI
+SE = sqrt(diag(CovB))
+t = qt(.975, nrow(X) - length(beta) - 2)
+
+cbind(L = beta -SE * t,C = beta, R = beta + SE*t)
+
+#build mu0 CI
+SE = sqrt(VarMu)
+cbind(L =  mu0 -SE * t, R = mu0 + SE*t)
+
+#build Kappa CI
+SE = sqrt(VarK)
+cbind(L =  Kappa -SE * t, R = Kappa + SE*t)
+
+```
+Here we implement the von Mises IRLS estimation procedure. We choose to use the arctangent-link function. From here, we estimate model parameters as well as corresponding variance estimates which can be intrepretted as follows. As we do not fit an intercept model, we see the the $\beta$ coefficents correspond to changes in change in tangent - angle corresponding to changes in the covariates. Namely, for $\hat{\beta}_{Hand} = 0.13380693$, we expect for a baseline pitch speed for the left handed batters to hit the ball to left field more. This suggests that left handed hitters are behind the pitch more often than right handed hitters. Moreover, for every unit increase in speed the expected ball direction to decrease at a rate of -0.01015326 in terms of the tangent function. This suggests that as speed increases, hits tend to go to the opposite field for right handed hitters.
+
+Confidence intervals for all estimated paramters are given above. We see that with the expception of $\kappa$, every interval contains zero suggesting that we do not have evidence to suggest that the parameters are not different from zero. The model from part a and the model here are similar in the sense they are modeling the same phenoma in two different ways. We know there is a connection between handedness, pitch speed, and hit direction. The first model predicts pitch speed from handedness and hit direction. Here we estimate the direction of hit direction from pitch speed and handedness and both models offer similar results with varying degree of confidence. 
+
+#### Part C 
+```{r}
+est = 2*atan(X %*% beta)
+resid = data.frame(Residual = baseball$dir - est)%%(2*pi)
+ggplot(data = resid, aes(Residual))+ 
+  coord_polar(, start = -pi/2)+
+  geom_histogram(binwidth  = pi/8)
+```
+Here we see the residuals for this model are roughlt normally distributed in the (0,$\pi$) range centered around one. We prefer these were centered around zero and hence this plot suggests that this model misspecifies the hit direciton in some small way. Wiht most of the errors clustered in the same direction, however, we see that these residuals share a common symmetric (possible right skewed) distribution. 
+
+
+
