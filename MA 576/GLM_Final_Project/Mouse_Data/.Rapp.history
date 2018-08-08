@@ -1,0 +1,1545 @@
+deg
+expand.grid(1:6, 1:6)
+X = expand.grid(deg, deg)
+dim(X)
+expand.grid(1:n, 1:n)
+ind = expand.grid(1:n, 1:n)
+dim(ind)
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]
+dim(centrality)
+centrality = eigen_centrality(net)$vector
+dim(centrality)
+cent = outer(centrality, centrality, "+")
+dim(cent)
+ind = outer(deg, deg, "c")
+deg = degree(net)#
+ind = outer(deg, deg, "paste")
+head(ind)
+ind[1,1]
+ind[1,2]
+tmp = tmp[upper.tri(tmp)]
+tmp = outer(deg, deg, "paste")
+tmp = tmp[upper.tri(tmp)]
+tmp
+length(tmp)
+strsplit(tmp[1], " ")
+X = sapply(tmp, FUN(x) unlist(strsplit(x," ")))
+X = sapply(tmp, FUN unlist(strsplit(x," ")))
+X = sapply(tmp, unlist(strsplit(x," ")))
+tmp
+class(tmp)
+X = apply(tmp,1, unlist(strsplit(x," ")))
+class(tmp[1])
+X = apply(tmp,1, unlist(strsplit(x)))
+X = apply(tmp,1, unlist(strsplit(x, " ")))
+deg = degree(net)#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+for(i in 1:length(tmp)){#
+	X[i,] = unlist(strsplit(tmp[i], " "))#
+}
+X[1:10,]
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+for(i in 1:length(tmp)){#
+	X[i,] = as.numeric(unlist(strsplit(tmp[i], " ")))#
+}
+rm(list = ls())
+library(igraph)
+set.seed(576)
+#set up interesting sample graph #
+n = 100#
+size.gp1 = 70#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .25#
+prob.gp2 = .45#
+prob.int = .05#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)#
+#
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+group = ifelse(P[upper.tri(P)] == prob.gp1,1,#
+ 		 ifelse(P[upper.tri(P)] == prob.gp2,-1,0))#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]
+#degree#
+deg = degree(net)#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+for(i in 1:length(tmp)){#
+	X[i,] = as.numeric(unlist(strsplit(tmp[i], " ")))#
+}
+m1 = glm(Y~as.factor(group) + X, family = "binomial")
+summary(m1)
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")
+summary(m1)
+library(igraph)#
+#set seed #
+set.seed(576)#
+#
+#set up interesting sample graph #
+n = 100#
+size.gp1 = 70#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .25#
+prob.gp2 = .45#
+prob.int = .05#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)#
+#
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+group = ifelse(P[upper.tri(P)] == prob.gp1,1,#
+ 		 ifelse(P[upper.tri(P)] == prob.gp2,-1,0))#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]#
+#
+#set up global vertex attributes#
+#
+#degree#
+deg = degree(net)#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = as.numeric(unlist(strsplit(tmp[i], " ")))#
+}#
+#
+#Construct model---------------------------------------------------#
+#
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")#
+summary(m1)#
+exp(coef(m1))
+library(igraph)#
+#set seed #
+set.seed(576)#
+#
+#set up interesting sample graph #
+n = 100#
+size.gp1 = 70#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .1#
+prob.gp2 = .1#
+prob.int = .5#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)#
+#
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+group = ifelse(P[upper.tri(P)] == prob.gp1,1,#
+ 		 ifelse(P[upper.tri(P)] == prob.gp2,-1,0))#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]#
+#
+#set up global vertex attributes#
+#
+#degree#
+deg = degree(net)#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = as.numeric(unlist(strsplit(tmp[i], " ")))#
+}#
+#
+#Construct model---------------------------------------------------#
+#
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")#
+summary(m1)#
+exp(coef(m1))
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")#
+summary(m1)#
+exp(coef(m1))#
+#
+m1 = glm(Y~ X + cent, family = "binomial")#
+summary(m1)
+library(igraph)#
+#set seed #
+set.seed(576)#
+#
+#set up interesting sample graph #
+n = 100#
+size.gp1 = 70#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .1#
+prob.gp2 = .1#
+prob.int = .05#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)#
+#
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+group = ifelse(P[upper.tri(P)] == prob.gp1,1,#
+ 		 ifelse(P[upper.tri(P)] == prob.gp2,-1,0))#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]#
+#
+#set up global vertex attributes#
+#
+#degree#
+deg = degree(net)#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = as.numeric(unlist(strsplit(tmp[i], " ")))#
+}#
+#
+#Construct model---------------------------------------------------#
+#
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")#
+summary(m1)#
+exp(coef(m1))#
+#
+m1 = glm(Y~ X + cent, family = "binomial")#
+summary(m1)
+library(igraph)#
+#set seed #
+set.seed(576)#
+#
+#set up interesting sample graph #
+n = 100#
+size.gp1 = 70#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .1#
+prob.gp2 = .1#
+prob.int = .1#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)#
+#
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+group = ifelse(P[upper.tri(P)] == prob.gp1,1,#
+ 		 ifelse(P[upper.tri(P)] == prob.gp2,-1,0))#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]#
+#
+#set up global vertex attributes#
+#
+#degree#
+deg = degree(net)#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = as.numeric(unlist(strsplit(tmp[i], " ")))#
+}#
+#
+#Construct model---------------------------------------------------#
+#
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")#
+summary(m1)#
+exp(coef(m1))#
+#
+m1 = glm(Y~ X + cent, family = "binomial")#
+summary(m1)
+library(igraph)#
+#set seed #
+set.seed(576)#
+#
+#set up interesting sample graph #
+n = 100#
+size.gp1 = 70#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .1#
+prob.gp2 = .1#
+prob.int = .1#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)#
+#
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+group = ifelse(P[upper.tri(P)] == prob.gp1,1,#
+ 		 ifelse(P[upper.tri(P)] == prob.gp2,-1,0))#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]#
+#
+#set up global vertex attributes#
+#
+#degree#
+deg = degree(net)#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = as.numeric(unlist(strsplit(tmp[i], " ")))#
+}#
+#
+#Construct model---------------------------------------------------#
+#
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")#
+summary(m1)#
+summary(m1)#
+exp(coef(m1))
+library(igraph)#
+#set seed #
+set.seed(576)#
+#
+#set up interesting sample graph #
+n = 100#
+size.gp1 = 70#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .1#
+prob.gp2 = .1#
+prob.int = .1#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)#
+#
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+group = ifelse(P[upper.tri(P)] == prob.gp1,1,#
+ 		 ifelse(P[upper.tri(P)] == prob.gp2,-1,0))#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]#
+#
+#set up global vertex attributes#
+#
+#degree#
+deg = degree(net)#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = as.numeric(unlist(strsplit(tmp[i], " ")))#
+}#
+#
+#Construct model---------------------------------------------------#
+#
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")#
+summary(m1)#
+exp(coef(m1))
+group
+group = c(rep(1, size.gp1),rep(1, size.gp1))
+group = c(rep(1, size.gp1),rep(0, size.gp2))
+group = c(rep(1, size.gp1),rep(-1, size.gp2))#
+group = outer(centrality, centrality, "-")#
+group = cent[upper.tri(cent)]/2
+group
+group = c(rep(1, size.gp1),rep(-1, size.gp2))
+group = outer(centrality, centrality, "-")
+group
+group = c(rep(1, size.gp1),rep(-1, size.gp2))
+group = outer(group, group, "-")
+group
+group = cent[upper.tri(group)]/2
+group
+group = group[upper.tri(group)]/2
+group = c(rep(1, size.gp1),rep(-1, size.gp2))#
+group = outer(group, group, "-")#
+group = group[upper.tri(group)]/2
+group
+group = c(rep(1, size.gp1),rep(-1, size.gp2))#
+group = outer(group, group, "+")
+group = group[upper.tri(group)]/2
+group
+#group#
+group = c(rep(1, size.gp1),rep(-1, size.gp2))#
+group = outer(group, group, "+")#
+group = group[upper.tri(group)]/2#
+#centraility#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]
+#degree#
+deg = degree(net)#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = as.numeric(unlist(strsplit(tmp[i], " ")))#
+}
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")#
+summary(m1)
+library(igraph)#
+#set seed #
+set.seed(576)#
+#
+#set up interesting sample graph #
+n = 100#
+size.gp1 = 70#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .1#
+prob.gp2 = .1#
+prob.int = .1#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)#
+#
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+#
+#group#
+group = c(rep(1, size.gp1),rep(-1, size.gp2))#
+group = outer(group, group, "+")#
+group = group[upper.tri(group)]/2#
+#centraility#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]#
+#
+#set up global vertex attributes#
+#
+#degree#
+deg = degree(net)#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = as.numeric(unlist(strsplit(tmp[i], " ")))#
+}#
+#
+#Construct model---------------------------------------------------#
+#
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")#
+summary(m1)#
+exp(coef(m1))
+cut(1:10)
+cut(1:10, quantiles(1:10))
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")#
+summary(m1)#
+exp(coef(m1))
+m1
+deg = cut(degree(net), quantile(degree(net)))
+deg
+deg = as.factor(cut(degree(net), quantile(degree(net))))
+deg
+?cut
+deg = cut(degree(net), quantile(degree(net)), ordered_result = T)
+deg
+deg[91]
+degree(net)
+degree(net)[91]
+quantile(degree(net))
+deg = cut(degree(net), quantile(degree(net)), ordered_result = T)
+deg
+levels(deg) = c(0, 1, 2, 3)
+deg
+deg[which.na(deg)]
+deg[which.NA(deg)]
+which.NA(deg)
+deg[which(degree(net) == min(degree(net)))] = 0
+deg = cut(degree(net), quantile(degree(net)), ordered_result = T)
+deg[which(degree(net) == min(degree(net)))] = 0
+deg = cut(degree(net), quantile(degree(net)), ordered_result = T)#
+levels(deg) = c(0, 1, 2, 3)#
+deg[which(degree(net) == min(degree(net)))] = 0
+deg
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)
+A = as.matrix(as_adjacency_matrix(net))
+Y = A[upper.tri(A, diag = F)]
+#group#
+group = c(rep(1, size.gp1),rep(-1, size.gp2))#
+group = outer(group, group, "+")#
+group = group[upper.tri(group)]/2
+#centraility#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]
+deg = cut(degree(net), quantile(degree(net)), ordered_result = T)#
+levels(deg) = c(0, 1, 2, 3)#
+deg[which(degree(net) == min(degree(net)))] = 0#
+deg#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = as.numeric(unlist(strsplit(tmp[i], " ")))#
+}
+X
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")
+summary(m1)
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = as.factor(unlist(strsplit(tmp[i], " ")))#
+}
+m1 = glm(Y~as.factor(group) + X + cent, family = "binomial")
+summary(m1)
+m1 = glm(Y~as.factor(group) + as.factor(X) + cent, family = "binomial")
+m1 = glm(Y~as.factor(group) + as.factor(X[,1]) + as.factor(X[,2]) + cent, family = "binomial")#
+summary(m1)
+table(X[,1])
+table(X[,2])
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = unlist(strsplit(tmp[i], " "))#
+}
+table(X[,2])
+m1 = glm(Y~as.factor(group) + as.factor(X[,1]) + as.factor(X[,2]) + cent, family = "binomial")#
+summary(m1)
+m1 = glm(Y~as.factor(group) + cent, family = "binomial")
+summary(m1)
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)
+library(igraph)#
+#set seed #
+set.seed(576)#
+#
+#set up interesting sample graph #
+n = 100#
+size.gp1 = 70#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .2#
+prob.gp2 = .2#
+prob.int = .05#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)
+library(igraph)#
+#set seed #
+set.seed(576)#
+#
+#set up interesting sample graph #
+n = 100#
+size.gp1 = 70#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .2#
+prob.gp2 = .2#
+prob.int = .5#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)#
+#
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+#
+#group#
+group = c(rep(1, size.gp1),rep(-1, size.gp2))#
+group = outer(group, group, "+")#
+group = group[upper.tri(group)]/2#
+#centraility#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]#
+#
+#set up global vertex attributes#
+#
+#degree#
+deg = cut(degree(net), quantile(degree(net)), ordered_result = T)#
+levels(deg) = c(0, 1, 2, 3)#
+deg[which(degree(net) == min(degree(net)))] = 0#
+deg#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = unlist(strsplit(tmp[i], " "))#
+}#
+#
+#Construct model---------------------------------------------------#
+#
+m1 = glm(Y~as.factor(group) + as.factor(X[,1]) + as.factor(X[,2]) + cent, family = "binomial")#
+summary(m1)#
+exp(coef(m1))#
+m1 = glm(Y~as.factor(group) + cent, family = "binomial")
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+#
+#group#
+group = c(rep(1, size.gp1),rep(-1, size.gp2))#
+group = outer(group, group, "+")#
+group = group[upper.tri(group)]/2#
+#centraility#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]#
+#
+#set up global vertex attributes#
+#
+#degree#
+deg = cut(degree(net), quantile(degree(net)), ordered_result = T)#
+levels(deg) = c(0, 1, 2, 3)#
+deg[which(degree(net) == min(degree(net)))] = 0#
+deg#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = unlist(strsplit(tmp[i], " "))#
+}
+m1 = glm(Y~as.factor(group) + as.factor(X[,1]) + as.factor(X[,2]) + cent, family = "binomial")
+summary(m1)
+library(igraph)#
+#set seed #
+set.seed(576)#
+#
+#set up interesting sample graph #
+n = 100#
+size.gp1 = 70#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .7#
+prob.gp2 = .7#
+prob.int = .1#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)#
+#
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+#
+#group#
+group = c(rep(1, size.gp1),rep(-1, size.gp2))#
+group = outer(group, group, "+")#
+group = group[upper.tri(group)]/2#
+#centraility#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]#
+#
+#set up global vertex attributes#
+#
+#degree#
+deg = cut(degree(net), quantile(degree(net)), ordered_result = T)#
+levels(deg) = c(0, 1, 2, 3)#
+deg[which(degree(net) == min(degree(net)))] = 0#
+deg#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = unlist(strsplit(tmp[i], " "))#
+}#
+#
+#Construct model---------------------------------------------------#
+#
+m1 = glm(Y~as.factor(group) + as.factor(X[,1]) + as.factor(X[,2]) + cent, family = "binomial")#
+summary(m1)#
+exp(coef(m1))#
+m1 = glm(Y~as.factor(group) + cent, family = "binomial")
+library(igraph)#
+#set seed #
+set.seed(576)#
+#
+#set up interesting sample graph #
+n = 200#
+size.gp1 = 130#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .2#
+prob.gp2 = .2#
+prob.int = .05#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)#
+#
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+#
+#group#
+group = c(rep(1, size.gp1),rep(-1, size.gp2))#
+group = outer(group, group, "+")#
+group = group[upper.tri(group)]/2#
+#centraility#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]#
+#
+#set up global vertex attributes#
+#
+#degree#
+deg = cut(degree(net), quantile(degree(net)), ordered_result = T)#
+levels(deg) = c(0, 1, 2, 3)#
+deg[which(degree(net) == min(degree(net)))] = 0#
+deg#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = unlist(strsplit(tmp[i], " "))#
+}#
+#
+#Construct model---------------------------------------------------#
+#
+m1 = glm(Y~as.factor(group) + as.factor(X[,1]) + as.factor(X[,2]) + cent, family = "binomial")#
+summary(m1)#
+exp(coef(m1))#
+m1 = glm(Y~as.factor(group) + cent, family = "binomial")
+library(igraph)#
+#set seed #
+set.seed(576)
+#set up interesting sample graph #
+n = 200#
+size.gp1 = 130#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .2#
+prob.gp2 = .2#
+prob.int = .05#
+#
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)#
+#
+#set up logistic regression model-----------------------------#
+#
+#set up response#
+A = as.matrix(as_adjacency_matrix(net))#
+Y = A[upper.tri(A, diag = F)]#
+#
+#set up inter-nodal attributes#
+#
+#group#
+group = c(rep(1, size.gp1),rep(-1, size.gp2))#
+group = outer(group, group, "+")#
+group = group[upper.tri(group)]/2#
+#centraility#
+centrality = eigen_centrality(net)$vector#
+cent = outer(centrality, centrality, "+")#
+cent = cent[upper.tri(cent)]#
+#
+#set up global vertex attributes#
+#
+#degree#
+deg = cut(degree(net), quantile(degree(net)), ordered_result = T)#
+levels(deg) = c(0, 1, 2, 3)#
+deg[which(degree(net) == min(degree(net)))] = 0#
+deg#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]#
+#
+X = matrix(NA, nrow = length(Y), ncol = 2)#
+colnames(X) = c("Degree 1", "Degree 2")#
+for(i in 1:length(tmp)){#
+	X[i,] = unlist(strsplit(tmp[i], " "))#
+}#
+#
+#Construct model---------------------------------------------------#
+#
+m1 = glm(Y~as.factor(group) + as.factor(X[,1]) + as.factor(X[,2]) + cent, family = "binomial")#
+summary(m1)#
+exp(coef(m1))#
+m1 = glm(Y~as.factor(group) + cent, family = "binomial")
+library(igraph)#
+#set seed #
+set.seed(576)#
+#
+#set up interesting sample graph #
+n = 200#
+size.gp1 = 130#
+size.gp2 = n - size.gp1#
+#
+#set group probabilities#
+prob.gp1 = .2#
+prob.gp2 = .2#
+prob.int = .05
+#create probability matrix#
+P = matrix(NA, ncol = n , nrow = n)#
+P[1:size.gp1, 1:size.gp1] = prob.gp1#
+P[(size.gp1+1):n, (size.gp1+1):n] = prob.gp2#
+P[1:size.gp1, (size.gp1 + 1):n] = prob.int#
+P[(size.gp1 + 1):n, 1:size.gp1] = prob.int#
+diag(P) = 0 #
+#set up sample function#
+bern_sample = function(p){#
+	return(rbinom(1,1,p))	#
+}#
+smb_sample = function(P){#
+	A = apply(P,c(1,2),bern_sample)#
+	A[lower.tri(A)] = t(A)[lower.tri(A)]#
+	diag(A) = 0#
+	return(A)#
+}#
+#
+#get sample and make some nice visuals#
+A = smb_sample(P)#
+net = graph_from_adjacency_matrix(A, mode = "undirected", weighted = TRUE)#
+V(net)$color = c(rep("red", size.gp1),rep("blue", size.gp2))#
+V(net)$label = ""#
+V(net)$size = 5#
+E(net)$width = .3#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+plot(net)
+A = as.matrix(as_adjacency_matrix(net))
+Y = A[upper.tri(A, diag = F)]
+deg = cut(degree(net), quantile(degree(net)), ordered_result = T)#
+levels(deg) = c(0, 1, 2, 3)#
+deg[which(degree(net) == min(degree(net)))] = 0#
+deg#
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]
+tmp
+X = sapply(tmp, strsplot(x, " "))
+X = sapply(tmp, strsplit(x, " "))
+split = function(a) strsplit(a, " ")#
+X = sapply(tmp, split)
+X
+split = function(a) unlist(strsplit(a, " "))
+X = sapply(tmp, split)
+class(X)
+dim(X)
+tmp = outer(deg, deg, "paste")#
+tmp = tmp[upper.tri(tmp)]
+split = function(a) unlist(strsplit(a, " "))#
+X = sapply(tmp, split)
+dim(X)
+get_global = function(x){#
+	tmp = outer(x, x, "paste")#
+	tmp = tmp[upper.tri(tmp)]#
+	split = function(a) unlist(strsplit(a, " "))#
+	X = sapply(tmp, split)#
+	return(X)		#
+}
+format_global = function(x){
+format_global = function(x){#
+	tmp = outer(x, x, "paste")#
+	tmp = tmp[upper.tri(tmp)]#
+	split = function(a) unlist(strsplit(a, " "))#
+	X = sapply(tmp, split)#
+	return(X)		#
+}
+library(igraph)#
+#set seed #
+set.seed(576)
+n = 200#
+size.gp1 = 130#
+size.gp2 = n - size.gp1
+#set group probabilities#
+prob.gp1 = .2#
+prob.gp2 = .2#
+prob.int = .05
+x1 = c(rpois(size.gp1,2),rpois(size.gp1,4))
+X1
+x1
+format_global = function(x){
+#make covariates based on groups#
+x1 = c(rpois(size.gp1,2),rpois(size.gp1,4))#
+x2 = ppois(n, 4)#
+x3 = c(rep(1, size.gp1),rep(2, size.gp2))#
+#
+X1 = format_global(x1)#
+X2 = format_global(x2)#
+X3 = format_global(x3)#
+#
+X = cbind(X1, X2, X3)
+format_global = function(x){#
+	tmp = outer(x, x, "paste")#
+	tmp = tmp[upper.tri(tmp)]#
+	split = function(a) unlist(strsplit(a, " "))#
+	X = sapply(tmp, split)#
+	return(X)		#
+}
+#set up interesting sample graph-----------------------------------------#
+n = 200#
+size.gp1 = 130#
+size.gp2 = n - size.gp1#
+#
+#make covariates based on groups#
+x1 = c(rpois(size.gp1,2),rpois(size.gp1,4))#
+x2 = ppois(n, 4)#
+x3 = c(rep(1, size.gp1),rep(2, size.gp2))#
+#
+X1 = format_global(x1)#
+X2 = format_global(x2)#
+X3 = format_global(x3)#
+#
+X = cbind(X1, X2, X3)
+format_global = function(x){#
+	tmp = outer(x, x, "paste")#
+	tmp = tmp[upper.tri(tmp)]#
+	split = function(a) as.numeric(unlist(strsplit(a, " ")))#
+	X = sapply(tmp, split)#
+	return(X)		#
+}#
+#
+#set up interesting sample graph-----------------------------------------#
+n = 200#
+size.gp1 = 130#
+size.gp2 = n - size.gp1#
+#
+#make covariates based on groups#
+x1 = c(rpois(size.gp1,2),rpois(size.gp1,4))#
+x2 = ppois(n, 4)#
+x3 = c(rep(1, size.gp1),rep(2, size.gp2))#
+#
+X1 = format_global(x1)#
+X2 = format_global(x2)#
+X3 = format_global(x3)#
+#
+X = cbind(X1, X2, X3)
+head(X)
+x1 = c(rpois(size.gp1,2),rpois(size.gp1,4))
+x1
+x = x1
+tmp = outer(x, x, "paste")
+tmp
+tmp = tmp[upper.tri(tmp)]
+tmp
+split = function(a) as.numeric(unlist(strsplit(a, " ")))
+X = sapply(tmp, split)
+head(X)
+load("/Users/benjamindraves/Desktop/network_data.RData")
+ls()
+head(conn_adj)
+plot(svd(conn_adj)$d)
+plot(svd(conn_adj)$d[1:25])
+setwd("Desktop/GLM_Final_Project/Mouse_Data")
+getwd()
+setwd("~/Desktop/GLM_Final_Project/Mouse_Data")
+format_global = function(x){
+brain = as.matrix(read.csv("N54859.csv", header = F))
+brain = as.matrix(read.csv("N54859.csv", header = F))
+}
+#Define useful functions-------------------------------------------------#
+format_global = function(x){#
+  n = length(x)#
+  ind = combn(1:n, 2)#
+  X = matrix(NA, ncol = 2, nrow = n*(n-1)/2)#
+  for(i in 1:(n*(n-1)/2)){#
+    X[i,] = c(x[ind[1,i]], x[ind[2,i]])#
+  }#
+  return(X)#
+}
+brain = as.matrix(read.csv("N54859.csv", header = F))
+n = nrow(brain)
+colnames(brain) = rownames(brain) = 1:n
+head(brain)
+head(brain)
+dim(brain)
+heat(brain)
+heatplot(brain)
+}
+brain2 = matrix(0, nrow = nrow(brain), ncol = ncol(brain))#
+for(i in 1:nrow(brain2)){#
+  ind = as.numeric(which(brain[i,] == max(brain[i,])))#
+  brain2[i,ind] = brain[i, ind]#
+}
+covar = read.csv("first_page.csv")[,-c(1:2,9:11)]
+covar = covar[-nrow(covar),]
+for(i in 1:ncol(covar)){#
+  covar[,i] = as.character(droplevels(covar[,i]))#
+}#
+covar = as.matrix(covar)
+head(covar)
+net = graph_from_adjacency_matrix(brain2,weighted = TRUE)
+net = graph_from_adjacency_matrix(brain2,weighted = TRUE)
+library(ggplot2)
+net = graph_from_adjacency_matrix(brain2,weighted = TRUE)#
+V(net)$color = c(rep("red", nrow(brain)/2), rep("blue", nrow(brain)/2))#
+V(net)$label = ""#
+V(net)$size = 2#
+E(net)$width = min(E(net)$weight, 100)/50#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+dev.off()#
+plot(net, layout = layout_on_sphere)
+net = graph_from_adjacency_matrix(brain2,weighted = TRUE)
+covar = as.matrix(covar)
+library(igraph)
+net = graph_from_adjacency_matrix(brain2,weighted = TRUE)
+V(net)$color = c(rep("red", nrow(brain)/2), rep("blue", nrow(brain)/2))#
+V(net)$label = ""#
+V(net)$size = 2#
+E(net)$width = min(E(net)$weight, 100)/50#
+E(net)$color = "#55555555"#
+E(net)$arrow.mode = 0 #
+dev.off()#
+plot(net, layout = layout_on_sphere)
+brain2 = log(brain + 1)#
+brainmelt = melt(brain2)#
+colnames(brainmelt) = c("Index","Index.","W")#
+ggplot(data = brainmelt, aes(x=Index, y=Index., fill=W)) + #
+  geom_tile()+#
+  scale_fill_gradient2(low = "white", #
+                       high = "black", mid = "grey", #
+                       midpoint = median(brain2), limit = c(0,max(brain2)))
+brain2 = log(brain + 1)
+brainmelt = melt(brain2)
+library(dplyr)
+library(ggplot2)
+brain2 = log(brain + 1)
+brainmelt = melt(brain2)
+??melt
+library(reshape)
+brainmelt = melt(brain2)
+colnames(brainmelt) = c("Index","Index.","W")
+ggplot(data = brainmelt, aes(x=Index, y=Index., fill=W)) + #
+  geom_tile()+#
+  scale_fill_gradient2(low = "white", #
+                       high = "black", mid = "grey", #
+                       midpoint = median(brain2), limit = c(0,max(brain2)))
+ggplot(data = brainmelt, aes(x=Index, y=Index., fill=W)) + #
+  geom_tile()+#
+  scale_fill_gradient2(low = "white", #
+                       high = "black", mid = "grey", #
+                       midpoint = median(brain2), limit = c(0,max(brain2)))
+Y = brain[upper.tri(brain)]
+#build covariates #
+hemi = format_global(covar[,1])#
+level1 = format_global(covar[,2])#
+level2 = format_global(covar[,3])#
+level3 = format_global(covar[,4])#
+level4 = format_global(covar[,5])#
+subdivision = format_global(covar[,6])#
+#
+hemi_group = ifelse(hemi[,1] == hemi[,2], 1, 0)#
+level1_group = ifelse(level1[,1] == level1[,2], 1, 0)#
+level2_group = ifelse(level2[,1] == level2[,2], 1, 0)#
+level3_group = ifelse(level3[,1] == level3[,2], 1, 0)#
+level4_group = ifelse(level4[,1] == level4[,2], 1, 0)#
+subdivision_group = ifelse(subdivision[,1] == subdivision[,2], 1, 0)#
+#
+X = cbind(hemi, level1 , level2, level3, level4, subdivision) #
+nested = numeric(nrow(X))#
+for(i in 1:nrow(X)){#
+  nested[i] = ifelse(X[i,1] != X[i,2], 0, #
+              ifelse(X[i,3] != X[i,4], 1, #
+              ifelse(X[i,5] != X[i,6], 2,#
+              ifelse(X[i,7] != X[i,8], 3,#
+              ifelse(X[i,9] != X[i,10], 4,#
+              ifelse(X[i,11] != X[i,12], 5,6))))))#
+}#
+#
+df = data.frame(Response = Y,#
+                hemisphere = hemi_group, #
+                level1 = level1_group,#
+                level2 = level2_group,#
+                level3 = level3_group,#
+                level4 = level4_group,#
+                subdivision = subdivision_group,#
+                nested = as.factor(nested))#
+#
+#construct nested varible#
+m1 = glm(Response~hemisphere + level1 + level2 + level3, data = df, family = poisson)#
+m2 = glm(Response~hemisphere + level1 + level2 + level3 + level4, data = df, family = poisson)#
+m3 = glm(Response~hemisphere + level1 + level2 + level3 +level4 + subdivision, data = df, family = poisson)#
+##
+anova(m1, m2, m3, m4, test = "Chisq")#
+sigma2 = sum(residuals(m3, "pearson")^2)/m3$df.residual#
+summary(m3, sigma2)
+nb_full = glm.nb(Response ~ hemisphere +level1+ level2 + level3 +level4 +subdivision, data = df, link = log)
+pchisq(2 * (logLik(nb_full) - logLik(m3)), df = 1, lower.tail = FALSE)
+nb_full = glm.nb(Response ~ hemisphere +level1+ level2 + level3 +level4 +subdivision, data = df, link = log)
+library(MASS)
+nb_full = glm.nb(Response ~ hemisphere +level1+ level2 + level3 +level4 +subdivision, data = df, link = log)
+pchisq(2 * (logLik(nb_full) - logLik(m3)), df = 1, lower.tail = FALSE)
+nb1 = glm.nb(Response ~ hemisphere, data = df, link = log)#
+nb2 = glm.nb(Response ~ hemisphere + level3 +level4, data = df, link = log)#
+nb3 = glm.nb(Response ~ hemisphere +level1+ level2 + level3 +level4, data = df, link = log)#
+nb4 = glm.nb(Response ~ hemisphere +level1+ level2 + level3 +level4 +subdivision, data = df, link = log)#
+anova(nb1, nb2, nb3,nb4, test = "Chisq")
+x = c(AIC(nb1),AIC(nb1), AIC(nb3), AIC(nb4))
+summary(nb4)
+summary(nb3) # best model by AIC and ANOVA standards
+est = cbind(Estimates = coef(nb3), confint(nb3))
+est
+Y = brain[upper.tri(brain)]
+make_group_labels = function(x){#
+  X = format_global(x)#
+  names = unique(x)#
+  ret = numeric(nrow(X))#
+  for(i in 1:nrow(X)){#
+    if(X[i,1] == X[i,2]){#
+      ret[i] = names[which(names == X[i,1])]#
+    }else{#
+      ret[i] = 0#
+    }#
+  }#
+  return(ret)#
+}
+hemi = make_group_labels(covar[,1])#
+level1 = make_group_labels(covar[,2])#
+level2 = make_group_labels(covar[,3])#
+level3 = make_group_labels(covar[,4])#
+level4 = make_group_labels(covar[,5])#
+subdivision = make_group_labels(covar[,6])
+)
+df = data.frame(Response = Y,#
+                hemisphere = as.factor(hemi), #
+                level1 = as.factor(level1),#
+                level2 = level2_group,#
+                level3 = level3_group,#
+                level4 = level4_group,#
+                level5 = subdivision_group#
+)
+model = glm.nb(Response ~., data = df, link = log)
+model$theta + qnorm(c(0.025, 0.975)) * model$SE.theta
+fit = model$fitted.values
+varest = fit + fit^2/model$theta
+fit
+varset
+varest

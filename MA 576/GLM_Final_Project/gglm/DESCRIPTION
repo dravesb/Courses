@@ -1,0 +1,7 @@
+Package: gglm
+Version: 0.1
+Title: Graph Generalized Linear Models
+Authors: Liz Upton and Luis Carvalho
+Maintainer: Liz Upton <eupton@bu.edu>
+Description: This package provides routines to fit GLMs in graphs.
+License: LGPL-3

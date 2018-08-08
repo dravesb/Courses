@@ -1,0 +1,27 @@
+GLM Project Goal: 
+	- Model the number of tracks in this network as a function of 
+		- Mouse gender 	
+		- Region attributes (encoded as factors)
+	- Question: how does the number of voxels affect the number of pairings
+
+C57Y Set 
+- Each network In C57 
+	- Adjacency matrix corresponds to the number between regions 
+	- Where track "paths through three dimensional space"
+	- What travels on those tracks are axons - brain wave stuff 
+- Each network in a Matlab file 
+	- 10 brains for each mouse in the sample 
+- Conn Adj 	
+	- the log the number of tracks from a single brain 
+	- Just use this to adapt code 
+- Nii files 
+	- shows you the region for each mouse 
+	- add one thousand to get from left to right hemisphere 
+
+Next Steps 
+	- Build adjacency matrices for each mouse 
+	- Build different types of covariate structures for each mouse 
+	- write up some of the basic background stuff 
+
+
+

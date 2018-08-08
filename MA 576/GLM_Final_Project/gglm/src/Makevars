@@ -1,0 +1,3 @@
+PKG_CFLAGS = -I /project/banner/libs/include
+PKG_LIBS = -L /project/banner/libs/lib -ligraph
+

@@ -1,0 +1,3 @@
+useDynLib(gglm, .registration = TRUE, .fixes = "G_")
+export(gglmParamSet, build.null.prior, gglm.fit, gglm, node.factor, node, ed.a, getpreds, gglm2)
+
