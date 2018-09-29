@@ -1,0 +1,80 @@
+\usepackage{graphicx}
+\usepackage{amsmath,amsthm,amsfonts}
+\usepackage{epsfig,graphics}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{mathrsfs}
+\usepackage{fancyhdr}
+
+\setlength{\textheight}{8.5in}
+\setlength{\evensidemargin}{0.0in}
+\setlength{\oddsidemargin}{0.0in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\textwidth}{6.5in}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{claim}{Claim}
+\newtheorem*{claim*}{Claim}
+\newtheorem{lemma}{Lemma}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem{exercise}{Exercise}
+\newtheorem*{exercise*}{Exercise}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{fact}{Fact}
+\newtheorem*{fact*}{Fact}
+
+
+\pagestyle{fancy}
+\fancyhf{}
+
+%\newcommand{\lecture}[5]{\handout{#1}{#2}{#3}{#4}{#5}}
+
+
+% Types of Variables
+\newcommand{\bvar}[1]{\mathbf{#1}} % bold variable
+\newcommand{\mvar}[1]{\bvar{#1}} % matrix variable
+\newcommand{\vvar}[1]{\vec{#1}} % vector variable
+
+% Domains
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\redgevec}{\R^{E}}
+\newcommand{\rvertvec}{\R^{V}}
+\newcommand{\rPos}{\R^{+}}
+\newcommand{\rNonNeg}{\R^{\geq 0}}
+
+% Probability Operators
+\newcommand{\E}{{\mathbb{E}}}
+\newcommand{\V}{{\text{Var}}}
+\newcommand{\prob}{{\mathbb{P}}}
+
+% Symbol for definitions
+\newcommand{\defeq}{\stackrel{\mathrm{\scriptscriptstyle def}}{=}}
+
+% Optimization
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\Cone}{Cone}
+\DeclareMathOperator{\Cut}{CUT}
+
+% Types of Graphs
+\newcommand{\nlap}{\mathscr{L}_G}
+\newcommand{\pseudo}[1]{{#1}^\dagger}
+\newcommand{\lapPseudo}{\pseudo{\lap}}
+\newcommand{\adj}{A}
+\newcommand{\incMatrix}{\mvar{B}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\rMatrix}{\mvar{R}} % resistance matrix
+\newcommand{\iMatrix}{\mvar{I}} % identity matrix
+\newcommand{\Vol}{\textrm{Vol}}
+
+
+% Vectors
+\newcommand{\1}{\vec{1}}
+\renewcommand{\dot}[1]{\langle {#1} \rangle}
+
+%other
+\DeclareMathOperator{\sgn}{sgn}
+

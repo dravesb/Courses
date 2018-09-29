@@ -1,0 +1,47 @@
+\documentclass[12pt]{article}
+\input{format.tex}
+
+\usepackage[document]{ragged2e}
+\lhead{Research Statement}
+\rhead{Benjamin Draves}
+\usepackage[margin = .9in]{geometry}
+
+\begin{document}
+
+My research focuses on multiple network inference problems. In particular, I am interested in analyzing random networks through their spectral properties. Under the Random Dot Product Graph (RDPG) model, networks are characterized by latent vectors $\bvar{x}_v\in\R^{d}$ associated with each vertex $v\in V$. Edge presence between vertices $v,w\in V$ is then modeled as $E_{vw}\sim\text{Bern}[\bvar{x}_v^T\bvar{x}_w]$. If we then organize these latent vectors into the \textit{rows} of the matrix $\bvar{X}$, then the entries of $\bvar{P} = \bvar{XX}^T\in[0,1]^{n\times n}$ contain the Bernoulli probabilities for each edge random variable in the network.
+
+In practice, we need to estimate the parameters of this model. Namely, we need to estimate the latent position vectors $\bvar{X}$. In practice, however, we only observe the adjacency matrix $\mathbf{A}$. Under this model however, we see that $\E(\bvar{A}) = \bvar{P}$ and as this is a symmetric real matrix we can find its eigendecomposition which provides us a canonical estimate of $\bvar{X}$. 
+{}\begin{equation}
+    \bvar{A} = \bvar{USU}^T = (\bvar{US}^{1/2})(\bvar{US}^{1/2})^T (\approx \bvar{XX}^T)  
+\end{equation}
+Our estimate $\bvar{US}^{1/2}$ is quite good. A considerable amount of research has gone into proving that this estimator is a consistent estimate of the latent positions with accompanying central limit theorem statements that provide asymptotic variances. 
+
+Recently, these techniques have been utilized in the analysis of multiple networks where each network has a common latent position structure. One such method is the Omnibus matrix embedding. First consider the omnibus matrix $\bvar{M}$
+\begin{equation}
+\mathbf{M} = \begin{bmatrix}
+    \mathbf{A}^{(1)} & \dots & \frac{1}{2}(\mathbf{A}^{(1)} + \mathbf{A}^{(m)})\\
+    \vdots & \ddots & \vdots\\
+     \frac{1}{2}(\mathbf{A}^{(1)} + \mathbf{A}^{(m)})& \dots & \mathbf{A}^{(m)}&\\
+\end{bmatrix}
+\quad 
+\E[\bvar{M}] = \mathbf{\widetilde{P}} = \begin{bmatrix}
+    \bvar{X}\\
+    \vdots\\
+    \bvar{X}
+    \end{bmatrix}
+    \begin{bmatrix}
+    \bvar{X}^T\dots\bvar{X}^T\end{bmatrix}
+\end{equation}
+If each network has common latent position matrix $\bvar{X}$ then $\E[\bvar{M}] = \widetilde{\bvar{P}} = \bvar{P}\otimes \bvar{J}_n$. In this setting, we can proceed as we did in the single network case to find an estimator. That is if $\bvar{M} = \bvar{U}_M\bvar{S}_M\bvar{U}_M^T$ then a canonical estimate of $\widetilde{\bvar{X}} = \bvar{X}\otimes \bvar{1}_m$ is given by $\bvar{U}_M\bvar{S}_M^{1/2}$. There are several nice properties of this estimation technique. As in the single network case, this estimator is consistent and central limit type theorems can be proven. The best estimator of the latent positions is given by the ``$\overline{\bvar{A}}$'' estimator where we follow the single network procedure with the ``average'' adjacency matrix $\overline{\bvar{A}} = m^{-1}\sum_{i=1}^m\bvar{A}^{(i)}$. By collapsing all of the networks into a single matrix, however, we lose all ability to compare networks. The Omnibus estimation technique provides a natural test statistic to test $H_0: \bvar{X}_i = \bvar{X}_j$ by looking at the corresponding estimates in $\bvar{U}_M\bvar{S}_M^{1/2}$. 
+
+Our belief is that if the omnibus matrix can detect differences in networks, then when the latent position matrices are not the same it must be introducing some bias into the estimation procedure. Our goal is to understand the bias in the estimates when $\bvar{X}_i\neq \bvar{X}_j$. We are currently focused on the two network case, where $\bvar{X}\neq \bvar{Y}$. Our goal is to understand the bias of the estimates provided by the Omnibus matrix. That is we look to analyze 
+\begin{equation}
+    \bvar{U}_M\bvar{S}_M^{1/2} - \begin{bmatrix}
+    \bvar{X}\\\bvar{Y}
+    \end{bmatrix}
+\end{equation}
+Currently, we are having some success looking at cases where if we consider the SVD of $\mathbf{X}$, $\bvar{X} = \bvar{U}\Sigma\mathbf{V}^T$, and where $\mathbf{Y} = \bvar{U}\Sigma\bvar{D}\bvar{V}^T$ for $\bvar{D} = \text{diag}(d_1, \ldots, d_d)$. That is where $\mathbf{Y}$ is just some scaling of the singular values of $\mathbf{X}$. We are looking to extend past this and demonstrate this bias in simulation settings. 
+
+
+
+\end{document}

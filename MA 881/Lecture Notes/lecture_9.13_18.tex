@@ -1,0 +1,120 @@
+\documentclass[11pt]{article}
+\input{format.tex}
+\graphicspath{{pictures/}}
+
+
+\lhead{MA 881: Lecture 9.13.18}
+\rhead{Benjamin Draves}
+
+\begin{document}
+
+\section{Cufflinks Transcript Abundance Model } 
+
+\subsection{Introduction}
+Now that we have established the gene-read matrix, we now look to an analyze the data using a popular software called Cufflinks. Cufflinks takes an aligned mRNA file and estimates the relative abundance of each transcript. Notice that this is not the gene-read matrix that we discussed in the previous lecture. Instead it uses a more fine grain matrix, the fragment-transcript matrix, $A_{R,T}$ where  
+\begin{equation}
+a_{r,t} = \begin{cases}
+			1 & \text{fragment $r$ is entirely contained in transcript $t$}\\
+			0 & \text{fragment $r$ is not contained in transcript $t$}
+		\end{cases}
+\end{equation}
+The task is that given this matrix, can we recover the ``transcript abundances'' $\{\rho_{t_1}, \rho_{t_2}, \ldots, \rho_{t_{|T|}}\}$ where $T$ is the set of transcripts.
+
+\subsection{Maximum Likelihood Estimation}
+
+ Eventually, we will need to incorporate the length of fragment in the transcript which we will denote $L_t(r)$. Now if we define $f_i$ to be the the $i$th fragments alignment and let $T_i$ be the true transcript from which the fragment $f_i$ is stored, we can write out the likelihood it the transcript abundances given the number of fragments $R$ as follows. 
+
+\begin{align*}
+\mathcal{L}(\rho|R) &= \prod_{i=1}^{R}\prob(f_i = r_i)\\
+&= \prod_{i=1}^{R}\sum_{t\in T}\prob(f_i = r_i|T_{i} = t)\prob(T_i = t)\\
+&= \prod_{i=1}^{R}\sum_{t\in T}\prob(f_i = r_i|T_{i} = t)\frac{\rho_t\tilde{L}(t)}{\sum_{t\in T}\rho_{t}\tilde{L}(t)}\\
+\end{align*}
+Here we model $\prob(T_i = t)$ based on the \textit{adjusted length} $\tilde{L}(t) = \sum_{i = 1}^{L(t)}F(i)\left\{L(t) - i + 1\right\}$ where $F(i)$ is the probability that any fragment has length $i$. In some sense, we are weighting the length amount that read $t$ in transcript $i$ by the length of that fragment. Moreover, the ratio in the last line of the conditional likelihood is the proportion of the transcript abundance $t$ to the entire set. We expect this to be large for transcripts that are particularly abundant. Continuing the derivation we have 
+\begin{align*}
+\mathcal{L}(\rho|R)&=\prod_{i=1}^R\sum_{t \in T}\frac{F(L_{t}(r_i))}{L(t) - L_t(r_i)+1}\alpha_t 
+\end{align*}
+Here we see that all functions are know except for $\alpha_t$ but notice that $\alpha_t$ must be estimated for far too many parameters. For this reason, we must introduce a new model that reduces the number of model parameters. 
+
+\subsection{Genome Partitioning}
+
+Suppose we instead partition the genome $\mathcal{G} = \bigcup_{j=1}^{|G|} G_j$. Next, define $L_i$ be a region that $f_i$ belongs to. Lastly, define $X_g$ be the number of fragments falling into region $G_g$. We wish to consider the probability that the region in which $f_i$ is from is equal to some region $\{L_i = G\}$.
+
+\begin{align*}
+\beta_g &\equiv \prob(L_i = G)= \sum_{t\in \mathcal{G}}\frac{\rho_t\tilde{L}(t)}{\sum_{t\in T}\rho_{t}\tilde{L}(t)}\\
+&= \frac{\sum_{t\in \mathcal{G}}\rho_t\widetilde{L}(t)}{\sum_{u\in T}\rho_u\widetilde{L}(u)}= \frac{\sum_{t\in \mathcal{G}}\sigma_g\tau_t\widetilde{L}(t)}{\sum_{h=1}^{|G|}\sum_{u\in G_h}\sigma_h\tau_u\mathcal{L}(u)}\\
+\end{align*}
+where $\sigma_g$ is the aggregated abundance over region $G$, $\sigma_g = \sum_{t\in G}\rho_t$ and $\tau_t$ is the proportional abundance in region $G$, $\tau_t= \frac{\rho_t}{\sum_{u\in G}\rho_u}$. From here, we can rederive the likelihood function as follows. 
+\begin{align*}
+\mathcal{L}(\rho|R) &= \prod_{i=1}^R\prob(f_i = r_i)\\
+&= \prod_{i=1}^R\sum_{g\in G}\prob(f_i = r_i|L_i = g)\prob(L_i = 	g)\\
+&= \prod_{i=1}^r\prob(f_i = r_i|L_i = g)\beta_g\mathcal{I}(r_i\in G_g)\\
+&= \left(\prod_{g=1}^{|G|}\prod_{r_i\in G_g}\sum_{t\in G_g}\prob(f_i=r_i|L_i = g, T_i = t)\prob(T_i = t|L_i = g)\right)\prod_{g=1}^{|\mathcal{G}|}\beta_g^{X_g}\\
+&= \left(\prod_{g=1}^{|G|}\prod_{r_i\in G_g}\sum_{t\in G_g}\gamma_{t}\frac{F(L_t(r_i)}{L(t)-L_t(r_i)+1}\right)\prod_{g=1}^{|\mathcal{G}|}\beta_g^{X_g}
+\end{align*}
+From here we can estimate $\gamma_t$ by constrained optimization and $\hat{\beta}_g=\frac{X_g}{R}$. 
+
+We can approximate the variance by inverting the empirical Fisher information. However, as this technique is highly unstable in practice, an alternative method is importance sampling from the likelihood function $\Psi$ from which we can estimate the mean and variance. A statistic normally used for abundance estimation in practice is the fragments per kilobase of transcript per million fragments mapped (FPKM).
+\begin{equation}
+FPKM = \frac{10^610^3\beta_g\gamma_t}{\tilde{L}(t)}
+\end{equation}
+From which the estimate is given by 
+\begin{equation}
+\widehat{FPKM} = \frac{10^9X_g\hat{\gamma}_t}{\tilde{L}(t)R}
+\end{equation}
+where the variance is given by the following
+\begin{align*}
+\V(\widehat{FPKM})&= \left(\frac{10^9}{\tilde{L}(t)R}\right)\left\{\V(X_g)\V(\hat{\gamma}_t) + \V(X)\E(\hat{\gamma}_t)^2 + \V(\hat{\gamma}_t)\E(X_g)^2\right\}\\ 
+&= \left(\frac{10^9}{\tilde{L}(t)R}\right)\left\{\Psi_{t,t}^gX_g + \Psi_{t,t}^gX_g^2 + (\hat{\gamma_t})^2X_g\right\}
+\end{align*}
+From here, we can test for \textit{differential expression} using the log ratio of RPKMs $\displaystyle\log\left(\frac{X_g^a\hat{\gamma}_t^aR^b}{X_g^b\hat{\gamma}_t^bR^a}\right)$
+From here we can use the fact $\V(\log(X))\sim \frac{\V(X)}{\
+E(X)^2}$ we have the following variance estimate 
+\begin{equation}
+\widehat{\V}\left[\log\left(\frac{X_g^a\hat{\gamma}_t^aR^b}{X_g^b\hat{\gamma}_t^bR^a}\right)\right] = \frac{\Psi_{t,t}^{g,a}(1+X_g^a)+(\hat{\gamma_t}^a)^2}{X_g^a (\hat{\gamma_t}^a)^2} + \frac{\Psi_{t,t}^{g,b}(1+X_g^a)+(\hat{\gamma_t}^b)^2}{X_g^b (\hat{\gamma_t}^b)^2}
+\end{equation}
+From here, we can build the test statistic under the null hypothesis that $H_0: RPKM_a = RPKM_b$
+\begin{equation}
+\frac{\log(\widehat{\text{ratio}}) - 0 }{\sqrt{\widehat{\text{Var}}}}\overset{\cdot}{\sim}N(0,1)
+\end{equation}
+We can extend this notation to the multiple testing framework by constructing an ANOVA like statistic. 
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
