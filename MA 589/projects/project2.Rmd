@@ -1,0 +1,176 @@
+---
+title: "Project 2"
+author: "Benjamin Draves"
+#output: pdf_document
+output: html_document
+---
+
+### Exercise 1 
+
+#### (a) 
+Horner's scheme iteratively adds successive polynomial degree until the polynomial is constructed. For instance, suppose that we have a coefficient vector $c = (c_1, c_2, \ldots, c_n)$. Then at any stage, $k$, of the process we have polynomial $p_k(x) = \sum_{i=0}^{k}c_{n-i}x^{k-i}$. Notice here that we assume that $c_n$ corresponds with the highest order on the polynomial (namely $k$) and $c_{n-k}$ corresponds with the constant term in the $p_k$ polynomial. Then from here we wish to build $p_{k+1}$ we can do so by the following 
+
+\begin{align*}
+p_{k+1}(x) = \sum_{i = 0}^{k+1}c_{n-i}x^{(k+1)-i} = c_{n-(k+1)} + x\sum_{i=0}^{k}c_{n-i}x^{k-i} = c_{n-(k+1)} + xp_{k}(x)
+\end{align*}
+Relating this to the code, we see that $s$ acts as polynomial at state each stage in the process. Then we look in descending order over of the coefficient vector $coef$ and update the polynomial by multiplying $x*s$ and then adding on the next coefficient. This is captured in the recursive formula written above. 
+
+#### (b)
+
+```{r}
+#initialize function
+horner <- function(coef){
+  function(x){
+    s <- 0
+    for(i in seq(length(coef), 1, -1)) s <- s * x + coef[i]
+    s
+  }
+}
+
+#plot function
+c <- c(2, -4, -1/2, 1); f <- horner(c)
+curve(f, from = -3, 3)
+```
+
+#### (c)
+
+```{r}
+
+poly_der_coef <- function(coef) seq(1, length(coef)-1) * coef[-1]
+
+newtons <- function(c, root = 0, max.iter = 1000){
+  
+  #set up polynomials
+  p <- horner(c)
+  p_prime <- horner(poly_der_coef(c))
+  
+  #set up stopping criterion
+  tol <- 10e-6
+  diff <- Inf
+  iter.num <- 1
+  
+  while(iter.num < max.iter & diff>tol){# two conditions: (i) iteration limit (ii) convergence criterion
+    
+    #update root: if derivative is zero, then Netwons update is undefined, return Nan, else use the Newtons update
+    new_root <- ifelse(abs(p_prime(root)) < tol, return(NaN), root - p(root)/p_prime(root)) 
+    diff <- abs(new_root - root) 
+    root <- new_root 
+    iter.num <- iter.num + 1
+  }
+  ifelse(iter.num == max.iter, NaN, root)
+}
+
+c <- c(2, -4, -1/2, 1)
+c(newtons(c, root = -1.5), newtons(c, root = 1.5), newtons(c, root = -1))
+
+```
+Here we see that for the first two starting points that the algorithm successfully converges to two differnt roots of $f(x)$, namely $x = -2,2$. When $x_0 = -1$ however, we see that $f'(-1.5) = 0$. Therefore, the Newton's included a not a numbe value. As we will never be able to update this number, we simply return not a number.
+
+#### (d)
+Here by simply rearraging terms in the recursive definition of the Legendre polynomials we have 
+
+\begin{align*}
+L_{e_n}(x) = \frac{2(n-1)+1}{n}L_{e_{n-1}}(x) - \frac{n-1}{n}L_{e_{n-2}}(x)
+\end{align*}
+Here it is easy to see that $L_{e_0}(x) = 1$ and $L_{e_1}(x) = x$. Using these, we can define a recursive function that constructs the $n$th order Legendre polynomial as follows. 
+
+
+```{r}
+legendre_coef <- function(n){
+  
+  if(n == 0) return(c(1)) # return coefficents for L_{e_0}
+  if(n == 1) return(c(0,1))# return coefficents for L_{e_1}
+  else{
+    ln1 <- (2*(n-1)+1)/n * c(0, legendre_coef(n-1)) # recursively get coefficents for L_{n-1}
+    tmp <-  (n-1)/n * legendre_coef(n-2)            # recursively get coefficents for L_{n-2}
+    ln2 <- c(tmp, rep(0,length(ln1) - length(tmp))) # match coefficents lengths 
+    return(ln1 - ln2)
+  }
+}
+
+#A plot of the first 6 polynomials
+for(i in 0:5){
+ f <- horner(legendre_coef(i))
+ if(i == 0) curve(f, from = -1, to = 1, col = i + 1, ylim = c(-1, 1))
+ else curve(f, from = -1, to = 1, col = i + 1, add = TRUE)
+} 
+
+
+```
+
+
+### Exercise 2 
+
+#### (a) 
+
+```{r}
+#import data 
+x <- c(-3.0,-2.5, -2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+y <- c(-17.0, -7.0, 0.5, 3.0, 5.0, 4.0, 2.5, -0.5, -2.0, -2.0, 0.5, 5.0, 12.0)
+
+#create design matrix
+d <- 4
+X <- outer(x, 0:d, '^')
+
+#build T 
+T <- rbind(cbind(crossprod(X), crossprod(X, y)), cbind(crossprod(y,X), crossprod(y)))
+```
+
+#### (b)
+
+```{r}
+SWEEP <- function(A, k){
+  D <- A[k, k]; ifelse(D == 0, A[k, ]<- A[k,], A[k,] <- A[k,]/D)
+  for(i in (1:nrow(A))[-k]){
+    B <- A[i, k]; A[i,] <- A[i,] - B*A[k,]
+    A[i,k] <- -B/D
+  }
+  A[k,k] <- 1/D
+  
+  return(A)
+}
+
+SWEEP(SWEEP(T, 1),1)
+SWEEP(SWEEP(T, 2),2)
+SWEEP(SWEEP(T, 3),3)
+SWEEP(SWEEP(T, 4),4)
+SWEEP(SWEEP(T, 5), 5)
+
+```
+Notice that in each of the examples above we see that the $k$th column is just the same as the original column. As sweep replaces each column sweep with the inverse of its previous value, but iterating, we simple get the inverse of the inverse. That is, we simply replace the original value with itself. Indeed this is the case as the next piece of code shows. 
+
+```{r}
+tol <- 10e-10
+sum(abs(SWEEP(SWEEP(T, 1),1) - T) > tol)
+sum(SWEEP(SWEEP(T, 2),2)- T > tol)
+sum(SWEEP(SWEEP(T, 3),3)- T > tol)
+sum(SWEEP(SWEEP(T, 4),4)- T > tol)
+sum(SWEEP(SWEEP(T, 5),5)- T > tol)
+```
+
+#### (c)
+
+
+```{r}
+plot(x, y)
+a <- seq(-3, 3, length.out = 100)
+p <- ncol(T) - 1
+for (k in 1:p) {
+T <- SWEEP(T, k)
+lines(a, horner(T[1:k, p + 1])(a), lty = k)
+print(c(k, T[p + 1, p + 1]))
+}
+```
+Notice for $k = 1$ we sweep the $k = 1$ row and plot first column of $X^Ty$ block. This corresponds to the regression fit with the data provided in the first column of $X^TX$. As that column are all ones, this coressponds to the regression model $\mathbb{E}(Y|X) =  \beta_0 $ which just fits the grand mean. For $k = 2$ we sweep the $k = 2$ row and plot the first and second column of $X^Ty$ block. Not if $X$ was just these first and second columns, then this would correspond to the regression fit with the data provided in those two columns. As that columns are $[1, X]$, this coressponds to the regression model $\mathbb{E}(Y|X) =  \beta_0 + \beta_1X$ which just fits the linear fit. This iterates for the different features until we plot the fit over all columns of X which is the regression model $\mathbb{E}(Y|X) =  \beta_0 + \beta_1X + \beta_2X^2 + \beta_3X^3 + \beta_4X^4$
+
+For any $k$ the lower right block after that row has been swept can be written as follows
+
+$$y^Ty - y^TX_{1:k}(X_{1:k}^TX_{1:k})^{-1}y$$
+This corresponds to the model RSS for the model $\mathbb{E}(Y|X) = \sum_{j = 0}^{k}\beta_jX^{k}$. Therefore we see we are iteratively printing out the model RSS statistics. 
+
+#### (c)
+
+
+
+
+
