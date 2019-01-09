@@ -1,8 +1,8 @@
 ---
 title: "Project 2"
 author: "Benjamin Draves"
-#output: pdf_document
-output: html_document
+output: pdf_document
+#output: html_document
 ---
 
 ### Exercise 1 
@@ -17,7 +17,7 @@ Relating this to the code, we see that $s$ acts as polynomial at state each stag
 
 #### (b)
 
-```{r}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 #initialize function
 horner <- function(coef){
   function(x){
@@ -34,7 +34,7 @@ curve(f, from = -3, 3)
 
 #### (c)
 
-```{r}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 
 poly_der_coef <- function(coef) seq(1, length(coef)-1) * coef[-1]
 
@@ -64,10 +64,10 @@ c <- c(2, -4, -1/2, 1)
 c(newtons(c, root = -1.5), newtons(c, root = 1.5), newtons(c, root = -1))
 
 ```
-Here we see that for the first two starting points that the algorithm successfully converges to two differnt roots of $f(x)$, namely $x = -2,2$. When $x_0 = -1$ however, we see that $f'(-1.5) = 0$. Therefore, the Newton's included a not a numbe value. As we will never be able to update this number, we simply return not a number.
+Here we see that for the first two starting points that the algorithm successfully converges to two different roots of $f(x)$, namely $x = -2,2$. When $x_0 = -1$ however, we see that $f'(-1.5) = 0$. Therefore, the Newton's included a not a number value. As we will never be able to update this number, we simply return not a number.
 
 #### (d)
-Here by simply rearraging terms in the recursive definition of the Legendre polynomials we have 
+Here by simply rearranging terms in the recursive definition of the Legendre polynomials we have 
 
 \begin{align*}
 L_{e_n}(x) = \frac{2(n-1)+1}{n}L_{e_{n-1}}(x) - \frac{n-1}{n}L_{e_{n-2}}(x)
@@ -75,7 +75,7 @@ L_{e_n}(x) = \frac{2(n-1)+1}{n}L_{e_{n-1}}(x) - \frac{n-1}{n}L_{e_{n-2}}(x)
 Here it is easy to see that $L_{e_0}(x) = 1$ and $L_{e_1}(x) = x$. Using these, we can define a recursive function that constructs the $n$th order Legendre polynomial as follows. 
 
 
-```{r}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=50)}
 legendre_coef <- function(n){
   
   if(n == 0) return(c(1)) # return coefficents for L_{e_0}
@@ -87,15 +87,17 @@ legendre_coef <- function(n){
     return(ln1 - ln2)
   }
 }
+```
 
+In addition we add a plot of the first 6 six Legrende polynomials. 
+
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 #A plot of the first 6 polynomials
 for(i in 0:5){
  f <- horner(legendre_coef(i))
  if(i == 0) curve(f, from = -1, to = 1, col = i + 1, ylim = c(-1, 1))
  else curve(f, from = -1, to = 1, col = i + 1, add = TRUE)
 } 
-
-
 ```
 
 
@@ -118,7 +120,7 @@ T <- rbind(cbind(crossprod(X), crossprod(X, y)), cbind(crossprod(y,X), crossprod
 
 #### (b)
 
-```{r}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 SWEEP <- function(A, k){
   D <- A[k, k]; ifelse(D == 0, A[k, ]<- A[k,], A[k,] <- A[k,]/D)
   for(i in (1:nrow(A))[-k]){
@@ -147,11 +149,11 @@ sum(SWEEP(SWEEP(T, 3),3)- T > tol)
 sum(SWEEP(SWEEP(T, 4),4)- T > tol)
 sum(SWEEP(SWEEP(T, 5),5)- T > tol)
 ```
+Therefore we see that the SWEEP of the SWEEP is simply the identity. 
 
 #### (c)
 
-
-```{r}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=60)}
 plot(x, y)
 a <- seq(-3, 3, length.out = 100)
 p <- ncol(T) - 1
@@ -161,15 +163,88 @@ lines(a, horner(T[1:k, p + 1])(a), lty = k)
 print(c(k, T[p + 1, p + 1]))
 }
 ```
-Notice for $k = 1$ we sweep the $k = 1$ row and plot first column of $X^Ty$ block. This corresponds to the regression fit with the data provided in the first column of $X^TX$. As that column are all ones, this coressponds to the regression model $\mathbb{E}(Y|X) =  \beta_0 $ which just fits the grand mean. For $k = 2$ we sweep the $k = 2$ row and plot the first and second column of $X^Ty$ block. Not if $X$ was just these first and second columns, then this would correspond to the regression fit with the data provided in those two columns. As that columns are $[1, X]$, this coressponds to the regression model $\mathbb{E}(Y|X) =  \beta_0 + \beta_1X$ which just fits the linear fit. This iterates for the different features until we plot the fit over all columns of X which is the regression model $\mathbb{E}(Y|X) =  \beta_0 + \beta_1X + \beta_2X^2 + \beta_3X^3 + \beta_4X^4$
+Notice for $k = 1$ we sweep the $k = 1$ row and plot first column of $X^Ty$ block. This corresponds to the regression fit with the data provided in the first column of $X^TX$. As that column are all ones, this corresponds to the regression model $\mathbb{E}(\mathbf{Y}|\mathbf{X}) = \beta_0$ which just fits the grand mean. For $k = 2$ we sweep the $k = 2$ row and plot the first and second column of $X^Ty$ block. Note if $X$ was just these first and second columns, then this would correspond to the regression fit with the data provided in those two columns. As that columns are $[1, X]$, this corresponds to the regression model $\mathbb{E}(Y|X) =  \beta_0 + \beta_1X$ which just fits the linear fit. This iterates for the different features until we plot the fit over all columns of X which is the regression model $\mathbb{E}(Y|X) =  \beta_0 + \beta_1X + \beta_2X^2 + \beta_3X^3 + \beta_4X^4$
 
 For any $k$ the lower right block after that row has been swept can be written as follows
 
 $$y^Ty - y^TX_{1:k}(X_{1:k}^TX_{1:k})^{-1}y$$
 This corresponds to the model RSS for the model $\mathbb{E}(Y|X) = \sum_{j = 0}^{k}\beta_jX^{k}$. Therefore we see we are iteratively printing out the model RSS statistics. 
 
+
+
+### Exercise 3 
+
+#### (a)
+Preforming the sweep operator on the $xx$-block. 
+
+\begin{align*}
+\Sigma &= \begin{bmatrix}
+\Sigma_{xx} & \Sigma_{xy}\\
+\Sigma_{xy}^T & \Sigma_{yy}
+\end{bmatrix} \longrightarrow \begin{bmatrix}
+\Sigma_{xx}^{-1}\Sigma_{xx} & \Sigma_{xx}^{-1}\Sigma_{xy}\\
+\Sigma_{xy}^T -\Sigma_{xy}^T\Sigma_{xx}^{-1}\Sigma_{xx}  & \Sigma_{yy} - \Sigma_{xy}^T\Sigma_{xx}^{-1}\Sigma_{xy}
+\end{bmatrix}\\
+&\longrightarrow
+\begin{bmatrix}
+I & \Sigma_{xx}^{-1}\Sigma_{xy}\\
+0  & \Sigma_{yy} - \Sigma_{xy}^T\Sigma_{xx}^{-1}\Sigma_{xy}
+\end{bmatrix}\longrightarrow \begin{bmatrix}
+\Sigma_{xx}^{-1} & \Sigma_{xx}^{-1}\Sigma_{xy}\\
+-\Sigma_{xy}^T\Sigma_{xx}^{-1}  & \Sigma_{yy} - \Sigma_{xy}^T\Sigma_{xx}^{-1}\Sigma_{xy}
+\end{bmatrix}
+\end{align*}
+Hence, if we define $S = \Sigma_{yy}-\Sigma_{xy}^T\Sigma_{xx}^{-1}\Sigma_{xy}$ we can sweep the $yy$-block as follows 
+
+\begin{align*}
+\begin{bmatrix}
+\Sigma_{xx}^{-1} & \Sigma_{xx}^{-1}\Sigma_{xy}\\
+-\Sigma_{xy}^T\Sigma_{xx}^{-1}  & S
+\end{bmatrix} \longrightarrow \begin{bmatrix}
+\Sigma_{xx}^{-1} - \Sigma_{xx}^{-1}\Sigma_{xy}S^{-1}\Sigma_{xy}^{T}\Sigma_{xx}^{-1} &  0\\
+-S^{-1}\Sigma_{xy}^T\Sigma_{xx}^{-1}  & I
+\end{bmatrix}\longrightarrow \begin{bmatrix}
+\Sigma_{xx}^{-1} - \Sigma_{xx}^{-1}\Sigma_{xy}S^{-1}\Sigma_{xy}^{T}\Sigma_{xx}^{-1}  &  \Sigma_{xx}^{-1}\Sigma_{xy}S^{-1}\\
+-S^{-1}\Sigma_{xy}^T\Sigma_{xx}^{-1}  & S^{-1}
+\end{bmatrix}
+\end{align*}
+From this we see that the $yy$-block of $\Sigma^{-1}$ is the inverse of the Schurr complement of the $yy$-block of $\Sigma$. Hence we see that these are almost commutatble in the sense that there is a relation between the Schurr complement and its inverse from a block matrix.   
+
+#### (b)
+
+Using the calculations made in $(a)$ we see that $(\Sigma^{-1})_{xx} = \Sigma_{xx}^{-1} - \Sigma_{xx}^{-1}\Sigma_{xy}S^{-1}\Sigma_{xy}^{T}\Sigma_{xx}^{-1}$. Now notice that if we would have swept the $yy$-block first followed by the $xx$-block, the first sweep would result in producing $SC_{xx}(\Sigma) = \Sigma_{xx} - \Sigma_{xy}^T\Sigma_{yy}^{-1}\Sigma_{xy}$. From here, when sweeping the $xx$-block would have produced $(SC_{xx}(\Sigma))^{-1}$. Hence we see that by symmetry that if we were to sweep $yy$ then $xx$ that $(\Sigma^{-1})_{xx} = (SC_{xx}(\Sigma))^{-1}= (\Sigma_{xx} - \Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{xy}^T)^{-1}$. 
+
 #### (c)
 
+Here we see that the conditional distribution has the following form 
+
+\begin{align*}
+\mathbf{y}|\mathbf{x}\sim N(\mu_y + \Sigma_{xy}^T\Sigma_{xx}^{-1}(\mathbf{x}-\mu_x), SC_{yy}(\Sigma))
+\end{align*}
+Recall that we achieved $SC_{yy}(\Sigma)$ after sweeping the $xx$-block of the $\Sigma$ matrix above. Moreover, by the definition of $SC_{yy}(\Sigma) = \Sigma_{yy} - \Sigma_{xy}^T\Sigma_{xx}^{-1}\Sigma_{xy}$ we see that the first two terms in the conditional mean are quite close to the desired quantity. Hence proceeding in a similar way as we did to set up the tableau in the regression case, consider the following form
+
+\begin{align*}
+\begin{bmatrix}
+\Sigma_{xx} & \Sigma_{xy} &  \mu_x-\mathbf{x}\\ 
+\Sigma_{xy}^T & \Sigma_{yy} & \mu_y
+\end{bmatrix}&\longrightarrow
+\begin{bmatrix}
+I & \Sigma_{xx}^{-1}\Sigma_{xy} &  \Sigma_{xx}^{-1}(\mu_x-\mathbf{x})\\ 
+0 & \Sigma_{yy} - \Sigma_{xy}^T\Sigma_{xx}^{-1}\Sigma_{xy} & \mu_y - \Sigma_{xy}^T\Sigma_{xx}^{-1}(\mu_x - \mathbb{x})
+\end{bmatrix}\\
+&\longrightarrow
+\begin{bmatrix}
+\Sigma_{xx}^{-1} & \Sigma_{xx}^{-1}\Sigma_{xy} &  \Sigma_{xx}^{-1}(\mu_x-\mathbf{x})\\ 
+-\Sigma_{xy}^T\Sigma_{xx}^{-1} & \Sigma_{yy} - \Sigma_{xy}^T\Sigma_{xx}^{-1}\Sigma_{xy} & \mu_y + \Sigma_{xy}^T\Sigma_{xx}^{-1}(\mathbf{x}-\mu_x)
+\end{bmatrix}\\
+&= 
+\begin{bmatrix}
+\Sigma_{xx}^{-1} & \Sigma_{xx}^{-1}\Sigma_{xy} &  \Sigma_{xx}^{-1}(\mu_x-\mathbf{x})\\ 
+-\Sigma_{xy}^T\Sigma_{xx}^{-1} & \text{Var}(\mathbf{y}|\mathbf{x}) & \mathbb{E}(\mathbf{y}|\mathbf{x})
+\end{bmatrix}\\
+\end{align*}
+
+Here we see that in the bottom row in the second and third entry that we recover the conditional variance and conditional mean of $\mathbf{y}|\mathbf{x}$. 
 
 
 
