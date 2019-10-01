@@ -1,0 +1,234 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.8 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \sortlist[entry]{nty/global/}
+    \entry{Craddock2012}{article}{}
+      \name{author}{1}{}{%
+        {{hash=3522dff4251ea2ed8a2bab227ab616a1}{%
+           family={al.},
+           familyi={a\bibinitperiod},
+           given={Craddock},
+           giveni={C\bibinitperiod},
+           prefix={et},
+           prefixi={e\bibinitperiod}}}%
+      }
+      \strng{namehash}{3522dff4251ea2ed8a2bab227ab616a1}
+      \strng{fullhash}{3522dff4251ea2ed8a2bab227ab616a1}
+      \strng{authornamehash}{3522dff4251ea2ed8a2bab227ab616a1}
+      \strng{authorfullhash}{3522dff4251ea2ed8a2bab227ab616a1}
+      \field{sortinit}{a}
+      \field{sortinithash}{3248043b5fe8d0a34dab5ab6b8d4309b}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Human brain mapping}
+      \field{month}{08}
+      \field{number}{8}
+      \field{title}{A whole brain fMRI atlas generated via spatially constrained spectral clustering}
+      \field{volume}{33}
+      \field{year}{2012}
+      \field{pages}{1914\bibrangedash 1928}
+      \range{pages}{15}
+    \endentry
+    \entry{Kiar188706}{article}{}
+      \name{author}{1}{}{%
+        {{hash=ff8a8869bb037c9afc1f0c92f26123fe}{%
+           family={al.},
+           familyi={a\bibinitperiod},
+           given={Kiar},
+           giveni={K\bibinitperiod},
+           prefix={et},
+           prefixi={e\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Cold Spring Harbor Laboratory}%
+      }
+      \strng{namehash}{ff8a8869bb037c9afc1f0c92f26123fe}
+      \strng{fullhash}{ff8a8869bb037c9afc1f0c92f26123fe}
+      \strng{authornamehash}{ff8a8869bb037c9afc1f0c92f26123fe}
+      \strng{authorfullhash}{ff8a8869bb037c9afc1f0c92f26123fe}
+      \field{sortinit}{a}
+      \field{sortinithash}{3248043b5fe8d0a34dab5ab6b8d4309b}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{bioRxiv}
+      \field{title}{A High-Throughput Pipeline Identifies Robust Connectomes But Troublesome Variability}
+      \field{year}{2018}
+      \verb{doi}
+      \verb 10.1101/188706
+      \endverb
+      \verb{eprint}
+      \verb https://www.biorxiv.org/content/early/2018/04/24/188706.full.pdf
+      \endverb
+    \endentry
+    \entry{Liu2017}{article}{}
+      \name{author}{1}{}{%
+        {{hash=42c0b74b408bbdae2ce7152f16b63671}{%
+           family={al.},
+           familyi={a\bibinitperiod},
+           given={Liu},
+           giveni={L\bibinitperiod},
+           prefix={et},
+           prefixi={e\bibinitperiod}}}%
+      }
+      \strng{namehash}{42c0b74b408bbdae2ce7152f16b63671}
+      \strng{fullhash}{42c0b74b408bbdae2ce7152f16b63671}
+      \strng{authornamehash}{42c0b74b408bbdae2ce7152f16b63671}
+      \strng{authorfullhash}{42c0b74b408bbdae2ce7152f16b63671}
+      \field{sortinit}{a}
+      \field{sortinithash}{3248043b5fe8d0a34dab5ab6b8d4309b}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Scientific Data}
+      \field{month}{02}
+      \field{title}{Longitudinal test-retest neuroimaging data from healthy young adults in southwest China}
+      \field{volume}{4}
+      \field{year}{2017}
+    \endentry
+    \entry{Soares2013}{article}{}
+      \name{author}{1}{}{%
+        {{hash=7e45771d3cecee61e71de45e0add96b4}{%
+           family={al.},
+           familyi={a\bibinitperiod},
+           given={Soares},
+           giveni={S\bibinitperiod},
+           prefix={et},
+           prefixi={e\bibinitperiod}}}%
+      }
+      \strng{namehash}{7e45771d3cecee61e71de45e0add96b4}
+      \strng{fullhash}{7e45771d3cecee61e71de45e0add96b4}
+      \strng{authornamehash}{7e45771d3cecee61e71de45e0add96b4}
+      \strng{authorfullhash}{7e45771d3cecee61e71de45e0add96b4}
+      \field{sortinit}{a}
+      \field{sortinithash}{3248043b5fe8d0a34dab5ab6b8d4309b}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Frontiers in neuroscience}
+      \field{month}{03}
+      \field{title}{A hitchhiker's guide to diffusion tensor imaging}
+      \field{volume}{7}
+      \field{year}{2013}
+      \field{pages}{31\bibrangedash 31}
+      \range{pages}{1}
+    \endentry
+    \entry{Zuo2014}{article}{}
+      \name{author}{1}{}{%
+        {{hash=ca19a6c28a1df63df21d57e67fe44c76}{%
+           family={al.},
+           familyi={a\bibinitperiod},
+           given={Zuo},
+           giveni={Z\bibinitperiod},
+           prefix={et},
+           prefixi={e\bibinitperiod}}}%
+      }
+      \strng{namehash}{ca19a6c28a1df63df21d57e67fe44c76}
+      \strng{fullhash}{ca19a6c28a1df63df21d57e67fe44c76}
+      \strng{authornamehash}{ca19a6c28a1df63df21d57e67fe44c76}
+      \strng{authorfullhash}{ca19a6c28a1df63df21d57e67fe44c76}
+      \field{sortinit}{a}
+      \field{sortinithash}{3248043b5fe8d0a34dab5ab6b8d4309b}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Scientific Data}
+      \field{title}{An open science resource for establishing reliability and reproducibility in functional connectomics}
+      \field{volume}{1}
+      \field{year}{2014}
+    \endentry
+    \entry{Barrat2004}{article}{}
+      \name{author}{4}{}{%
+        {{hash=399c90d79654023eaad65875a34e5382}{%
+           family={Barrat},
+           familyi={B\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+        {{hash=2304b7ec38d1fe7daacc02d9e612a18c}{%
+           family={Barthélemy},
+           familyi={B\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=b86fbab79ac28b9ee7931d294fe2f9cd}{%
+           family={Pastor-Satorras},
+           familyi={P\bibinithyphendelim S\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod}}}%
+        {{hash=16a5dd201b938b876dc5fd474d02ca0e}{%
+           family={Vespignani},
+           familyi={V\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {National Academy of Sciences}%
+      }
+      \strng{namehash}{c1a287dd119a0faa0f110d3a0f6caef8}
+      \strng{fullhash}{76cdca34c0234690902fa6b53cbfbed7}
+      \strng{authornamehash}{c1a287dd119a0faa0f110d3a0f6caef8}
+      \strng{authorfullhash}{76cdca34c0234690902fa6b53cbfbed7}
+      \field{sortinit}{B}
+      \field{sortinithash}{5f6fa000f686ee5b41be67ba6ff7962d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Networked structures arise in a wide array of different contexts such as technological and transportation infrastructures, social phenomena, and biological systems. These highly interconnected systems have recently been the focus of a great deal of attention that has uncovered and characterized their topological complexity. Along with a complex topological structure, real networks display a large heterogeneity in the capacity and intensity of the connections. These features, however, have mainly not been considered in past studies where links are usually represented as binary states, i.e., either present or absent. Here, we study the scientific collaboration network and the world-wide air-transportation network, which are representative examples of social and large infrastructure systems, respectively. In both cases it is possible to assign to each edge of the graph a weight proportional to the intensity or capacity of the connections among the various elements of the network. We define appropriate metrics combining weighted and topological observables that enable us to characterize the complex statistical properties and heterogeneity of the actual strength of edges and vertices. This information allows us to investigate the correlations among weighted quantities and the underlying topological structure of the network. These results provide a better description of the hierarchies and organizational principles at the basis of the architecture of weighted networks.}
+      \field{issn}{0027-8424}
+      \field{journaltitle}{Proceedings of the National Academy of Sciences}
+      \field{number}{11}
+      \field{title}{The architecture of complex weighted networks}
+      \field{volume}{101}
+      \field{year}{2004}
+      \field{pages}{3747\bibrangedash 3752}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1073/pnas.0400087101
+      \endverb
+      \verb{eprint}
+      \verb https://www.pnas.org/content/101/11/3747.full.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.pnas.org/content/101/11/3747
+      \endverb
+    \endentry
+    \entry{Corballis2014}{article}{}
+      \name{author}{1}{}{%
+        {{hash=3806613c359ff74bf6e4540db50b1805}{%
+           family={Corballis},
+           familyi={C\bibinitperiod},
+           given={M.\bibnamedelimi C.},
+           giveni={M\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \strng{namehash}{3806613c359ff74bf6e4540db50b1805}
+      \strng{fullhash}{3806613c359ff74bf6e4540db50b1805}
+      \strng{authornamehash}{3806613c359ff74bf6e4540db50b1805}
+      \strng{authorfullhash}{3806613c359ff74bf6e4540db50b1805}
+      \field{sortinit}{C}
+      \field{sortinithash}{095692fd22cc3c74d7fe223d02314dbd}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{PLoS Biol.}
+      \field{month}{1}
+      \field{number}{1}
+      \field{title}{{{L}eft brain, right brain: facts and fantasies}}
+      \field{volume}{12}
+      \field{year}{2014}
+      \field{pages}{e1001767}
+      \range{pages}{-1}
+    \endentry
+  \endsortlist
+\endrefsection
+\endinput
+

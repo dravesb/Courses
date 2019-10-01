@@ -1,0 +1,17 @@
+[0] Config.pm:354> INFO - This is Biber 2.7
+[0] Config.pm:357> INFO - Logfile is 'main.blg'
+[57] biber-darwin:303> INFO - === Sun Sep 22, 2019, 20:53:37
+[83] Biber.pm:359> INFO - Reading 'main.bcf'
+[200] Biber.pm:832> INFO - Using all citekeys in bib section 0
+[220] Biber.pm:3670> INFO - Processing section 0
+[238] Biber.pm:3840> INFO - Looking for bibtex format file 'ref.bib' for section 0
+[240] bibtex.pm:1435> INFO - Decoding LaTeX character macros into UTF-8
+[246] bibtex.pm:1292> INFO - Found BibTeX data source 'ref.bib'
+[264] Utils.pm:164> WARN - month field 'Jan' in entry 'Corballis2014' is not an integer - this will probably not sort properly.
+[289] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[289] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[289] Biber.pm:3499> INFO - Sorting list 'nty/global/' of type 'entry' with scheme 'nty' and locale 'en-US'
+[289] Biber.pm:3505> INFO - No sort tailoring available for locale 'en-US'
+[302] bbl.pm:608> INFO - Writing 'main.bbl' with encoding 'UTF-8'
+[304] bbl.pm:712> INFO - Output to main.bbl
+[304] Biber.pm:109> INFO - WARNINGS: 1
