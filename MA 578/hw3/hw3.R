@@ -32,9 +32,8 @@ diff_means <- numeric(1000)
 for(i in 1:1000){
   
   #sample binomial
-  
-  sim_post_y <- rbeta(1000, 1 + sum(bikes_y), 1 + sum(n - bikes_y))
-  sim_post_z <- rbeta(1000, 1 + sum(bikes_z), 1 + sum(m - bikes_z))
+  sim_post_y <- sapply(sim_post_y, function(x) rbinom())
+  sim_post_z <- 
   
   diff_means[i] <- mean(sim_post_y) - mean(sim_post_z)
 }
